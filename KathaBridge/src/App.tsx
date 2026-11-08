@@ -13,6 +13,7 @@ import { ReviewerDashboardModal } from "./components/ReviewerDashboardModal";
 import { ContributionModal } from "./components/ContributionModal";
 import { AuthModal } from "./components/AuthModal";
 import { MalayalamVoiceLabModal } from "./components/MalayalamVoiceLabModal";
+import { IntroSplashAndAuth } from "./components/IntroSplashAndAuth";
 import { ContactAndPolicyModals, PolicyType } from "./components/ContactAndPolicyModals";
 import { speakSafely } from "./utils/malayalamPhonetics";
 import { getUIText } from "./utils/translations";
@@ -42,6 +43,7 @@ export default function App() {
   const [reviewerModalOpen, setReviewerModalOpen] = useState(false);
   const [contributionModalOpen, setContributionModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [showIntroSplash, setShowIntroSplash] = useState(true);
   const [voiceLabOpen, setVoiceLabOpen] = useState(false);
   const introAudioRef = useRef<HTMLAudioElement | null>(null);
   const [activePolicyModal, setActivePolicyModal] = useState<PolicyType | null>(null);
@@ -223,6 +225,21 @@ export default function App() {
       {/* Confetti Particle Burst */}
       {showConfetti && <ConfettiEffect onComplete={() => setShowConfetti(false)} />}
 
+      {/* Intro Loading Curtain & User Login Modal (from design zip) */}
+      {showIntroSplash && (
+        <IntroSplashAndAuth
+          isOpen={showIntroSplash}
+          onComplete={() => setShowIntroSplash(false)}
+          onUserLogin={(user) => {
+            setCurrentUser(user);
+            StorageService.setUser(user);
+            setShowIntroSplash(false);
+            showToast(t.toast.signedIn);
+          }}
+          currentUser={currentUser}
+        />
+      )}
+
       {/* Floating Cultural Indian BGM Soundtrack Player */}
       <SoundtrackWidget />
 
@@ -398,14 +415,31 @@ export default function App() {
               )}
             </div>
 
+            {/* Replay Intro Splash & Login Trigger */}
+            <button
+              onClick={() => {
+                Soundtrack.playClick();
+                setShowIntroSplash(true);
+              }}
+              title="Launch Intro Splash & User Login"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 border-2 border-brandBlack rounded-full bg-brandYellow hover:bg-brandPink hover:text-white transition shadow-[3px_3px_0px_#080808] text-xs font-mono font-black cursor-pointer"
+            >
+              <span>✨</span>
+              <span>Intro &amp; Login</span>
+            </button>
+
             {/* User Account / Profile Button */}
             <button
               onClick={() => {
                 Soundtrack.playModalPop();
-                setAuthModalOpen(true);
+                if (!currentUser) {
+                  setShowIntroSplash(true);
+                } else {
+                  setAuthModalOpen(true);
+                }
               }}
               title={currentUser ? `Profile: ${currentUser.name}` : "Sign In / Register"}
-              className="flex items-center gap-1.5 px-3 py-1.5 border-2 border-brandBlack rounded-full bg-white hover:bg-brandYellow transition shadow-[3px_3px_0px_#080808]"
+              className="flex items-center gap-1.5 px-3 py-1.5 border-2 border-brandBlack rounded-full bg-white hover:bg-brandYellow transition shadow-[3px_3px_0px_#080808] cursor-pointer"
             >
               <div className="w-6 h-6 rounded-full bg-brandPink text-white font-mono text-[10px] font-black flex items-center justify-center">
                 {currentUser ? currentUser.avatarInitials : "👤"}
@@ -988,6 +1022,13 @@ export default function App() {
                       alt={story.title.EN}
                       className="w-full h-full object-cover object-top"
                       src={story.image}
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (story.id === "theyyam") target.src = "/images/landing/asset_7.png";
+                        else if (story.id === "koodiyattam") target.src = "/images/landing/asset_2.png";
+                        else if (story.id === "panchatantra") target.src = "/images/landing/asset_11.png";
+                        else target.src = "/images/landing/asset_10.png";
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
                     <span

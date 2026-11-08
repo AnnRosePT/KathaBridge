@@ -1,0 +1,781 @@
+import React, { useState, useEffect, useRef } from "react";
+import { UserProfile } from "../types";
+import { Soundtrack } from "../services/soundtrackService";
+
+interface Props {
+  isOpen: boolean;
+  onComplete: () => void;
+  onUserLogin: (user: UserProfile) => void;
+  currentUser: UserProfile | null;
+}
+
+export const IntroSplashAndAuth: React.FC<Props> = ({
+  isOpen,
+  onComplete,
+  onUserLogin,
+  currentUser
+}) => {
+  // Stages: "loading" -> "login_modal" -> "intro_hero" -> "done"
+  const [stage, setStage] = useState<"loading" | "login_modal" | "intro_hero" | "done">("loading");
+  const [progressPct, setProgressPct] = useState(0);
+  const [statusText, setStatusText] = useState("INITIALIZING ARCHIVE...");
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+
+  // Form input state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const tiltCardRef = useRef<HTMLDivElement | null>(null);
+
+  const loaderQuotes = [
+    "Translating centuries of oral folklore into vibrant interactive experiences...",
+    "Preserving endangered dialects, ritual songs, and living oral traditions...",
+    "Connecting UNESCO intangible heritage with universal accessibility...",
+    "Welcome to KathaBridge: Stories Beyond Language."
+  ];
+
+  const loaderStages = [
+    { pct: 32, text: "INDEXING REGIONAL TALES..." },
+    { pct: 64, text: "SYNCHRONIZING BILINGUAL AUDIO..." },
+    { pct: 89, text: "PREPARING CULTURAL ARCHIVE..." },
+    { pct: 100, text: "WELCOME TO KATHABRIDGE" }
+  ];
+
+  // 1. Loading sequence
+  useEffect(() => {
+    if (!isOpen) return;
+    setStage("loading");
+    setProgressPct(0);
+
+    let stageIdx = 0;
+    const interval = setInterval(() => {
+      if (stageIdx < loaderStages.length) {
+        setProgressPct(loaderStages[stageIdx].pct);
+        setStatusText(loaderStages[stageIdx].text);
+        setCurrentQuoteIndex((prev) => (prev + 1) % loaderQuotes.length);
+        if (isAudioEnabled) {
+          Soundtrack.playClick();
+        }
+        stageIdx++;
+      } else {
+        clearInterval(interval);
+        // Completed loading -> transition to login modal
+        setTimeout(() => {
+          if (isAudioEnabled) {
+            Soundtrack.playSuccessChime();
+          }
+          setStage("login_modal");
+        }, 500);
+      }
+    }, 600);
+
+    return () => clearInterval(interval);
+  }, [isOpen]);
+
+  // 2. Interactive Sparkles Canvas (from code.html)
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener("resize", handleResize);
+
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      color: string;
+      alpha: number;
+      fadeRate: number;
+    }
+
+    const particles: Particle[] = [];
+    const colors = ["#FFFC00", "#FF2D78", "#FFFFFF"];
+
+    const createParticle = (x: number, y: number): Particle => ({
+      x,
+      y,
+      vx: (Math.random() - 0.5) * 3,
+      vy: (Math.random() - 0.5) * 3,
+      size: Math.random() * 3 + 1,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      fadeRate: 0.015 + Math.random() * 0.02
+    });
+
+    const handlePointerMove = (e: MouseEvent) => {
+      if (Math.random() > 0.4) {
+        particles.push(createParticle(e.clientX, e.clientY));
+      }
+    };
+    window.addEventListener("mousemove", handlePointerMove);
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.fadeRate;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handlePointerMove);
+    };
+  }, []);
+
+  // 3. 3D Card Tilt effect from code.html
+  useEffect(() => {
+    const card = tiltCardRef.current;
+    if (!card) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -10;
+      const rotateY = ((x - centerX) / centerX) * 10;
+
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    };
+
+    const handleMouseLeave = () => {
+      card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+    };
+
+    card.addEventListener("mousemove", handleMouseMove);
+    card.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      card.removeEventListener("mousemove", handleMouseMove);
+      card.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [stage]);
+
+  const handleSkipLoading = () => {
+    Soundtrack.playClick();
+    Soundtrack.playSuccessChime();
+    setStage("login_modal");
+  };
+
+  const handleGoogleLogin = () => {
+    Soundtrack.playModalPop();
+    const mockUser: UserProfile = {
+      id: "usr-google-" + Date.now(),
+      name: "Aarav Sharma",
+      email: "aarav.sharma@gmail.com",
+      avatarInitials: "AS",
+      role: "SCHOLAR",
+      contributionsCount: 3,
+      savedStoriesCount: 4,
+      joinedDate: "November 2026",
+      preferredLanguage: "EN"
+    };
+    onUserLogin(mockUser);
+    Soundtrack.playSuccessChime();
+    setStage("done");
+    onComplete();
+  };
+
+  const handleMobileLogin = () => {
+    Soundtrack.playModalPop();
+    const mockUser: UserProfile = {
+      id: "usr-mob-" + Date.now(),
+      name: "Kerala Folk Reader",
+      email: "+91 98470 12345",
+      avatarInitials: "KF",
+      role: "READER",
+      contributionsCount: 1,
+      savedStoriesCount: 2,
+      joinedDate: "November 2026",
+      preferredLanguage: "ML"
+    };
+    onUserLogin(mockUser);
+    Soundtrack.playSuccessChime();
+    setStage("done");
+    onComplete();
+  };
+
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    Soundtrack.playModalPop();
+    const namePart = email.split("@")[0] || "Reader";
+    const initials = (namePart.slice(0, 2) || "KB").toUpperCase();
+    const mockUser: UserProfile = {
+      id: "usr-email-" + Date.now(),
+      name: namePart.charAt(0).toUpperCase() + namePart.slice(1),
+      email: email,
+      avatarInitials: initials,
+      role: "READER",
+      contributionsCount: 0,
+      savedStoriesCount: 1,
+      joinedDate: "November 2026",
+      preferredLanguage: "EN"
+    };
+    onUserLogin(mockUser);
+    Soundtrack.playSuccessChime();
+    setStage("done");
+    onComplete();
+  };
+
+  const handleCloseModalToHero = () => {
+    Soundtrack.playClick();
+    setStage("intro_hero");
+  };
+
+  const handleExploreStories = () => {
+    Soundtrack.playClick();
+    setStage("done");
+    onComplete();
+    setTimeout(() => {
+      const el = document.getElementById("stories");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
+  if (!isOpen || stage === "done") return null;
+
+  return (
+    <>
+      {/* Interactive Sparkles Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 pointer-events-none z-[65]"
+        style={{ width: "100%", height: "100%" }}
+      />
+
+      {/* ========================================================== */}
+      {/* 1. FULLSCREEN INTRO / LOADING CURTAIN                      */}
+      {/* ========================================================== */}
+      {stage === "loading" && (
+        <div
+          className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-between p-6 sm:p-12 transition-all duration-700 select-none animate-fade-in"
+          id="intro-screen"
+        >
+          {/* Top Bar inside Loader */}
+          <div className="w-full flex items-center justify-between max-w-6xl">
+            <div className="flex items-center gap-3">
+              {/* Hot Pink Spinning Starburst */}
+              <svg
+                className="w-7 h-7 text-[#FF2D78] animate-spin"
+                fill="currentColor"
+                style={{ animationDuration: "8s" }}
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 0L14.5 8.5L23.5 9.5L16.5 15.5L18.5 24L12 19L5.5 24L7.5 15.5L0.5 9.5L9.5 8.5L12 0Z"></path>
+              </svg>
+              <span className="font-bold text-xl tracking-tight text-white font-sans">
+                KathaBridge
+              </span>
+            </div>
+
+            {/* Audio FX Controller / Equalizer Indicator */}
+            <div className="flex items-center gap-4">
+              <button
+                className="flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-neutral-800 hover:border-[#FFFC00]/60 bg-neutral-900/70 text-xs font-mono transition-all group cursor-pointer"
+                onClick={() => {
+                  setIsAudioEnabled(!isAudioEnabled);
+                  Soundtrack.playClick();
+                }}
+              >
+                <div
+                  className={`flex items-end gap-0.5 h-4 w-4 ${
+                    isAudioEnabled ? "" : "opacity-30"
+                  }`}
+                >
+                  <span className="w-1 bg-[#FFFC00] rounded-sm eq-bar-1"></span>
+                  <span className="w-1 bg-[#FF2D78] rounded-sm eq-bar-2"></span>
+                  <span className="w-1 bg-[#FFFC00] rounded-sm eq-bar-3"></span>
+                </div>
+                <span className="text-neutral-300 group-hover:text-white tracking-wider">
+                  {isAudioEnabled ? "SOUND FX: ON" : "SOUND FX: OFF"}
+                </span>
+              </button>
+              <div className="hidden md:block text-xs tracking-widest uppercase text-neutral-400 font-mono">
+                Cultural Folklore Archive • 2025
+              </div>
+            </div>
+          </div>
+
+          {/* Center Interactive Loader Element */}
+          <div className="flex flex-col items-center text-center max-w-lg my-auto">
+            {/* Mascot Emblem with glowing pulse */}
+            <div
+              className="relative mb-8 cursor-pointer group"
+              onClick={handleSkipLoading}
+              title="Click to enter immediately"
+            >
+              <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#FF2D78] to-[#FFFC00] p-[3px] animate-logo-pulse">
+                <div className="w-full h-full bg-black rounded-full flex items-center justify-center p-3">
+                  <svg className="w-12 h-12 text-[#FFFC00]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0L14.5 8.5L23.5 9.5L16.5 15.5L18.5 24L12 19L5.5 24L7.5 15.5L0.5 9.5L9.5 8.5L12 0Z"></path>
+                  </svg>
+                </div>
+              </div>
+              {/* Pulsing ring badge */}
+              <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-[#FF2D78] text-white text-[10px] font-bold px-3 py-0.5 rounded-full uppercase tracking-wider font-mono whitespace-nowrap shadow-md">
+                Loading Stories
+              </div>
+            </div>
+
+            {/* Animated Tagline */}
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3 text-white">
+              Stories Beyond <span className="text-[#FFFC00]">Language.</span>
+            </h2>
+            <p className="text-neutral-400 text-sm sm:text-base leading-relaxed mb-8 h-12 transition-opacity duration-300">
+              "{loaderQuotes[currentQuoteIndex]}"
+            </p>
+
+            {/* Progress Track */}
+            <div className="w-full max-w-xs bg-neutral-900 border border-neutral-800 rounded-full h-2 p-0.5 relative overflow-hidden mb-3">
+              <div
+                className="bg-gradient-to-r from-[#FF2D78] to-[#FFFC00] h-full rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${progressPct}%` }}
+              ></div>
+            </div>
+            <div className="flex items-center justify-between w-full max-w-xs text-xs font-mono text-neutral-500">
+              <span>{statusText}</span>
+              <span className="text-[#FFFC00] font-bold">{progressPct}%</span>
+            </div>
+
+            {/* Skip Button */}
+            <button
+              className="mt-8 text-xs text-neutral-400 hover:text-white underline underline-offset-4 tracking-wider uppercase font-mono transition-colors cursor-pointer"
+              onClick={handleSkipLoading}
+            >
+              Skip intro directly to Login →
+            </button>
+          </div>
+
+          {/* Bottom disclaimer */}
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-[11px] text-neutral-500 font-mono tracking-wider">
+            <span>MTC24 DESIGN FESTIVAL EDITION</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="text-[#FFFC00]/80">WEB AUDIO SYNTH ENGINE ACTIVE</span>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================== */}
+      {/* 2 & 3. DARK INTRO HERO BASE (Behind Modal & Direct View)   */}
+      {/* ========================================================== */}
+      {(stage === "login_modal" || stage === "intro_hero") && (
+        <div className="fixed inset-0 z-40 bg-black text-white overflow-y-auto flex flex-col justify-between select-none">
+          {/* Top Sticky Navigation Bar from code.html */}
+          <header className="w-full px-6 sm:px-12 py-5 flex items-center justify-between relative z-30 max-w-7xl mx-auto">
+            {/* Brand Logo */}
+            <div
+              className="flex items-center gap-3 group cursor-pointer"
+              onClick={() => {
+                Soundtrack.playClick();
+                setStage("loading");
+              }}
+            >
+              <svg
+                className="w-7 h-7 text-[#FF2D78] transition-transform duration-300 group-hover:rotate-45"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 0L14.5 8.5L23.5 9.5L16.5 15.5L18.5 24L12 19L5.5 24L7.5 15.5L0.5 9.5L9.5 8.5L12 0Z"></path>
+              </svg>
+              <div className="flex flex-col">
+                <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white leading-none">
+                  KathaBridge
+                </span>
+                <span className="text-[9px] uppercase tracking-widest text-neutral-400 font-mono mt-0.5">
+                  Stories Beyond Language
+                </span>
+              </div>
+            </div>
+
+            {/* Nav Items */}
+            <nav className="flex items-center gap-3 sm:gap-5">
+              <button
+                className="bg-[#FFFC00] text-black font-bold text-xs sm:text-sm px-5 py-2 rounded-full shadow-[0_0_15px_rgba(255,252,0,0.3)] hover:scale-105 transition-all cursor-pointer"
+                onClick={handleExploreStories}
+              >
+                Home
+              </button>
+              <button
+                className="text-xs sm:text-sm font-semibold text-neutral-300 hover:text-white px-3 py-2 transition-colors cursor-pointer"
+                onClick={handleExploreStories}
+              >
+                Stories
+              </button>
+              <button
+                className="text-xs sm:text-sm font-semibold text-neutral-300 hover:text-white px-3 py-2 transition-colors cursor-pointer"
+                onClick={handleExploreStories}
+              >
+                About
+              </button>
+
+              {/* Language Switcher Pill */}
+              <div className="hidden sm:flex items-center gap-1.5 border border-neutral-700/80 rounded-full px-3.5 py-1.5 text-xs text-neutral-300">
+                <span>English</span>
+                <span className="text-neutral-500 text-xs">▼</span>
+              </div>
+
+              {/* Sign In / User Status */}
+              <button
+                className="border border-[#FF2D78] hover:bg-[#FF2D78] text-[#FF2D78] hover:text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-full transition-all flex items-center gap-2 cursor-pointer"
+                onClick={() => {
+                  Soundtrack.playModalPop();
+                  setStage("login_modal");
+                }}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  ></path>
+                </svg>
+                <span>{currentUser ? currentUser.name.split(" ")[0] : "Sign In"}</span>
+              </button>
+            </nav>
+          </header>
+
+          {/* Hero Main Section from code.html */}
+          <main className="w-full max-w-7xl mx-auto px-6 sm:px-12 py-4 sm:py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-grow relative z-20">
+            {/* Left Column: Typography & CTAs */}
+            <div className="lg:col-span-6 flex flex-col items-start space-y-6">
+              {/* Category Pill */}
+              <div className="inline-flex items-center gap-2 border border-[#FFFC00]/40 bg-black/60 px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-mono uppercase tracking-wider text-[#FFFC00]">
+                <span>Culture</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D78]"></span>
+                <span>Language</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D78]"></span>
+                <span>Accessibility</span>
+              </div>
+
+              {/* Main Headline from Screenshot 5 & 6 */}
+              <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-[76px] tracking-tight leading-[1.02] text-white">
+                Stories<br />
+                Beyond<br />
+                <span className="text-[#FFFC00] inline-block relative">
+                  Language.
+                  <span className="absolute -bottom-1 left-0 w-full h-2 bg-[#FFFC00]/20 blur-sm rounded"></span>
+                </span>
+              </h1>
+
+              {/* Subtext */}
+              <p className="text-neutral-400 text-base sm:text-lg max-w-md leading-relaxed">
+                Discover India's rich cultural stories across languages with accessible, meaningful and human-reviewed storytelling.
+              </p>
+
+              {/* CTAs */}
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <button
+                  className="bg-[#FFFC00] hover:bg-[#ffe600] text-black font-extrabold text-sm sm:text-base px-8 py-4 rounded-full shadow-[0_0_30px_rgba(255,252,0,0.4)] hover:shadow-[0_0_40px_rgba(255,252,0,0.6)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 cursor-pointer"
+                  onClick={handleExploreStories}
+                >
+                  <span>Explore Stories</span>
+                  <span className="text-base font-bold">→</span>
+                </button>
+
+                <button
+                  className="bg-neutral-900/80 hover:bg-neutral-800 text-white font-semibold text-sm px-6 py-4 rounded-full border border-neutral-800 hover:border-neutral-700 transition-all cursor-pointer"
+                  onClick={() => {
+                    Soundtrack.playModalPop();
+                    setStage("login_modal");
+                  }}
+                >
+                  Account &amp; Library
+                </button>
+              </div>
+
+              {/* Live Experience Quick Trigger */}
+              <div className="pt-4 flex items-center gap-3 text-xs text-neutral-400 font-mono">
+                <button
+                  className="hover:text-[#FFFC00] flex items-center gap-1.5 transition-colors cursor-pointer"
+                  onClick={() => {
+                    Soundtrack.playClick();
+                    setStage("loading");
+                  }}
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    ></path>
+                  </svg>
+                  <span>Replay Intro Splash</span>
+                </button>
+                <span>•</span>
+                <span className="text-neutral-500">Interactive 3D Tilt Active</span>
+              </div>
+            </div>
+
+            {/* Right Column: 3D Artwork Ensemble with Pulsing Stars */}
+            <div className="lg:col-span-6 relative flex items-center justify-center py-6">
+              <div
+                ref={tiltCardRef}
+                className="tilt-card relative w-full max-w-[540px] flex items-center justify-center p-4 transition-transform duration-200"
+              >
+                {/* Floating Animated Pink Accent Stars */}
+                <div className="absolute -top-4 right-16 z-20 pointer-events-none float-star-1">
+                  <svg className="w-10 h-10 text-[#FF2D78]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0L14.5 8.5L23.5 9.5L16.5 15.5L18.5 24L12 19L5.5 24L7.5 15.5L0.5 9.5L9.5 8.5L12 0Z"></path>
+                  </svg>
+                </div>
+                <div className="absolute top-1/4 -left-4 z-20 pointer-events-none float-star-2">
+                  <svg className="w-12 h-12 text-[#FF2D78]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0L14.5 8.5L23.5 9.5L16.5 15.5L18.5 24L12 19L5.5 24L7.5 15.5L0.5 9.5L9.5 8.5L12 0Z"></path>
+                  </svg>
+                </div>
+                <div className="absolute bottom-1/3 -right-6 z-20 pointer-events-none float-star-3">
+                  <svg className="w-9 h-9 text-[#FF2D78]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0L14.5 8.5L23.5 9.5L16.5 15.5L18.5 24L12 19L5.5 24L7.5 15.5L0.5 9.5L9.5 8.5L12 0Z"></path>
+                  </svg>
+                </div>
+
+                {/* Cultural Ensemble Illustration */}
+                <div className="relative w-full overflow-visible transition-transform duration-300 hover:scale-[1.03]">
+                  <img
+                    alt="KathaBridge Cultural Folklore Ensemble"
+                    className="w-full h-auto object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] drop-shadow-[0_0_60px_rgba(255,45,120,0.25)] select-none cursor-pointer"
+                    src="/images/landing/login_ensemble_transparent.png"
+                    onClick={handleExploreStories}
+                  />
+                </div>
+              </div>
+            </div>
+          </main>
+
+          {/* Angled Running Marquee Ticker Tape */}
+          <div className="w-full overflow-hidden bg-[#FFFC00] text-black py-3 sm:py-3.5 transform rotate-[-1.5deg] scale-[1.04] origin-left shadow-[0_10px_30px_rgba(255,252,0,0.3)] relative z-30 mt-6 border-y-2 border-black">
+            <div className="animate-marquee whitespace-nowrap flex items-center text-sm sm:text-base font-extrabold uppercase tracking-widest font-mono">
+              <span className="flex items-center gap-6 mx-4">
+                <span>KATHABRIDGE</span>
+                <span className="text-[#FF2D78]">✳</span>
+                <span>KATHABRIDGE</span>
+                <span className="text-[#FF2D78]">✳</span>
+                <span>STORIES BEYOND LANGUAGE</span>
+                <span className="text-[#FF2D78]">✳</span>
+                <span>CULTURAL HERITAGE ARCHIVE</span>
+                <span className="text-[#FF2D78]">✳</span>
+                <span>MALAYALAM NARRATION ENGINE</span>
+                <span className="text-[#FF2D78]">✳</span>
+              </span>
+              <span className="flex items-center gap-6 mx-4" aria-hidden="true">
+                <span>KATHABRIDGE</span>
+                <span className="text-[#FF2D78]">✳</span>
+                <span>KATHABRIDGE</span>
+                <span className="text-[#FF2D78]">✳</span>
+                <span>STORIES BEYOND LANGUAGE</span>
+                <span className="text-[#FF2D78]">✳</span>
+                <span>CULTURAL HERITAGE ARCHIVE</span>
+                <span className="text-[#FF2D78]">✳</span>
+                <span>MALAYALAM NARRATION ENGINE</span>
+                <span className="text-[#FF2D78]">✳</span>
+              </span>
+            </div>
+          </div>
+
+          {/* ========================================================== */}
+          {/* LOGIN MODAL OVERLAY (When stage === "login_modal")         */}
+          {/* ========================================================== */}
+          {stage === "login_modal" && (
+            <div
+              className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-500 animate-fade-in"
+              id="login-modal"
+            >
+              <div
+                className="relative w-full max-w-md bg-[#0F0F0F] border-2 border-[#FFFC00] rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(255,252,0,0.25)] transition-all transform scale-100 duration-300"
+                id="login-card"
+              >
+                {/* Close Button -> reveals Dark Hero page */}
+                <button
+                  className="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-800 hover:bg-[#FF2D78] text-neutral-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                  onClick={handleCloseModalToHero}
+                  title="Close and explore landing page"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M6 18L18 6M6 6l12 12"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.5"
+                    ></path>
+                  </svg>
+                </button>
+
+                {/* Decorative Brand Star */}
+                <div className="flex items-center gap-2 mb-2">
+                  <svg className="w-6 h-6 text-[#FF2D78]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0L14.5 8.5L23.5 9.5L16.5 15.5L18.5 24L12 19L5.5 24L7.5 15.5L0.5 9.5L9.5 8.5L12 0Z"></path>
+                  </svg>
+                  <span className="text-xs uppercase font-mono tracking-widest text-[#FFFC00] font-bold">
+                    KATHABRIDGE ACCESS
+                  </span>
+                </div>
+
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
+                  Enter the World of Stories
+                </h3>
+                <p className="text-neutral-400 text-sm mb-6 leading-relaxed">
+                  Sign in to save regional bookmarks, explore interactive folk audio, and contribute regional folklore.
+                </p>
+
+                {/* Social Login Options */}
+                <div className="space-y-3 mb-6">
+                  <button
+                    className="w-full bg-white hover:bg-neutral-100 text-black font-semibold text-sm py-3 px-4 rounded-full flex items-center justify-center gap-3 transition-transform active:scale-95 shadow-md cursor-pointer"
+                    onClick={handleGoogleLogin}
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 24 24">
+                      <path
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                        fill="#4285F4"
+                      ></path>
+                      <path
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                        fill="#34A853"
+                      ></path>
+                      <path
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                        fill="#FBBC05"
+                      ></path>
+                      <path
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                        fill="#EA4335"
+                      ></path>
+                    </svg>
+                    <span>Continue with Google</span>
+                  </button>
+
+                  <button
+                    className="w-full bg-[#1F1F1F] hover:bg-[#2A2A2A] text-white border border-neutral-700 font-semibold text-sm py-3 px-4 rounded-full flex items-center justify-center gap-3 transition-transform active:scale-95 cursor-pointer"
+                    onClick={handleMobileLogin}
+                  >
+                    <svg className="w-5 h-5 text-[#FFFC00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                      ></path>
+                    </svg>
+                    <span>Continue with Mobile / OTP</span>
+                  </button>
+                </div>
+
+                {/* Divider */}
+                <div className="relative flex py-2 items-center mb-5">
+                  <div className="flex-grow border-t border-neutral-800"></div>
+                  <span className="flex-shrink mx-4 text-[11px] font-mono uppercase tracking-widest text-neutral-500">
+                    OR WITH EMAIL
+                  </span>
+                  <div className="flex-grow border-t border-neutral-800"></div>
+                </div>
+
+                {/* Email Form */}
+                <form className="space-y-4" onSubmit={handleEmailSubmit}>
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-300 mb-1">
+                      Email or Member ID
+                    </label>
+                    <input
+                      className="w-full bg-black border border-neutral-800 focus:border-[#FFFC00] focus:ring-1 focus:ring-[#FFFC00] text-sm px-4 py-3 rounded-xl text-white placeholder-neutral-600 outline-none transition-all"
+                      placeholder="reader@kathabridge.org"
+                      required
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-xs font-medium text-neutral-300">Password</label>
+                      <a
+                        className="text-[11px] text-[#FF2D78] hover:underline"
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          Soundtrack.playClick();
+                        }}
+                      >
+                        Forgot?
+                      </a>
+                    </div>
+                    <input
+                      className="w-full bg-black border border-neutral-800 focus:border-[#FFFC00] focus:ring-1 focus:ring-[#FFFC00] text-sm px-4 py-3 rounded-xl text-white placeholder-neutral-600 outline-none transition-all"
+                      placeholder="••••••••"
+                      required
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+
+                  <button
+                    className="w-full bg-[#FFFC00] hover:bg-[#ffe600] text-black font-extrabold text-sm py-3.5 px-4 rounded-full transition-transform active:scale-95 shadow-[0_0_20px_rgba(255,252,0,0.3)] mt-2 flex items-center justify-center gap-2 cursor-pointer"
+                    type="submit"
+                  >
+                    <span>Sign In to KathaBridge</span>
+                    <span>→</span>
+                  </button>
+                </form>
+
+                {/* Guest Entry Link */}
+                <div className="mt-5 text-center">
+                  <button
+                    className="text-xs text-neutral-400 hover:text-[#FFFC00] transition-colors underline underline-offset-4 font-mono cursor-pointer"
+                    onClick={handleCloseModalToHero}
+                  >
+                    Or continue as Guest Reader (Read-Only) →
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
+};
