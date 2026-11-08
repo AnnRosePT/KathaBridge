@@ -1,0 +1,442 @@
+[
+  {
+    "id": "mahabali",
+    "number": "01",
+    "title": {
+      "EN": "The Legend of Mahabali: The Just Sovereign of Kerala",
+      "ML": "മഹാബലിയുടെ ഐതിഹ്യം: തുല്യതയുടെ സുവർണ്ണകാലം"
+    },
+    "category": "FOLK_TALES",
+    "categoryLabel": "KERALA FOLKLORE",
+    "originRegion": "Pan-Kerala",
+    "originalLanguage": "Malayalam",
+    "availableLanguages": [
+      "EN",
+      "ML"
+    ],
+    "pillTag": "ONAM HERITAGE",
+    "image": "/images/stories/mahabali.png",
+    "imageBg": "bg-brandYellowWarm",
+    "tapeColor": "pink",
+    "sourceAttribution": "Kerala Tourism Heritage Archives & Herman Gundert Folk Collection (Archive.org)",
+    "sourceUrl": "https://www.keralatourism.org/festival/onam/1",
+    "license": "Government Open Information / Public Domain",
+    "imageAttribution": "Wikimedia Commons / Kerala Heritage Archive under CC BY-SA 4.0",
+    "summary": {
+      "EN": "How an Asura sovereign's unwavering egalitarian generosity outshone the celestial heavens, commemorated annually through Kerala's harvest festival of Onam.",
+      "ML": "അസുര ചക്രവർത്തിയായ മഹാബലിയുടെ തുല്യതയും ഉദാരമനസ്കതയും വാനവരെപ്പോലും വിസ്മയിപ്പിച്ചതിന്റെയും ഓണക്കാലത്തെ അദ്ദേഹത്തിന്റെ തിരിച്ചുവരവിന്റെയും ഐതിഹ്യം."
+    },
+    "keyConcept": {
+      "title": "Key Concept: Maveli Nadu Vaneedum Kalam",
+      "quote: ": "\"മാവേലി നാടു വാണീടും കാലം, മാനുഷരെല്ലാരും ഒന്നുപോലെ...\"",
+      "quote": "\"മാവേലി നാടു വാണീടും കാലം, മാനുഷരെല്ലാരും ഒന്നുപോലെ...\"",
+      "explanation": "A celebrated golden epoch of complete social justice, where falsehood, inequality, theft, and fear were wholly unknown across the kingdom."
+    },
+    "culturalBackground": "Celebrated during the Malayalam month of Chingam. Unlike orthodox mythologies where Asuras are cast solely as demonic villains, in Kerala folklore Mahabali is revered as a just, beloved sovereign whose egalitarian rule challenged cosmic hierarchies. Sourced from Kerala Tourism cultural archives and William Logan's Malabar Manual (Archive.org).",
+    "readingDurationMinutes": 6,
+    "isFeatured": true,
+    "viewsCount": 3420,
+    "likesCount": 512,
+    "culturalExpressionIds": [
+      "exp-maveli",
+      "exp-onasadya",
+      "exp-pookkalam",
+      "exp-onakkodi"
+    ],
+    "sentences": [
+      {
+        "id": "mb-1",
+        "originalText": "മാവേലി നാടു വാണീടും കാലം മാനുഷരെല്ലാരും ഒന്നുപോലെ കഴിഞ്ഞിരുന്ന ഒരു സുവർണ്ണ കാലഘട്ടമുണ്ടായിരുന്നു.",
+        "translatedText": {
+          "EN": "In ancient times, during the reign when King Mahabali ruled the land, all human beings lived together in absolute equality and shared peace.",
+          "ML": "മാവേലി നാടു വാണീടും കാലം മാനുഷരെല്ലാരും ഒന്നുപോലെ കഴിഞ്ഞിരുന്ന ഒരു സുവർണ്ണ കാലഘട്ടമുണ്ടായിരുന്നു."
+        },
+        "highlightedTermIds": [
+          "exp-maveli"
+        ]
+      },
+      {
+        "id": "mb-2",
+        "originalText": "കള്ളവും ചതിയുമില്ലാത്ത, തുല്യത നിറഞ്ഞ ആ രാജ്യത്ത് ദാരിദ്ര്യമോ വഞ്ചനയോ ആർക്കും പരിചയമില്ലായിരുന്നു.",
+        "translatedText": {
+          "EN": "In that prosperous realm devoid of deceit and cruelty, no one experienced poverty, falsehood, or social humiliation.",
+          "ML": "കള്ളവും ചതിയുമില്ലാത്ത, തുല്യത നിറഞ്ഞ ആ രാജ്യത്ത് ദാരിദ്ര്യമോ വഞ്ചനയോ ആർക്കും പരിചയമില്ലായിരുന്നു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "mb-3",
+        "originalText": "മഹാബലിയുടെ കീർത്തി സ്വർഗ്ഗലോകം വരെ ഉയർന്നപ്പോൾ, ദേവേന്ദ്രൻ അസൂയാലുവാകുകയും മഹാവിഷ്ണുവിനോട് സഹായം യാചിക്കുകയും ചെയ്തു.",
+        "translatedText": {
+          "EN": "When King Mahabali's renown reached the celestial heavens, Indra grew fearful of his virtue and implored Lord Vishnu for divine intervention.",
+          "ML": "മഹാബലിയുടെ കീർത്തി സ്വർഗ്ഗലോകം വരെ ഉയർന്നപ്പോൾ, ദേവേന്ദ്രൻ അസൂയാലുവാകുകയും മഹാവിഷ്ണുവിനോട് സഹായം യാചിക്കുകയും ചെയ്തു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "mb-4",
+        "originalText": "തുടർന്ന് വാമനനായി എത്തിയ വിഷ്ണു മൂന്നടി മണ്ണ് ഭിക്ഷയായി ആവശ്യപ്പെടുകയും, ആദ്യ രണ്ടു പടികൾ കൊണ്ട് ഭൂമിയും ആകാശവും അളന്നെടുക്കുകയും ചെയ്തു.",
+        "translatedText": {
+          "EN": "Lord Vishnu arrived in the guise of the dwarven ascetic Vamana, asking for merely three strides of land, measuring earth and the sky in two immense steps.",
+          "ML": "തുടർന്ന് വാമനനായി എത്തിയ വിഷ്ണു മൂന്നടി മണ്ണ് ഭിക്ഷയായി ആവശ്യപ്പെടുകയും, ആദ്യ രണ്ടു പടികൾ കൊണ്ട് ഭൂമിയും ആകാശവും അളന്നെടുക്കുകയും ചെയ്തു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "mb-5",
+        "originalText": "മൂന്നാമത്തെ അടിക്കായി മഹാബലി വിനയത്തോടെ തന്റെ ശിരസ്സ് സമർപ്പിച്ച് വാക്കിലുള്ള സത്യസന്ധത കാത്തുസൂക്ഷിച്ചു.",
+        "translatedText": {
+          "EN": "For the third stride, King Mahabali bowed with serene humility, offering his own head rather than breaking his sacred promise.",
+          "ML": "മൂന്നാമത്തെ അടിക്കായി മഹാബലി വിനയത്തോടെ തന്റെ ശിരസ്സ് സമർപ്പിച്ച് വാക്കിലുള്ള സത്യസന്ധത കാത്തുസൂക്ഷിച്ചു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "mb-6",
+        "originalText": "വർഷത്തിലൊരിക്കൽ തന്റെ പ്രിയപ്പെട്ട പ്രജകളെ സന്ദർശിക്കാൻ അനുമതി നേടിയ മഹാബലിയെ ഓണനാളിൽ പൂക്കളവും ഓണസദ്യയും ഒരുക്കി മലയാളികൾ വരവേൽക്കുന്നു.",
+        "translatedText": {
+          "EN": "Granted the boon to visit his beloved people once every year, Malayalis across the world welcome Mahabali during Onam with vibrant floral carpets and grand feasts.",
+          "ML": "വർഷത്തിലൊരിക്കൽ തന്റെ പ്രിയപ്പെട്ട പ്രജകളെ സന്ദർശിക്കാൻ അനുമതി നേടിയ മഹാബലിയെ ഓണനാളിൽ പൂക്കളവും ഓണസദ്യയും ഒരുക്കി മലയാളികൾ വരവേൽക്കുന്നു."
+        },
+        "highlightedTermIds": [
+          "exp-pookkalam",
+          "exp-onasadya"
+        ]
+      },
+      {
+        "id": "mb-7",
+        "originalText": "ഇന്നും ഓണക്കോടി അണിഞ്ഞ് തുല്യതയുടെ ഓർമ്മ പുതുക്കുന്ന ഈ ഉത്സവം മനുഷ്യസ്നേഹത്തിന്റെ മായാത്ത പ്രതീകമാണ്.",
+        "translatedText": {
+          "EN": "Donning new festive garments, this living festival remains an enduring testament to human brotherhood and egalitarian hope.",
+          "ML": "ഇന്നും ഓണക്കോടി അണിഞ്ഞ് തുല്യതയുടെ ഓർമ്മ പുതുക്കുന്ന ഈ ഉത്സവം മനുഷ്യസ്നേഹത്തിന്റെ മായാത്ത പ്രതീകമാണ്."
+        },
+        "highlightedTermIds": [
+          "exp-onakkodi"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "theyyam",
+    "number": "02",
+    "title": {
+      "EN": "Theyyam: The Living Gods of North Malabar",
+      "ML": "തെയ്യം: ഉത്തരമലബാറിലെ ദൈവക്കോലങ്ങൾ"
+    },
+    "category": "PERFORMANCES",
+    "categoryLabel": "RITUAL FOLK ART",
+    "originRegion": "North Malabar (Kannur & Kasaragod)",
+    "originalLanguage": "Malayalam",
+    "availableLanguages": [
+      "EN",
+      "ML"
+    ],
+    "pillTag": "FOLK RITUAL",
+    "image": "/images/stories/theyyam.png",
+    "imageBg": "bg-brandPink/15",
+    "tapeColor": "yellow",
+    "sourceAttribution": "Sahapedia North Malabar Ritual Performance Archive & Kerala Tourism",
+    "sourceUrl": "https://www.sahapedia.org/theyyam",
+    "license": "CC BY-NC-SA 4.0 / Government Open Information",
+    "imageAttribution": "Shagil Kannur / Wikimedia Commons under CC BY-SA 4.0",
+    "summary": {
+      "EN": "An ancient ritual art form where mortal performers transcend societal hierarchies through sacred trance, fiery devotion, and ancestral invocation in sacred groves.",
+      "ML": "ഉത്തരമലബാറിലെ കാവുകളിൽ മൺമറഞ്ഞ വീരന്മാരെയും ദേവതകളെയും ഉണർത്തി അഗ്നിയിലും താളത്തിലും ലയിച്ചുണരുന്ന അപൂർവ്വ അനുഷ്ഠാന കലാരൂപം."
+    },
+    "keyConcept": {
+      "title": "Key Concept: Daivakolam & Subaltern Justice",
+      "quote": "\"തീയിൽ പിറന്നവൾ, നാടിന്റെ കാവൽ...\"",
+      "explanation": "In Theyyam, subaltern caste performers embody deities, providing an extraordinary space where feudal masters historically sought counsel and forgiveness from marginalized performers."
+    },
+    "culturalBackground": "Performed exclusively in the sacred groves (Kavu) of Kannur and Kasaragod. Unlike classical temple arts historically reserved for the elite, Theyyam belongs entirely to subaltern communities (Vannan, Malayan, Velan). Performers recount oral histories through Thottam Pattu hymns and endure tests of fire. Documented on Sahapedia and Kerala Tourism.",
+    "readingDurationMinutes": 8,
+    "isFeatured": true,
+    "viewsCount": 4890,
+    "likesCount": 810,
+    "culturalExpressionIds": [
+      "exp-daivakolam",
+      "exp-thottam",
+      "exp-theechamundi",
+      "exp-sarpakkavu"
+    ],
+    "sentences": [
+      {
+        "id": "th-1",
+        "originalText": "ഉത്തരമലബാറിലെ ഗ്രാമീണ കാവുകളിൽ സന്ധ്യാസമയത്ത് ചെണ്ടമേളത്തിന്റെ അകമ്പടിയോടെ തോറ്റംപാട്ട് മുഴങ്ങാൻ തുടങ്ങുന്നു.",
+        "translatedText": {
+          "EN": "At dusk within the sacred groves of North Malabar, the deep resonance of Chenda drums accompanies the sacred Thottam Pattu invocation hymns.",
+          "ML": "ഉത്തരമലബാറിലെ ഗ്രാമീണ കാവുകളിൽ സന്ധ്യാസമയത്ത് ചെണ്ടമേളത്തിന്റെ അകമ്പടിയോടെ തോറ്റംപാട്ട് മുഴങ്ങാൻ തുടങ്ങുന്നു."
+        },
+        "highlightedTermIds": [
+          "exp-thottam",
+          "exp-sarpakkavu"
+        ]
+      },
+      {
+        "id": "th-2",
+        "originalText": "മുഖത്തെഴുത്തും വർണ്ണപ്പകിട്ടുള്ള മുടിയും അണിഞ്ഞ് സാധാരണ മനുഷ്യൻ ദൈവക്കോലമായി രൂപാന്തരപ്പെടുന്നു.",
+        "translatedText": {
+          "EN": "Adorned with natural mineral face-paints and towering sacred headdresses, a mortal human undergoes profound transformation into a living Daivakolam.",
+          "ML": "മുഖത്തെഴുത്തും വർണ്ണപ്പകിട്ടുള്ള മുടിയും അണിഞ്ഞ് സാധാരണ മനുഷ്യൻ ദൈവക്കോലമായി രൂപാന്തരപ്പെടുന്നു."
+        },
+        "highlightedTermIds": [
+          "exp-daivakolam"
+        ]
+      },
+      {
+        "id": "th-3",
+        "originalText": "അനീതിക്കെതിരെ പടപൊരുതി വീരമൃത്യു വരിച്ച പൂർവ്വികരുടെ ആത്മാക്കൾ ഇവിടെ ദേവതകളായി പുനർജനിക്കുന്നു.",
+        "translatedText": {
+          "EN": "Here, the ancestral spirits of martyrs who fought against social injustice and oppression are reborn as venerated divinities.",
+          "ML": "അനീതിക്കെതിരെ പടപൊരുതി വീരമൃത്യു വരിച്ച പൂർവ്വികരുടെ ആത്മാക്കൾ ഇവിടെ ദേവതകളായി പുനർജനിക്കുന്നു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "th-4",
+        "originalText": "തീച്ചാമുണ്ഡി തെയ്യം ജ്വലിച്ചുയരുന്ന മേലേരിയിലേക്ക് കൂസാതെ ചാടിവീഴുന്നത് അത്ഭുതകരമായ ഭക്തിയുടെ സാക്ഷ്യമാണ്.",
+        "translatedText": {
+          "EN": "When the Thee Chamundi performer leaps fearless into a massive pyre of red-hot embers, thousands watch in awe of such spiritual resilience.",
+          "ML": "തീച്ചാമുണ്ഡി തെയ്യം ജ്വലിച്ചുയരുന്ന മേലേരിയിലേക്ക് കൂസാതെ ചാടിവീഴുന്നത് അത്ഭുതകരമായ ഭക്തിയുടെ സാക്ഷ്യമാണ്."
+        },
+        "highlightedTermIds": [
+          "exp-theechamundi"
+        ]
+      },
+      {
+        "id": "th-5",
+        "originalText": "ജാതിശ്രേണികൾ തകിടംമറിയുന്ന ഈ അനുഷ്ഠാനത്തിൽ പ്രഭുക്കന്മാരും പണ്ഡിതന്മാരും കോലധാരിയുടെ മുന്നിൽ തലകുനിക്കുന്നു.",
+        "translatedText": {
+          "EN": "In this sacred inversion of caste hierarchies, high-ranking landlords and priests bow their heads before the subaltern dancer to seek counsel.",
+          "ML": "ജാതിശ്രേണികൾ തകിടംമറിയുന്ന ഈ അനുഷ്ഠാനത്തിൽ പ്രഭുക്കന്മാരും പണ്ഡിതന്മാരും കോലധാരിയുടെ മുന്നിൽ തലകുനിക്കുന്നു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "th-6",
+        "originalText": "നീതിയും തുല്യതയും ആവശ്യപ്പെടുന്ന തെയ്യം കേവലമൊരു നൃത്തമല്ല, മറിച്ച് പ്രതിരോധത്തിന്റെ ജീവിക്കുന്ന ചരിത്രമാണ്.",
+        "translatedText": {
+          "EN": "Demanding justice and communal harmony, Theyyam is never mere spectacle—it is the living, pulsating history of subaltern resistance.",
+          "ML": "നീതിയും തുല്യതയും ആവശ്യപ്പെടുന്ന തെയ്യം കേവലമൊരു നൃത്തമല്ല, മറിച്ച് പ്രതിരോധത്തിന്റെ ജീവിക്കുന്ന ചരിത്രമാണ്."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "th-7",
+        "originalText": "പുലർച്ചെ അനുഗ്രഹം ചൊരിഞ്ഞു വിടവാങ്ങുന്ന തെയ്യം ജനഹൃദയങ്ങളിൽ ആശ്വാസവും സുരക്ഷിതത്വവും നിറയ്ക്കുന്നു.",
+        "translatedText": {
+          "EN": "Bestowing blessings as dawn breaks over the palm canopies, the deity brings solace, protection, and renewed courage to the gathered community.",
+          "ML": "പുലർച്ചെ അനുഗ്രഹം ചൊരിഞ്ഞു വിടവാങ്ങുന്ന തെയ്യം ജനഹൃദയങ്ങളിൽ ആശ്വാസവും സുരക്ഷിതത്വവും നിറയ്ക്കുന്നു."
+        },
+        "highlightedTermIds": []
+      }
+    ]
+  },
+  {
+    "id": "koodiyattam",
+    "number": "03",
+    "title": {
+      "EN": "Koodiyattam: The Living Sanskrit Theatre of Kerala",
+      "ML": "കൂടിയാട്ടം: യുനെസ്കോ അംഗീകരിച്ച പുരാതന സംസ്കൃത നാടകം"
+    },
+    "category": "PERFORMANCES",
+    "categoryLabel": "UNESCO LIVING HERITAGE",
+    "originRegion": "Central Kerala (Thrissur & Irinjalakuda)",
+    "originalLanguage": "Malayalam / Sanskrit",
+    "availableLanguages": [
+      "EN",
+      "ML"
+    ],
+    "pillTag": "UNESCO INTANGIBLE HERITAGE",
+    "image": "/images/stories/koodiyattam.png",
+    "imageBg": "bg-brandCyan/20",
+    "tapeColor": "pink",
+    "sourceAttribution": "UNESCO Intangible Cultural Heritage Representative List (Dossier 00010) & Sahapedia",
+    "sourceUrl": "https://ich.unesco.org/en/RL/kutiyattam-sanskrit-theatre-00010",
+    "license": "UNESCO Public International Cultural Documentation",
+    "imageAttribution": "Kalamandalam Sivan Namboodiri / Wikimedia Commons under CC BY-SA 3.0",
+    "summary": {
+      "EN": "Recognized by UNESCO as a Masterpiece of the Oral and Intangible Heritage of Humanity, Koodiyattam represents humanity's oldest surviving Sanskrit theatrical tradition.",
+      "ML": "രണ്ടായിരത്തിലധികം വർഷത്തെ പാരമ്പര്യമുള്ളതും യുനെസ്കോയുടെ ലോക പൈതൃക പട്ടികയിൽ ഇടംനേടിയതുമായ ഭാരതത്തിലെ ഏറ്റവും പുരാതനമായ സംസ്കൃത നാട്യകലാരൂപം."
+    },
+    "keyConcept": {
+      "title": "Key Concept: Netrabhinaya & Sacred Acoustics",
+      "quote": "\"മിഴാവിന്റെ നാദത്തിൽ വിടരുന്ന നേത്രാഭിനയം...\"",
+      "explanation": "Performed inside temple Koothambalams, Koodiyattam communicates the deepest human rasas through nuanced ocular micro-movements accompanied by sacred copper Mizhavu drums."
+    },
+    "culturalBackground": "Inscribed by UNESCO in 2008 (originally proclaimed in 2001) as humanity's living link to ancient Sanskrit theatre. Performed by the Chakyar (actors) and Nambiar (Mizhavu percussionists) and Nangiar (actresses) communities. Documented on UNESCO ICH and Sahapedia.",
+    "readingDurationMinutes": 7,
+    "isFeatured": true,
+    "viewsCount": 2980,
+    "likesCount": 640,
+    "culturalExpressionIds": [
+      "exp-koothambalam",
+      "exp-mizhavu",
+      "exp-netrabhinaya"
+    ],
+    "sentences": [
+      {
+        "id": "kd-1",
+        "originalText": "ക്ഷേത്രങ്ങളിലെ കൂത്തമ്പലങ്ങളിൽ എണ്ണവിളക്കിന്റെ വെളിച്ചത്തിൽ അരങ്ങേറുന്ന കൂടിയാട്ടം ലോകത്തിലെ ഏറ്റവും പുരാതനമായ നാടക പാരമ്പര്യമാണ്.",
+        "translatedText": {
+          "EN": "Enacted in temple Koothambalam sanctums by the flicker of bronze oil lamps, Koodiyattam represents the world's oldest surviving living theatrical tradition.",
+          "ML": "ക്ഷേത്രങ്ങളിലെ കൂത്തമ്പലങ്ങളിൽ എണ്ണവിളക്കിന്റെ വെളിച്ചത്തിൽ അരങ്ങേറുന്ന കൂടിയാട്ടം ലോകത്തിലെ ഏറ്റവും പുരാതനമായ നാടക പാരമ്പര്യമാണ്."
+        },
+        "highlightedTermIds": [
+          "exp-koothambalam"
+        ]
+      },
+      {
+        "id": "kd-2",
+        "originalText": "വലിയ ചെമ്പുകുടമായ മിഴാവിന്റെ ഗംഭീര നാദം കൂത്തമ്പലത്തിലെ തടികൊണ്ടുള്ള വാസ്തുശില്പത്തിൽ പ്രതിധ്വനിക്കുന്നു.",
+        "translatedText": {
+          "EN": "The resonant cadence of the spherical copper Mizhavu drum reverberates through the precise wooden acoustic architecture of the theatre hall.",
+          "ML": "വലിയ ചെമ്പുകുടമായ മിഴാവിന്റെ ഗംഭീര നാദം കൂത്തമ്പലത്തിലെ തടികൊണ്ടുള്ള വാസ്തുശില്പത്തിൽ പ്രതിധ്വനിക്കുന്നു."
+        },
+        "highlightedTermIds": [
+          "exp-mizhavu"
+        ]
+      },
+      {
+        "id": "kd-3",
+        "originalText": "കണ്ണുകളുടെ സൂക്ഷ്മ ചലനങ്ങളിലൂടെ ആന്തരിക വികാരങ്ങൾ പ്രകടിപ്പിക്കുന്ന നേത്രാഭിനയം കൂടിയാട്ടത്തിന്റെ വിസ്മയകരമായ പ്രത്യേകതയാണ്.",
+        "translatedText": {
+          "EN": "Expressing intricate psychological states through the nuanced micro-movements of the eyes, Netrabhinaya constitutes Koodiyattam's most astonishing masterstroke.",
+          "ML": "കണ്ണുകളുടെ സൂക്ഷ്മ ചലനങ്ങളിലൂടെ ആന്തരിക വികാരങ്ങൾ പ്രകടിപ്പിക്കുന്ന നേത്രാഭിനയം കൂടിയാട്ടത്തിന്റെ വിസ്മയകരമായ പ്രത്യേകതയാണ്."
+        },
+        "highlightedTermIds": [
+          "exp-netrabhinaya"
+        ]
+      },
+      {
+        "id": "kd-4",
+        "originalText": "നടനും വിദൂഷകനും ചേർന്ന് സംസ്കൃത ശ്ലോകങ്ങൾക്ക് പ്രാദേശിക മലയാളത്തിൽ സമകാലിക അർത്ഥങ്ങളും വ്യാഖ്യാനങ്ങളും നൽകുന്നു.",
+        "translatedText": {
+          "EN": "The actor and the jester (Vidushaka) weave together classical Sanskrit verses with vernacular Malayalam, delivering razor-sharp socio-political commentary.",
+          "ML": "നടനും വിദൂഷകനും ചേർന്ന് സംസ്കൃത ശ്ലോകങ്ങൾക്ക് പ്രാദേശിക മലയാളത്തിൽ സമകാലിക അർത്ഥങ്ങളും വ്യാഖ്യാനങ്ങളും നൽകുന്നു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "kd-5",
+        "originalText": "ഒരു രംഗം പൂർത്തിയാക്കാൻ ദിവസങ്ങളോളം നീളുന്ന അഭിനയ പരീക്ഷണങ്ങൾ കലാകാരന്റെ അർപ്പണബോധം തെളിയിക്കുന്നു.",
+        "translatedText": {
+          "EN": "Requiring continuous performance across successive nights to unpack a single scene, it demands unprecedented ascetic discipline from the performer.",
+          "ML": "ഒരു രംഗം പൂർത്തിയാക്കാൻ ദിവസങ്ങളോളം നീളുന്ന അഭിനയ പരീക്ഷണങ്ങൾ കലാകാരന്റെ അർപ്പണബോധം തെളിയിക്കുന്നു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "kd-6",
+        "originalText": "2001-ൽ യുനെസ്കോ കൂടിയാട്ടത്തെ മനുഷ്യരാശിയുടെ വാമൊഴി-അദൃശ്യ പൈതൃകത്തിന്റെ ഉദാത്ത സൃഷ്ടിയായി പ്രഖ്യാപിച്ചു.",
+        "translatedText": {
+          "EN": "UNESCO proclaimed Koodiyattam as a Masterpiece of the Oral and Intangible Heritage of Humanity in 2001, safeguarding its legacy for global posterity.",
+          "ML": "2001-ൽ യുനെസ്കോ കൂടിയാട്ടത്തെ മനുഷ്യരാശിയുടെ വാമൊഴി-അദൃശ്യ പൈതൃകത്തിന്റെ ഉദാത്ത സൃഷ്ടിയായി പ്രഖ്യാപിച്ചു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "kd-7",
+        "originalText": "ഭാഷാതീതമായ ഈ രംഗകല മനുഷ്യവികാരങ്ങളുടെ ആഴങ്ങളെ സാർവ്വത്രികമായി സ്പർശിക്കുന്ന ഒന്നാണ്.",
+        "translatedText": {
+          "EN": "Transcending language barriers, this classical art form touches the universal depths of human emotion and artistic devotion.",
+          "ML": "ഭാഷാതീതമായ ഈ രംഗകല മനുഷ്യവികാരങ്ങളുടെ ആഴങ്ങളെ സാർവ്വത്രികമായി സ്പർശിക്കുന്ന ഒന്നാണ്."
+        },
+        "highlightedTermIds": []
+      }
+    ]
+  },
+  {
+    "id": "panchatantra",
+    "number": "04",
+    "title": {
+      "EN": "Panchatantra: The Blue Jackal and the Loyal Wolf",
+      "ML": "തന്ത്രകഥകൾ: നീലക്കുറുക്കനും കൗശലങ്ങളും"
+    },
+    "category": "CLASSICAL_LIT",
+    "categoryLabel": "ANCIENT MORAL FABLES",
+    "originRegion": "Pan-India / Kerala Recension",
+    "originalLanguage": "Sanskrit / Malayalam",
+    "availableLanguages": [
+      "EN",
+      "ML"
+    ],
+    "pillTag": "FOLK ALLEGORY",
+    "image": "/images/stories/panchatantra.png",
+    "imageBg": "bg-brandYellowLight",
+    "tapeColor": "yellow",
+    "sourceAttribution": "StoryWeaver by Pratham Books (CC BY 4.0) & Sahapedia Classical Literature",
+    "sourceUrl": "https://storyweaver.org.in/",
+    "license": "CC BY 4.0",
+    "imageAttribution": "StoryWeaver Open Illustration Library under CC BY 4.0",
+    "summary": {
+      "EN": "An allegorical fable illustrating how superficial pretenses can never substitute for authentic character, adapted into vernacular moral traditions.",
+      "ML": "ബാഹ്യമായ വേഷഭൂഷാദികൾ കൊണ്ട് ഒരാൾക്ക് തന്റെ തനതായ സ്വഭാവത്തെ മാറ്റിമറിക്കാൻ കഴിയില്ലെന്ന് പഠിപ്പിക്കുന്ന പ്രാചീന നീതിസാര കഥ."
+    },
+    "keyConcept": {
+      "title": "Key Concept: Kakka Kulichal Kokkavumo?",
+      "quote": "\"കാക്ക കുളിച്ചാൽ കൊക്കാവുമോ?\"",
+      "explanation": "Ancient didactic wisdom warning that deceitful appearances and temporary posturing inevitably unravel when subjected to natural tests."
+    },
+    "culturalBackground": "Adapted widely across Kerala through Kunjan Nambiar's Thullal parables and traditional schoolroom reading. Sourced and adapted under CC BY 4.0 from StoryWeaver.",
+    "readingDurationMinutes": 5,
+    "isFeatured": false,
+    "viewsCount": 2150,
+    "likesCount": 420,
+    "culturalExpressionIds": [
+      "exp-kakka",
+      "exp-mitrabheda"
+    ],
+    "sentences": [
+      {
+        "id": "pc-1",
+        "originalText": "ഒരു കാട്ടിൽ അലഞ്ഞുതിരിഞ്ഞ ചന്ദ്രരവൻ എന്ന കുറുക്കൻ അബദ്ധത്തിൽ ചായപ്പണിക്കാരന്റെ നീലത്തൊട്ടിയിൽ വീണുപോയി.",
+        "translatedText": {
+          "EN": "Wandering near human settlements, a jackal named Chandarava accidentally tumbled into a dyer's vat filled with deep blue indigo dye.",
+          "ML": "ഒരു കാട്ടിൽ അലഞ്ഞുതിരിഞ്ഞ ചന്ദ്രരവൻ എന്ന കുറുക്കൻ അബദ്ധത്തിൽ ചായപ്പണിക്കാരന്റെ നീലത്തൊട്ടിയിൽ വീണുപോയി."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "pc-2",
+        "originalText": "തന്റെ ശരീരം മുഴുവൻ നീലനിറമായത് കണ്ട അവൻ വനത്തിലേക്ക് മടങ്ങിയെത്തി ദൈവത്തിന്റെ ദൂതനാണെന്ന് മൃഗങ്ങളോട് അവകാശപ്പെട്ടു.",
+        "translatedText": {
+          "EN": "Finding himself dyed bright blue, he returned to the forest and proclaimed himself a celestial king appointed by the gods.",
+          "ML": "തന്റെ ശരീരം മുഴുവൻ നീലനിറമായത് കണ്ട അവൻ വനത്തിലേക്ക് മടങ്ങിയെത്തി ദൈവത്തിന്റെ ദൂതനാണെന്ന് മൃഗങ്ങളോട് അവകാശപ്പെട്ടു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "pc-3",
+        "originalText": "മൃഗങ്ങളെല്ലാം അവനെ രാജാവായി വാഴിച്ചെങ്കിലും, സ്വന്തം വർഗ്ഗമായ കുറുക്കന്മാരെ അവൻ കാട്ടിൽ നിന്ന് ആട്ടിയോടിച്ചു.",
+        "translatedText": {
+          "EN": "The gullible jungle creatures bowed before him, but in his haughty arrogance, he banished his fellow jackals from the realm.",
+          "ML": "മൃഗങ്ങളെല്ലാം അവനെ രാജാവായി വാഴിച്ചെങ്കിലും, സ്വന്തം വർഗ്ഗമായ കുറുക്കന്മാരെ അവൻ കാട്ടിൽ നിന്ന് ആട്ടിയോടിച്ചു."
+        },
+        "highlightedTermIds": [
+          "exp-mitrabheda"
+        ]
+      },
+      {
+        "id": "pc-4",
+        "originalText": "ഒരു പൂർണ്ണചന്ദ്ര രാത്രിയിൽ ദൂരെനിന്ന് കുറുക്കന്മാരുടെ ഓരിയിടൽ കേട്ടപ്പോൾ, അവനും സ്വഭാവം നിയന്ത്രിക്കാനാവാതെ കൂവിപ്പോയി.",
+        "translatedText": {
+          "EN": "On a moonlit night, upon hearing distant howls from his brethren, he could not resist his natural instinct and howled loudly in response.",
+          "ML": "ഒരു പൂർണ്ണചന്ദ്ര രാത്രിയിൽ ദൂരെനിന്ന് കുറുക്കന്മാരുടെ ഓരിയിടൽ കേട്ടപ്പോൾ, അവനും സ്വഭാവം നിയന്ത്രിക്കാനാവാതെ കൂവിപ്പോയി."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "pc-5",
+        "originalText": "കാക്ക കുളിച്ചാൽ കൊക്കാവില്ലെന്ന സത്യം തിരിച്ചറിഞ്ഞ വന്യമൃഗങ്ങൾ കപടവേഷധാരിയായ കുറുക്കനെ അപ്പോൾത്തന്നെ പുറത്താക്കി.",
+        "translatedText": {
+          "EN": "Realizing that washing in a pond cannot turn a crow into a stork, the animals immediately cast out the hollow pretender.",
+          "ML": "കാക്ക കുളിച്ചാൽ കൊക്കാവില്ലെന്ന സത്യം തിരിച്ചറിഞ്ഞ വന്യമൃഗങ്ങൾ കപടവേഷധാരിയായ കുറുക്കനെ അപ്പോൾത്തന്നെ പുറത്താക്കി."
+        },
+        "highlightedTermIds": [
+          "exp-kakka"
+        ]
+      }
+    ]
+  }
+]

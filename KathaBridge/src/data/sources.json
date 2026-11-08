@@ -1,0 +1,80 @@
+[
+  {
+    "id": "src-storyweaver",
+    "name": "StoryWeaver by Pratham Books",
+    "url": "https://storyweaver.org.in/",
+    "domain": "storyweaver.org.in",
+    "category": "Open Multilingual Literature & Folklore",
+    "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    "description": "An open repository of multilingual illustrated stories and folklore curated to promote mother-tongue reading and cultural storytelling.",
+    "attributionText": "Content sourced and adapted under CC BY 4.0 from StoryWeaver (Pratham Books).",
+    "heritageRole": "Supplies accessible, translated folk narratives suitable for multi-sensory reading."
+  },
+  {
+    "id": "src-keralatourism",
+    "name": "Kerala Tourism Official Cultural Heritage Repository",
+    "url": "https://www.keralatourism.org/",
+    "domain": "keralatourism.org",
+    "category": "Department of Tourism, Government of Kerala",
+    "license": "Government Open Information / Public Cultural Education",
+    "description": "Official documentation of Kerala's living performative traditions, folk festivals (Onam, Theyyam, Thrissur Pooram), and heritage monuments.",
+    "attributionText": "Cultural descriptions and event histories verified against Kerala Tourism Cultural Archives.",
+    "heritageRole": "Provides authentic state-verified accounts of Onam, Theyyam, and traditional temple arts."
+  },
+  {
+    "id": "src-sahapedia",
+    "name": "Sahapedia — Open Online Resource on Indian Arts & Heritage",
+    "url": "https://www.sahapedia.org/",
+    "domain": "sahapedia.org",
+    "category": "Open Cultural Encyclopaedia",
+    "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (CC BY-NC-SA 4.0)",
+    "description": "In-depth peer-reviewed scholarly documentation of Indian rituals, performing arts, folklore, oral histories, and intangible heritage.",
+    "attributionText": "Ritual performance analysis and Thottam hymn context sourced from Sahapedia's North Malabar and Kerala Performance Archives.",
+    "heritageRole": "Supplies ethnographic depth for Theyyam invocations, Chakyar Koothu, and indigenous ritual practices."
+  },
+  {
+    "id": "src-wikimedia",
+    "name": "Wikimedia Commons",
+    "url": "https://commons.wikimedia.org/",
+    "domain": "commons.wikimedia.org",
+    "category": "Open Media Repository",
+    "license": "Creative Commons Attribution-ShareAlike (CC BY-SA) / Public Domain",
+    "description": "Community-curated repository of high-resolution cultural photographs, historical paintings, and performative documentation.",
+    "attributionText": "Photography of Theyyam, Koodiyattam, and Onam festivities credited to individual Wikimedia Commons photographers under CC BY-SA.",
+    "heritageRole": "Provides authentic visual media for story headers, glossary cards, and illustration overlays."
+  },
+  {
+    "id": "src-unesco-ich",
+    "name": "UNESCO Intangible Cultural Heritage of Humanity",
+    "url": "https://ich.unesco.org/",
+    "domain": "ich.unesco.org",
+    "category": "United Nations Cultural Agency",
+    "license": "Public International Cultural Heritage Documentation",
+    "description": "Global inventory of living traditions, performing arts, social practices, and traditional craftsmanship.",
+    "attributionText": "Documentation for Koodiyattam (inscribed 2008) and Mudiyettu (inscribed 2010) referenced from UNESCO Representative List dossiers.",
+    "heritageRole": "Supplies international preservation benchmarks, safeguarding recommendations, and performance structural records."
+  },
+  {
+    "id": "src-bhashini",
+    "name": "Digital India Bhashini (National Language Translation Mission)",
+    "url": "https://bhashini.gov.in/",
+    "domain": "bhashini.gov.in",
+    "category": "Ministry of Electronics & Information Technology, Government of India",
+    "license": "Open Government Data (OGD) / Digital India Initiative",
+    "description": "National linguistic AI platform advancing Indic language technologies, speech recognition, translation models, and accessibility tools.",
+    "attributionText": "Linguistic guidelines, Indic phonetic benchmarks, and bilingual evaluation metrics aligned with Bhashini standards.",
+    "heritageRole": "Guides transliteration schemes, speech synthesis phonetic mapping, and responsible AI translation boundaries."
+  },
+  {
+    "id": "src-archive-org",
+    "name": "Internet Archive — Public Domain Malayalam & Kerala Collections",
+    "url": "https://archive.org/",
+    "domain": "archive.org",
+    "category": "Universal Public Domain Digital Library",
+    "license": "Public Domain (Pre-1928 Publications & Out-of-Copyright Historical Works)",
+    "description": "Historical repository containing seminal texts including Herman Gundert's Malayalam-English Dictionary (1872), William Logan's Malabar Manual (1887), and Travancore State Manuals.",
+    "attributionText": "Historical etymology, folk proverb collections, and early colonial folklore surveys referenced from Internet Archive public domain archives.",
+    "heritageRole": "Anchors regional idioms in verified 19th-century linguistic and sociological documentation."
+  }
+]
+

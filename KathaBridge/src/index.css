@@ -1,0 +1,190 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brandYellow: #FFFC00;
+  --color-brandYellowLight: #FFFDE0;
+  --color-brandYellowWarm: #FFF973;
+  --color-brandPink: #FF087D;
+  --color-brandPinkDark: #D80066;
+  --color-brandBlack: #080808;
+  --color-brandBlue: #1565C0;
+  --color-brandCyan: #00D2FF;
+  --color-brandGold: #FFD000;
+  --color-brandGreen: #00C853;
+  --color-brandVermillion: #FF3B30;
+  --color-brandEmerald: #00875A;
+
+  --color-brand-yellow: #FFFC00;
+  --color-brand-yellow-light: #FFFDE0;
+  --color-brand-yellow-warm: #FFF973;
+  --color-brand-pink: #FF087D;
+  --color-brand-pink-dark: #D80066;
+  --color-brand-black: #080808;
+  --color-brand-blue: #1565C0;
+  --color-brand-cyan: #00D2FF;
+  --color-brand-gold: #FFD000;
+  --color-brand-green: #00C853;
+  --color-brand-vermillion: #FF3B30;
+  --color-brand-emerald: #00875A;
+
+  --font-pixel: "Silkscreen", monospace;
+  --font-sans: "Outfit", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "Space Mono", monospace;
+
+  --shadow-brutal: 4px 4px 0px #080808;
+  --shadow-brutal-lg: 8px 8px 0px #080808;
+  --shadow-brutal-pink: 6px 6px 0px #FF087D;
+  --shadow-brutal-yellow: 6px 6px 0px #FFFC00;
+}
+
+@layer base {
+  :root {
+    color: #080808;
+    background-color: #FFFC00;
+    font-family: "Outfit", sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100dvh;
+    background-color: #FFFC00;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+/* Typography Helpers */
+.pixel-heading {
+  font-family: 'Silkscreen', monospace;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15);
+}
+
+.pixel-marquee {
+  font-family: 'Silkscreen', monospace;
+  letter-spacing: 0.08em;
+}
+
+.font-editorial {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Textures & Canvases */
+.bg-canvas {
+  background-color: #FFFC00;
+  background-image: radial-gradient(rgba(8, 8, 8, 0.07) 1.5px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.bg-canvas-pink {
+  background-color: #FF087D;
+  background-image: radial-gradient(rgba(255, 252, 0, 0.18) 1.5px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Animations */
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(1deg);
+  }
+}
+
+.animate-float {
+  animation: float-subtle 6s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Tape and Scrapbook Accents */
+.scrapbook-tape {
+  background: rgba(255, 8, 125, 0.85);
+  backdrop-filter: blur(2px);
+  box-shadow: 2px 2px 0px rgba(8, 8, 8, 0.3);
+}
+
+.scrapbook-tape-yellow {
+  background: rgba(255, 252, 0, 0.9);
+  backdrop-filter: blur(2px);
+  border: 1px dashed #080808;
+  box-shadow: 2px 2px 0px rgba(8, 8, 8, 0.3);
+}
+
+.polaroid-tilt-1 {
+  transform: rotate(-1.5deg);
+}
+
+.polaroid-tilt-2 {
+  transform: rotate(2deg);
+}
+
+/* Accessibility Large Text Mode */
+.large-text {
+  font-size: 1.15rem;
+}
+
+.large-text p {
+  font-size: 1.125em;
+  line-height: 1.6;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 180ms ease-out forwards;
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

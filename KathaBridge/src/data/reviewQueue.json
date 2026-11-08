@@ -1,0 +1,177 @@
+[
+  {
+    "id": "rev-theyyam-fire",
+    "submissionType": "NEW_STORY",
+    "title": "Thee Chamundi: The Fire-Walking Rite of Karivellur",
+    "contributorName": "Manoj V. (Folklorist & Field Archivist)",
+    "contributorEmail": "manoj.karivellur@heritage.org",
+    "submittedAt": "2026-10-24T14:30:00Z",
+    "language": "Malayalam / English",
+    "region": "Kannur, North Malabar",
+    "originalContent": "കരിവെള്ളൂർ കാവിലെ മേലേരിയിൽ തീക്കനലുകളിലേക്ക് നൂറ്റിയിരുപത്തിയൊന്നു തവണയാണ് കോലധാരി എടുത്തുചാടുന്നത്. തെയ്യം പൂർണ്ണ ഭക്തിയുടെയും അർപ്പണബോധത്തിന്റെയും അഗ്നിപരീക്ഷണമാണ്.",
+    "aiDraftContent": "In Karivellur Kavu, the performer jumps 121 times into the burning furnace of embers called Meleri. The Theyyam is an ordeal of complete devotion and self-surrender.",
+    "reviewedContent": "In the sacred grove of Karivellur, the consecrated Thee Chamundi dancer leaps over 101 consecutive times into the glowing embers of the sacred Meleri pyre, entering an ecstatic trance state that transcends physical burns through collective community devotion.",
+    "culturalNotes": "Meleri pyre is prepared using tamarind and jackfruit firewood consecrated at dusk with Chenda beats. Performed strictly by hereditary Malayan subaltern lineage.",
+    "transcriptStatus": "PENDING",
+    "translationStatus": "PENDING",
+    "explanationStatus": "PENDING",
+    "overallStatus": "PENDING",
+    "reviewerNotes": "Audio clarity verified against field recording. Pending final cross-check with Karivellur Kavu trustee elder.",
+    "reviewedBy": "Dr. Ananya Nair (Senior Folklorist)",
+    "reviewedAt": "2026-10-25T09:15:00Z",
+    "version": 1,
+    "versionHistory": [
+      {
+        "version": 1,
+        "timestamp": "2026-10-24T14:30:00Z",
+        "modifiedBy": "System Ingestion (AI Draft Engine)",
+        "changes": "Generated automated Whisper transcript and Gemini draft translation."
+      }
+    ]
+  },
+  {
+    "id": "rev-koothu-humor",
+    "submissionType": "CULTURAL_NOTE",
+    "title": "The Vidushaka's Right of Satire in Koothambalam",
+    "contributorName": "Prof. K. Raghavan",
+    "contributorEmail": "raghavan.k@calicutheritage.org",
+    "submittedAt": "2026-09-12T11:00:00Z",
+    "language": "Malayalam / English",
+    "region": "Thrissur, Kerala",
+    "originalContent": "കൂത്തമ്പലത്തിൽ ചാക്യാർക്ക് രാജാവിനെപ്പോലും പരിഹസിക്കാൻ പൂർണ്ണ സ്വാതന്ത്ര്യമുണ്ടായിരുന്നു. ഇതാണ് പ്രാചീന കേരളത്തിലെ ജനാധിപത്യപരമായ വിമർശനാവകാശം.",
+    "aiDraftContent": "In the temple hall, the Chakyar had full freedom to mock even the King. This was ancient Kerala's democratic right of criticism.",
+    "reviewedContent": "Within the sacred perimeter of the Koothambalam, the Vidushaka (performer-jester) possessed ancient inviolable immunity to satirize any reigning monarch, landlord, or ecclesiastical dignitary present in the audience, holding political power accountable through dramatic wit.",
+    "culturalNotes": "Verified in historical Travancore and Cochin royal edicts: no sovereign could punish a Chakyar for satirical critiques made during a performance.",
+    "transcriptStatus": "APPROVED",
+    "translationStatus": "APPROVED",
+    "explanationStatus": "APPROVED",
+    "overallStatus": "APPROVED",
+    "reviewerNotes": "Excellently documented with references to Natyashastra traditions and UNESCO dossier 00010.",
+    "reviewedBy": "Acharya Mani Damodara Chakyar",
+    "reviewedAt": "2026-09-14T16:45:00Z",
+    "version": 2,
+    "versionHistory": [
+      {
+        "version": 1,
+        "timestamp": "2026-09-12T11:00:00Z",
+        "modifiedBy": "Prof. K. Raghavan",
+        "changes": "Initial submission from Sahapedia archive research."
+      },
+      {
+        "version": 2,
+        "timestamp": "2026-09-14T16:45:00Z",
+        "modifiedBy": "Acharya Mani Damodara Chakyar",
+        "changes": "Approved with verified historical citation to royal immunities."
+      }
+    ]
+  },
+  {
+    "id": "rev-pookkalam-etymology",
+    "submissionType": "EXPRESSION",
+    "title": "Ecological Ten Flowers (Dasapushpam) of Onam",
+    "contributorName": "Lakshmi Priyadarsini",
+    "contributorEmail": "lakshmi.p@botany.kerala.gov.in",
+    "submittedAt": "2026-08-18T10:15:00Z",
+    "language": "Malayalam",
+    "region": "South Kerala",
+    "originalContent": "പൂക്കളത്തിൽ ഇടേണ്ട പത്തു പൂക്കൾ (ദശപുഷ്പങ്ങൾ) കേവലം അലങ്കാരമല്ല, പ്രകൃതിയിലെ ഔഷധ സസ്യങ്ങളുടെ സംരക്ഷണമാണ്.",
+    "aiDraftContent": "The ten flowers of the floral carpet are not just decoration, they represent the protection of nature's herbal medicinal plants.",
+    "reviewedContent": "The sacred floral arrangement (Pookkalam) traditionally incorporates the Dasapushpam (ten sacred native flowering herbs such as Mukkutti, Poovamkurunnila, and Cherula), underscoring an indigenous agrarian ritual that documented and preserved monsoon wetland biodiversity.",
+    "culturalNotes": "Sourced from Kerala Ayurvedic treatises and Kerala Tourism ethnobotanical publications.",
+    "transcriptStatus": "APPROVED",
+    "translationStatus": "APPROVED",
+    "explanationStatus": "APPROVED",
+    "overallStatus": "APPROVED",
+    "reviewerNotes": "Ethnobotanical connections authenticated by Kerala State Medicinal Plants Board.",
+    "reviewedBy": "Dr. Ananya Nair",
+    "reviewedAt": "2026-08-20T14:20:00Z",
+    "version": 2,
+    "versionHistory": [
+      {
+        "version": 1,
+        "timestamp": "2026-08-18T10:15:00Z",
+        "modifiedBy": "Lakshmi Priyadarsini",
+        "changes": "Community submission of botanical terminology."
+      },
+      {
+        "version": 2,
+        "timestamp": "2026-08-20T14:20:00Z",
+        "modifiedBy": "Dr. Ananya Nair",
+        "changes": "Refined English context and validated against folklore corpus."
+      }
+    ]
+  },
+  {
+    "id": "rev-sarpakkavu-ecology",
+    "submissionType": "CULTURAL_NOTE",
+    "title": "Sarpakkavu: Indigenous Hydrological Sanctuary",
+    "contributorName": "Arjun Menon",
+    "contributorEmail": "arjun.m@ecosophy.org",
+    "submittedAt": "2026-10-02T08:30:00Z",
+    "language": "Malayalam / English",
+    "region": "Central Travancore",
+    "originalContent": "സർപ്പക്കാവുകൾ വെട്ടിനശിപ്പിക്കാൻ പാടില്ലെന്ന വിശ്വാസം കാടുകളെയും ജലസ്രോതസ്സുകളെയും സംരക്ഷിക്കാനാണ്.",
+    "aiDraftContent": "The belief that serpent groves must not be destroyed was meant to save forests and water sources.",
+    "reviewedContent": "Ancient serpent groves (Sarpakkavu) served as sacred micro-watersheds that sustained underground aquifer tables and preserved endemic riparian flora across the tropical coastal plains of Kerala.",
+    "culturalNotes": "Needs specific ecological data citations. Does the claim apply to all 14 districts or primarily alluvial lowland zones?",
+    "transcriptStatus": "APPROVED",
+    "translationStatus": "PENDING",
+    "explanationStatus": "REVISION_REQUESTED",
+    "overallStatus": "REVISION_REQUESTED",
+    "reviewerNotes": "Please cite the Kerala State Biodiversity Board report on sacred grove groundwater recharging before marking fully verified.",
+    "reviewedBy": "Dr. K. Muraleedharan",
+    "reviewedAt": "2026-10-05T12:00:00Z",
+    "version": 2,
+    "versionHistory": [
+      {
+        "version": 1,
+        "timestamp": "2026-10-02T08:30:00Z",
+        "modifiedBy": "Arjun Menon",
+        "changes": "Initial community submission."
+      },
+      {
+        "version": 2,
+        "timestamp": "2026-10-05T12:00:00Z",
+        "modifiedBy": "Dr. K. Muraleedharan",
+        "changes": "Requested empirical hydrological citation."
+      }
+    ]
+  },
+  {
+    "id": "rev-pulikkali-machine",
+    "submissionType": "TRANSLATION_CORRECTION",
+    "title": "Machine-Translated Pulikkali Historical Origins",
+    "contributorName": "Anonymous Web Ingestion",
+    "contributorEmail": "bot-crawler@crawler.net",
+    "submittedAt": "2026-10-15T03:00:00Z",
+    "language": "English to Malayalam",
+    "region": "Thrissur",
+    "originalContent": "Pulikkali was invented in British India by European soldiers who wanted to hunt wild animals in city streets.",
+    "aiDraftContent": "പുലിക്കളി ബ്രിട്ടീഷ് പട്ടാളക്കാർ തെരുവുകളിൽ വേട്ടയാടാൻ വേണ്ടി ഉണ്ടാക്കിയ കളിയാണ്.",
+    "reviewedContent": "INCORRECT HISTORICAL CLAIM. Pulikkali was introduced by Sakthan Thampuran (Maharaja Rama Varma of Cochin, reign 1790-1805) to instill spirited physical agility and festivity during Onam celebrations.",
+    "culturalNotes": "AI hallucinated European military origin; contradicts all authentic municipal records of Cochin and Thrissur archives.",
+    "transcriptStatus": "REJECTED",
+    "translationStatus": "REJECTED",
+    "explanationStatus": "REJECTED",
+    "overallStatus": "REJECTED",
+    "reviewerNotes": "Rejected due to factual inaccuracy in machine-generated ingestion. Historical documentation preserved from Kerala Tourism and Thrissur Pooram archives.",
+    "reviewedBy": "Thrissur Heritage Council",
+    "reviewedAt": "2026-10-16T10:00:00Z",
+    "version": 2,
+    "versionHistory": [
+      {
+        "version": 1,
+        "timestamp": "2026-10-15T03:00:00Z",
+        "modifiedBy": "Automated Web Ingestion",
+        "changes": "Ingested unverified web snippet."
+      },
+      {
+        "version": 2,
+        "timestamp": "2026-10-16T10:00:00Z",
+        "modifiedBy": "Thrissur Heritage Council",
+        "changes": "Classified as hallucination and rejected."
+      }
+    ]
+  }
+]
+

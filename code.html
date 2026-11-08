@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KathaBridge – Stories Beyond Language</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Silkscreen (Pixel/Display), Outfit (Body/UI), Space Grotesk, Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&amp;family=Silkscreen:wght@400;700&amp;family=Space+Grotesk:wght@600;700;800&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandYellow: '#FFFC00',
+            brandYellowLight: '#FFFDE0',
+            brandYellowWarm: '#FFF973',
+            brandPink: '#FF087D',
+            brandPinkDark: '#D80066',
+            brandBlack: '#080808',
+            brandBlue: '#1565C0',
+            brandCyan: '#00D2FF',
+            brandGold: '#FFD000',
+            brandGreen: '#00C853',
+            brandVermillion: '#FF3B30',
+            brandEmerald: '#00875A'
+          },
+          fontFamily: {
+            pixel: ['"Silkscreen"', 'monospace'],
+            sans: ['"Outfit"', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace']
+          },
+          boxShadow: {
+            'brutal': '4px 4px 0px #080808',
+            'brutal-lg': '8px 8px 0px #080808',
+            'brutal-pink': '6px 6px 0px #FF087D',
+            'brutal-yellow': '6px 6px 0px #FFFC00',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Typography Styles -->
+<style data-purpose="typography">
+    .pixel-heading {
+      font-family: 'Silkscreen', monospace;
+      letter-spacing: -0.01em;
+      line-height: 0.95;
+      text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15);
+    }
+    .pixel-marquee {
+      font-family: 'Silkscreen', monospace;
+      letter-spacing: 0.08em;
+    }
+    .font-editorial {
+      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+<!-- END: Custom Typography Styles -->
+<!-- BEGIN: Graphic & Layout Styles -->
+<style data-purpose="custom-decorations">
+    /* Subtle dot grid texture overlay on neon snapchat yellow canvas */
+    .bg-canvas {
+      background-color: #FFFC00;
+      background-image: radial-gradient(rgba(8, 8, 8, 0.07) 1.5px, transparent 0);
+      background-size: 24px 24px;
+    }
+    
+    .bg-canvas-pink {
+      background-color: #FF087D;
+      background-image: radial-gradient(rgba(255, 252, 0, 0.18) 1.5px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* Animation for subtle floating elements */
+    @keyframes float-subtle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(1deg); }
+    }
+    .animate-float {
+      animation: float-subtle 6s ease-in-out infinite;
+    }
+
+    /* Neon duct tape effect */
+    .scrapbook-tape {
+      background: rgba(255, 8, 125, 0.85);
+      backdrop-filter: blur(2px);
+      box-shadow: 2px 2px 0px rgba(8,8,8,0.3);
+    }
+    .scrapbook-tape-yellow {
+      background: rgba(255, 252, 0, 0.9);
+      backdrop-filter: blur(2px);
+      border: 1px dashed #080808;
+      box-shadow: 2px 2px 0px rgba(8,8,8,0.3);
+    }
+  </style>
+<!-- END: Graphic & Layout Styles -->
+</head>
+<body class="bg-canvas text-brandBlack font-sans selection:bg-brandPink selection:text-white min-h-screen overflow-x-hidden flex flex-col justify-between">
+<!-- BEGIN: TopNavigationBar -->
+<header class="w-full max-w-[1440px] mx-auto pt-7 px-8 lg:px-12 flex items-center justify-between z-30" data-purpose="site-navigation">
+<!-- Brand Identity Logo -->
+<div class="flex items-center gap-6" data-purpose="brand-identity">
+<a class="group flex flex-col" href="#">
+<div class="flex items-center gap-1.5">
+<span class="text-[28px] font-black tracking-tight text-brandBlack leading-none font-sans">KathaBridge</span>
+<!-- 4-point hot-pink star -->
+<svg class="w-5 h-5 text-brandPink fill-current -mt-1 group-hover:scale-125 transition-transform" viewbox="0 0 24 24">
+<path d="M12 0L14.7 9.3L24 12L14.7 14.7L12 24L9.3 14.7L0 12L9.3 9.3L12 0Z"></path>
+</svg>
+</div>
+<span class="text-[10px] tracking-[0.25em] font-extrabold text-brandBlack uppercase mt-1">STORIES BEYOND LANGUAGE</span>
+</a>
+<!-- Vertical divider between brand and nav -->
+<div class="h-8 w-[2px] bg-brandBlack hidden md:block"></div>
+<!-- Navigation Pill Links -->
+<nav class="hidden md:flex items-center gap-1.5 text-[15px] font-bold tracking-tight" data-purpose="primary-links">
+<a class="bg-brandPink text-white px-5 py-2 rounded-full font-extrabold border-2 border-brandBlack shadow-[2px_2px_0px_#080808] transition hover:brightness-110" href="#home">Home</a>
+<a class="text-brandBlack px-4 py-2 hover:bg-white rounded-full border border-transparent hover:border-brandBlack transition duration-150 font-bold" href="#stories">Stories</a>
+<a class="text-brandBlack px-4 py-2 hover:bg-white rounded-full border border-transparent hover:border-brandBlack transition duration-150 font-bold" href="#explore">Explore</a>
+<a class="text-brandBlack px-4 py-2 hover:bg-white rounded-full border border-transparent hover:border-brandBlack transition duration-150 font-bold" href="#about">About</a>
+<a class="text-brandBlack px-4 py-2 hover:bg-white rounded-full border border-transparent hover:border-brandBlack transition duration-150 font-bold" href="#contribute">Contribute</a>
+</nav>
+</div>
+<!-- Right Controls: Accessibility and Language -->
+<div class="flex items-center gap-3" data-purpose="accessibility-controls">
+<!-- Font sizing control -->
+<button aria-label="Adjust font size" class="flex items-center justify-center px-4 py-2 border-2 border-brandBlack rounded-full bg-white hover:bg-brandPink hover:text-white text-xs font-bold transition shadow-[3px_3px_0px_#080808]">
+<span class="text-sm font-black">A</span><span class="text-[10px] font-black align-top ml-0.5">a</span>
+</button>
+<!-- Audio / Narration Mode -->
+<button aria-label="Listen audio mode" class="flex items-center justify-center p-2.5 border-2 border-brandBlack rounded-full bg-white hover:bg-brandPink hover:text-white transition shadow-[3px_3px_0px_#080808]">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M3 18v-6a9 9 0 0 1 18 0v6M3 18a3 3 0 0 0 3 3h1a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H4a1 1 0 0 0-1 1v4zm18 0a3 3 0 0 1-3 3h-1a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h3a1 1 0 0 1 1 1v4z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Language Selector Dropdown -->
+<button aria-label="Select Language" class="flex items-center gap-2 px-4 py-2 border-2 border-brandBlack rounded-full bg-white hover:bg-brandPink hover:text-white text-xs font-black transition shadow-[3px_3px_0px_#080808]">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+</svg>
+<span class="font-black tracking-wider">EN</span>
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</header>
+<!-- END: TopNavigationBar -->
+<!-- BEGIN: HeroSection -->
+<main class="w-full max-w-[1440px] mx-auto px-6 lg:px-12 pt-4 pb-8 flex flex-col justify-center relative overflow-hidden" data-purpose="hero-content" id="home">
+<!-- Decorative background elements: Left Starburst peeking -->
+<div class="absolute -left-12 top-28 -z-0 pointer-events-none select-none">
+<svg class="w-48 h-48 text-brandPink fill-current opacity-95 animate-pulse" viewbox="0 0 100 100">
+<path d="M0,50 L40,30 L50,0 L60,30 L100,50 L60,70 L50,100 L40,70 Z"></path>
+</svg>
+</div>
+<!-- Decorative background elements: Right Starburst peeking -->
+<div class="absolute -right-16 bottom-20 -z-0 pointer-events-none select-none">
+<svg class="w-60 h-60 text-brandPink fill-current opacity-90 rotate-12" viewbox="0 0 100 100">
+<path d="M0,50 L35,28 L50,0 L65,28 L100,50 L65,72 L50,100 L35,72 Z"></path>
+</svg>
+</div>
+<!-- Hero Two Column Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center relative z-10">
+<div class="flex flex-col justify-center pr-0 lg:pr-4" data-purpose="hero-copy">
+<div class="relative mb-6 select-none">
+<div class="inline-flex items-center gap-2 bg-brandPink text-white border-2 border-brandBlack px-3.5 py-1 text-xs font-mono font-black mb-4 shadow-[3px_3px_0px_#080808] rotate-[-1.5deg]">
+  ✦ FOLKLORE MEETS HIGH-ENERGY ARCHIVE ✦
+</div>
+<div class="pixel-heading text-[52px] sm:text-[68px] md:text-[80px] font-black text-brandBlack leading-[0.98]">
+<div>STORIES</div>
+<div class="flex items-center gap-4"><span class="text-brandPink">BEYOND</span><svg class="w-12 h-12 md:w-16 md:h-16 text-brandPink fill-current -mt-2 animate-bounce" viewbox="0 0 24 24"><path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z"></path></svg></div>
+<div>LANGUAGE</div>
+</div>
+</div>
+<p class="text-brandBlack text-[18px] sm:text-[20px] leading-relaxed max-w-[530px] font-bold mb-8">
+  Discover cultural stories, folk performances and regional literature in multiple languages, with meaning, context and inclusive access for all.
+</p>
+<div class="flex flex-wrap items-center gap-4 mb-10" data-purpose="call-to-action-buttons">
+<a class="inline-flex items-center gap-3 bg-brandPink hover:bg-brandPinkDark text-white border-2 border-brandBlack px-8 py-4 rounded-full font-black text-base transition-all duration-200 transform hover:-translate-y-1 shadow-[5px_5px_0px_#080808]" href="#explore-stories">
+<span class="text-xs bg-brandYellow text-brandBlack font-black p-1.5 rounded-full leading-none border border-brandBlack">▶</span>
+<span>Explore Stories</span>
+<span class="text-xl">→</span>
+</a>
+<a class="inline-flex items-center gap-3 bg-white hover:bg-brandYellowLight text-brandBlack border-2 border-brandBlack px-8 py-4 rounded-full font-black text-base transition-all duration-200 transform hover:-translate-y-1 shadow-[5px_5px_0px_#080808]" href="#our-mission">
+<span>Our Mission</span>
+<span class="text-xl">→</span>
+</a>
+</div>
+<div class="grid grid-cols-4 gap-2 pt-6 border-t-2 border-brandBlack max-w-[560px]" data-purpose="features-grid">
+<div class="flex flex-col items-center text-center px-1">
+<div class="mb-2 bg-white p-2 rounded-xl border-2 border-brandBlack shadow-[2px_2px_0px_#080808]"><svg class="w-6 h-6 text-brandBlack" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><path d="m5 8 6 6m0 0 6-6m-6 6V3m6 8a9 9 0 1 1-18 0" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 13l4-8 4 8M5 10h4M14 9h6M17 9v8" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+<span class="text-xs font-black leading-tight text-brandBlack">Multilingual<br/>Stories</span>
+</div>
+<div class="flex flex-col items-center text-center px-1 border-l-2 border-brandBlack">
+<div class="mb-2 bg-white p-2 rounded-xl border-2 border-brandBlack shadow-[2px_2px_0px_#080808]"><svg class="w-6 h-6 text-brandBlack" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+<span class="text-xs font-black leading-tight text-brandBlack">Cultural<br/>Explanations</span>
+</div>
+<div class="flex flex-col items-center text-center px-1 border-l-2 border-brandBlack">
+<div class="mb-2 bg-white p-2 rounded-xl border-2 border-brandBlack shadow-[2px_2px_0px_#080808]"><svg class="w-6 h-6 text-brandBlack" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><circle cx="12" cy="5" r="2"></circle><path d="M4 11h16M12 11v10m-3-6 3 3 3-3" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+<span class="text-xs font-black leading-tight text-brandBlack">Accessible<br/>for All</span>
+</div>
+<div class="flex flex-col items-center text-center px-1 border-l-2 border-brandBlack">
+<div class="mb-2 bg-white p-2 rounded-xl border-2 border-brandBlack shadow-[2px_2px_0px_#080808]"><svg class="w-6 h-6 text-brandBlack" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+<span class="text-xs font-black leading-tight text-brandBlack">Human<br/>Reviewed</span>
+</div>
+</div>
+</div>
+<div class="relative flex justify-center items-center min-h-[580px] lg:min-h-[640px] w-full" data-purpose="pop-art-hero-illustration">
+<div class="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none opacity-90">
+<svg class="w-full max-w-[620px] h-[620px] text-brandPink/30 fill-current animate-pulse" style="animation-duration: 7s;" viewbox="0 0 400 400"><polygon points="200,200 180,0 220,0"></polygon><polygon points="200,200 320,40 350,75"></polygon><polygon points="200,200 400,180 400,220"></polygon><polygon points="200,200 360,320 330,355"></polygon><polygon points="200,200 220,400 180,400"></polygon><polygon points="200,200 75,360 40,325"></polygon><polygon points="200,200 0,220 0,180"></polygon><polygon points="200,200 400,75 75,40"></polygon></svg>
+</div>
+<div class="absolute right-0 top-1/4 w-96 h-80 bg-brandPink/30 rounded-full blur-3xl -z-10"></div>
+<div class="absolute left-0 bottom-16 w-80 h-72 bg-white/50 rounded-full blur-2xl -z-10"></div>
+<div class="relative w-full flex flex-col items-center">
+<img alt="KathaBridge Cultural Pop Art Storyteller" class="w-full h-auto max-h-[640px] object-contain select-none animate-float filter drop-shadow-[10px_10px_0px_#080808]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOhHPGb7m5GbH60SJxUWAsEk5uPpVZwVUDiSJ_mEfCFbpPUn2QKNBixPR-7ahtOTVTmJWwDpC0SsZuJeIZp_svAbc2W-tsLiW7yZ_v62wVX9wUWbfNbl3-Uh1wDuXePrsZR0K5soOUkKcX0MxgUFldMNLduicFtPPsDpQlKDf8FA6FosBphqe3gQww-7orNZe_puWCycIIMWbQLJkdO4Ty5E1DTNaan1EaXIbYH3qomckElW-MVD8wVg" style="mix-blend-mode: multiply;"/>
+</div>
+</div>
+</div>
+</main>
+<!-- END: HeroSection -->
+<!-- BEGIN: BottomMarqueeTicker -->
+<div class="w-full bg-brandPink text-brandYellow overflow-hidden py-3.5 border-y-2 border-brandBlack z-20 shadow-[0_4px_0_#080808]" data-purpose="announcement-marquee">
+<div class="flex whitespace-nowrap select-none font-bold text-lg sm:text-xl items-center tracking-wider pixel-marquee">
+<!-- Repeating Ribbon Text Pattern matching reference -->
+<div class="flex items-center gap-6 shrink-0">
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">STORIES BEYOND LANGUAGE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">ORAL TRADITION</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">VERIFIED FOLKLORE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+</div>
+<div aria-hidden="true" class="flex items-center gap-6 shrink-0 ml-6">
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">STORIES BEYOND LANGUAGE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">ORAL TRADITION</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">VERIFIED FOLKLORE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+</div>
+</div>
+</div>
+<!-- END: BottomMarqueeTicker -->
+<!-- =================================================================== -->
+<!-- SECTION 2: CULTURAL INTRODUCTION ("EVERY CULTURE HAS A STORY.") -->
+<!-- =================================================================== -->
+<section class="w-full max-w-[1440px] mx-auto px-6 lg:px-12 py-20 lg:py-28 relative" data-purpose="cultural-introduction" id="our-mission">
+<div class="flex items-center justify-between border-b-2 border-brandBlack pb-4 mb-12">
+<div class="flex items-center gap-3 font-mono text-xs md:text-sm font-black tracking-wider text-brandBlack">
+<span class="bg-brandPink text-white px-3 py-1 rounded-full border-2 border-brandBlack shadow-[2px_2px_0px_#080808]">[ 01 / CULTURAL ARCHIVE ]</span>
+<span>MANIFESTO &amp; REGIONAL ROOTS</span>
+</div>
+<div class="hidden sm:flex items-center gap-2 font-mono text-xs font-bold text-brandBlack bg-white px-3 py-1 rounded-full border-2 border-brandBlack shadow-[2px_2px_0px_#080808]">
+<span>REF // KBR-2025</span>
+<span class="text-brandPink">✦</span>
+<span>BHARAT FOLKLORE INITIATIVE</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="flex flex-col justify-between">
+<div>
+<div class="inline-flex items-center gap-2 bg-brandPink text-white border-2 border-brandBlack px-3.5 py-1 text-xs font-mono font-black w-fit mb-6 shadow-[3px_3px_0px_#080808]">
+<span>✦</span> PRESERVING ORAL TRADITIONS WITH MEANING
+</div>
+<h2 class="font-editorial text-4xl sm:text-5xl lg:text-6xl font-black text-brandBlack leading-[1.05] tracking-tight mb-8">
+  EVERY CULTURE <br/>
+<span class="relative inline-block text-brandPink bg-white px-2 py-0.5 border-2 border-brandBlack shadow-[4px_4px_0px_#080808] rotate-[-1deg]">
+    HAS A STORY.
+  </span><br/>
+  AND EVERY STORY DESERVES CONTEXT.
+</h2>
+<p class="text-brandBlack text-lg sm:text-xl font-bold leading-relaxed max-w-xl mb-6">
+  When folklore crosses boundaries, automated machine tools strip out centuries of nuanced humor, ritual reverence, and regional idioms. KathaBridge bridges that gap through curated, verified, and accessible digital archives of living traditions.
+</p>
+<div class="flex flex-wrap gap-3 mt-4">
+<span class="inline-flex items-center gap-2 bg-white border-2 border-brandBlack px-4 py-2 rounded-full text-xs font-black shadow-[3px_3px_0px_#080808]">
+<span class="w-3 h-3 rounded-full bg-brandPink border border-brandBlack"></span> Dialect Integrity
+</span>
+<span class="inline-flex items-center gap-2 bg-brandYellow border-2 border-brandBlack px-4 py-2 rounded-full text-xs font-black shadow-[3px_3px_0px_#080808]">
+<span class="w-3 h-3 rounded-full bg-brandBlack"></span> Ritual Symbolism Decoded
+</span>
+<span class="inline-flex items-center gap-2 bg-white border-2 border-brandBlack px-4 py-2 rounded-full text-xs font-black shadow-[3px_3px_0px_#080808]">
+<span class="w-3 h-3 rounded-full bg-brandPink border border-brandBlack"></span> Multilingual Transcriptions
+</span>
+</div>
+</div>
+</div>
+<div class="w-full">
+<div class="relative pb-10 pt-4">
+<div class="absolute -top-3 left-12 w-32 h-8 scrapbook-tape z-30 transform -rotate-3 border border-brandBlack"></div>
+<div class="relative bg-white border-2 border-brandBlack p-4 rounded-2xl polaroid-tilt-1 transition hover:rotate-0 duration-200 z-10 shadow-[8px_8px_0px_#080808]">
+<div class="relative overflow-hidden rounded-xl border-2 border-brandBlack bg-brandYellowWarm">
+<img alt="Living Oral Traditions - Traditional Veil and Folk Motifs" class="w-full h-96 object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxFTiIt9iZ6HToLpKB0VIhba5Uk10403gJycGe_6qOfxapr_XKUXvKwIpSkECsqwaNMXj-Bekw-diMve1PtlaWb0dIxM1Bfl7ozcbNpviLqSWrME9h-pOW84mnSEVAXtc49waJBd1f2bS_qNq_pm4FOeNvr_dJfdpLV-C2D573smuLrscnqdYlzyFRyyVAkPbP8CvDQfu4dTbQpHD9pwi5bulLSwVBb3SQVALxz9quTSwcnF6DVYy9VQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-6">
+<div>
+<span class="bg-brandPink text-white font-mono text-[11px] font-black px-3 py-1 rounded border border-brandBlack shadow-[2px_2px_0px_#080808]">FOLK ARCHIVE // 01</span>
+<h3 class="text-white font-editorial text-3xl font-black mt-2 drop-shadow">Living Oral Traditions</h3>
+<p class="text-white text-sm mt-1.5 font-bold line-clamp-2 max-w-md">Over 22 constitutionally recognized languages and thousands of regional dialects shape living, breathing folklore.</p>
+</div>
+</div>
+</div>
+<div class="pt-4 px-2 pb-1 flex items-center justify-between font-mono text-xs font-black text-brandBlack">
+<span>ORIGIN: RAJASTHAN &amp; KERALA</span>
+<span class="text-brandPink bg-brandYellow px-2 py-0.5 rounded border border-brandBlack">★ VERIFIED HERITAGE</span>
+</div>
+</div>
+<div class="absolute -bottom-8 -left-6 sm:-left-8 w-72 sm:w-80 bg-brandYellow border-2 border-brandBlack p-3 rounded-xl polaroid-tilt-2 z-20 transition hover:scale-105 duration-200 shadow-[6px_6px_0px_#080808]">
+<div class="w-28 h-6 scrapbook-tape absolute -top-2 right-6 -rotate-6 z-10 border border-brandBlack"></div>
+<img alt="Puppet Theatre Under Banyan Tree" class="w-full h-44 object-cover rounded-lg border-2 border-brandBlack" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5aohgtrGV3ZEV6bHWwUuQLFVOkN3srLu2MnDbCHaVVgwJ_qKfECXZXziu69zE_rBD1r1FJWE3dHaxaz5wdmSieT1MKrNjxzHXKRi-FYEEOFBuX5mqwhcjIHeybYlB81Ok5Nv6eN90uJTEZyz4zOvVSTkuFD8IQbvF5m7-h1Dyzh7ySuPT2XJIUgtnglJ6R2q0V61Wf9RP9QWU_Xw47VNKYOHFjIsdUQe2znpQE09Qy9-mh6dvzLBXew"/>
+<div class="mt-2.5 px-1">
+<span class="text-[10px] font-mono font-black bg-brandPink text-white px-2 py-0.5 rounded border border-brandBlack">PUPPETRY &amp; MUSIC</span>
+<p class="text-xs text-brandBlack font-extrabold leading-tight mt-1">Village banyan gatherings &amp; shadow play.</p>
+</div>
+</div>
+<div class="absolute -top-5 -right-4 bg-brandPink text-white border-2 border-brandBlack px-4 py-1.5 text-xs font-mono font-black rotate-6 shadow-[4px_4px_0px_#080808] z-30">✦ ORAL ROOTS</div>
+<div class="absolute top-1/2 -right-8 w-24 h-24 bg-brandYellow border-2 border-brandBlack rounded-full flex flex-col items-center justify-center p-2 text-center text-[10px] font-mono font-black -rotate-12 shadow-[4px_4px_0px_#080808] z-20 hidden md:flex border-dashed">
+<span class="text-sm font-black text-brandPink">100%</span>
+<span class="leading-none text-brandBlack">COMMUNITY CURATED</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =================================================================== -->
+<!-- SECTION 3: FEATURED STORIES ("STORIES THAT TRAVEL THROUGH TIME.") -->
+<!-- =================================================================== -->
+<section class="w-full max-w-[1440px] mx-auto px-6 lg:px-12 py-16 lg:py-24" data-purpose="featured-stories" id="stories">
+<!-- Section Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-14 border-b-2 border-brandBlack pb-6">
+<div>
+<div class="font-mono text-xs md:text-sm font-black text-brandPink tracking-widest mb-2 bg-brandBlack text-white inline-block px-2.5 py-0.5 rounded border border-brandBlack shadow-[2px_2px_0px_#FFFC00]">[ 02 / FEATURED ARCHIVE ]</div>
+<h2 class="font-editorial text-3xl sm:text-5xl font-black text-brandBlack tracking-tight">
+  STORIES THAT TRAVEL THROUGH TIME.
+</h2>
+</div>
+<div class="mt-4 md:mt-0 flex items-center gap-2">
+<span class="text-xs font-mono font-black text-brandBlack">FILTER BY:</span>
+<span class="bg-brandPink text-white border-2 border-brandBlack px-3.5 py-1 rounded-full text-xs font-black shadow-[2px_2px_0px_#080808] cursor-pointer">ALL</span>
+<span class="bg-white border-2 border-brandBlack px-3.5 py-1 rounded-full text-xs font-black hover:bg-brandYellow cursor-pointer shadow-[2px_2px_0px_#080808]">MALAYALAM</span>
+<span class="bg-white border-2 border-brandBlack px-3.5 py-1 rounded-full text-xs font-black hover:bg-brandYellow cursor-pointer shadow-[2px_2px_0px_#080808]">SANSKRIT</span>
+</div>
+</div>
+<!-- 3 Editorial Story Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+<!-- Story 01: Mahabali -->
+<article class="bg-white border-2 border-brandBlack rounded-2xl overflow-hidden shadow-[7px_7px_0px_#080808] flex flex-col justify-between group hover:-translate-y-1 transition duration-200">
+<div class="relative bg-brandYellow border-b-2 border-brandBlack p-5 pt-7 overflow-hidden flex flex-col items-center">
+<div class="w-28 h-6 scrapbook-tape absolute -top-1 left-6 -rotate-2 z-20 border border-brandBlack"></div>
+<div class="relative w-full h-72 sm:h-80 overflow-hidden rounded-xl border-2 border-brandBlack shadow-[5px_5px_0px_#080808] -rotate-1 group-hover:rotate-0 transition-transform duration-200 bg-brandYellowWarm">
+<img alt="Kerala Folklore &amp; Onam Traditions Art" class="w-full h-full object-cover object-top" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdFjsmT5EQ2sZW6SfxjbyguD5FsbchrKezElfGnz_qUbXh2VwT_iQyN8e4WMCYGUz2bTgM7TwrDzoHwmzz0L_rtQ1matz-a76Eiitjc1vckSEg-mvuG9thGkQAQuicg7ei6IaNNY7XYgovNHuoY8Qf95VkJS8WVgzVuvSLsMpxR8ZWo59bWGfmJlSS5pWXrWJQ2n9GvLRQIz2H-BSw-mfqGk5OdiZ9iefPujcDaGcRgjuzrYZLKYMX6g"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+<span class="absolute bottom-3 left-3 text-[11px] font-mono font-black tracking-widest bg-brandPink text-white px-2.5 py-1 rounded border border-brandBlack shadow-[2px_2px_0px_#080808]">ONAM HERITAGE</span>
+</div>
+<div class="absolute top-3 right-4 flex gap-1.5 z-20">
+<span class="bg-brandPink text-white text-[10px] font-mono font-black px-2.5 py-1 rounded border-2 border-brandBlack rotate-3 shadow-[2px_2px_0px_#080808]">MALAYALAM</span>
+<span class="bg-brandYellow text-brandBlack text-[10px] font-mono font-black px-2.5 py-1 rounded border-2 border-brandBlack -rotate-2 shadow-[2px_2px_0px_#080808]">ENGLISH</span>
+</div>
+</div>
+<!-- Story Content -->
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="text-xs font-mono text-brandPink font-black mb-1">STORY // 01 • KERALA FOLKLORE</div>
+<h3 class="font-editorial text-2xl font-black text-brandBlack mb-3 group-hover:text-brandPink transition-colors">
+    The Legend of Mahabali
+  </h3>
+<p class="text-brandBlack text-sm font-semibold leading-relaxed mb-4">
+    How an Asura king’s unwavering egalitarian generosity outshone the celestial heavens, commemorated annually through Kerala’s harvest festival of Onam.
+  </p>
+<div class="bg-brandYellow p-3 rounded-lg border-2 border-brandBlack text-xs font-mono text-brandBlack shadow-[2px_2px_0px_#080808]">
+<strong class="font-black">Key Concept:</strong> <em>"Maveli Nadu Vaneedum Kalam"</em> — A golden era of equality where deceit was unknown.
+  </div>
+</div>
+<div class="pt-4 mt-4 border-t-2 border-brandBlack flex items-center justify-between">
+<span class="text-xs font-black text-neutral-600 font-mono">12 MIN READ • AUDIO</span>
+<a class="inline-flex items-center gap-1.5 text-xs font-black bg-brandPink text-white hover:bg-brandPinkDark border-2 border-brandBlack px-4 py-2 rounded-full transition shadow-[3px_3px_0px_#080808]" href="#story-read">
+<span>Read Story</span> <span>→</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Story 02: Theyyam -->
+<article class="bg-white border-2 border-brandBlack rounded-2xl overflow-hidden shadow-[7px_7px_0px_#080808] flex flex-col justify-between group hover:-translate-y-1 transition duration-200">
+<div class="relative bg-brandPink border-b-2 border-brandBlack p-5 pt-7 overflow-hidden flex flex-col items-center">
+<div class="w-28 h-6 scrapbook-tape-yellow absolute -top-1 right-8 rotate-3 z-20"></div>
+<div class="relative w-full h-72 sm:h-80 overflow-hidden rounded-xl border-2 border-brandBlack shadow-[5px_5px_0px_#080808] rotate-1 group-hover:rotate-0 transition-transform duration-200 bg-[#E63920]">
+<img alt="Theyyam Mask &amp; Sacred Ritual Performance" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi8KZ9dN8XzhCF40jgdk8L6ul57BnsgsciqSv-6GuxdzFSYSX5qArSvpSHzm9IIxWBl_nneMImJJ0qIS3_wkgKrM6e-9jaDiGXT2zCk70sGjAM6_1p_2_jmdyTvmKgI04eel77HpGXjGleFE3VVm5ACBg6GTRZdKRw08bgIjFLpydtfYXW3eHnloVNiTUP4qMI7UhlQkdCyFl4CjVb7eXAYfAHoejnUYPGt3rT-6146b8YjJ5bxM3pOg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+<span class="absolute bottom-3 left-3 text-[11px] font-mono font-black tracking-widest bg-brandYellow text-brandBlack px-2.5 py-1 rounded border border-brandBlack shadow-[2px_2px_0px_#080808]">RITUAL DANCE</span>
+</div>
+<div class="absolute top-3 left-4 flex gap-1.5 z-20">
+<span class="bg-brandYellow text-brandBlack text-[10px] font-mono font-black px-2.5 py-1 rounded border-2 border-brandBlack -rotate-2 shadow-[2px_2px_0px_#080808]">MALAYALAM</span>
+<span class="bg-white text-brandBlack text-[10px] font-mono font-black px-2.5 py-1 rounded border-2 border-brandBlack rotate-2 shadow-[2px_2px_0px_#080808]">ENGLISH</span>
+</div>
+</div>
+<!-- Story Content -->
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="text-xs font-mono text-brandPink font-black mb-1">STORY // 02 • MALABAR PERFORMANCE</div>
+<h3 class="font-editorial text-2xl font-black text-brandBlack mb-3 group-hover:text-brandPink transition-colors">
+    Theyyam – The Divine Dance
+  </h3>
+<p class="text-brandBlack text-sm font-semibold leading-relaxed mb-4">
+    Where human mortals transcend earthly form through fiery rhythm, sacred masks, and centuries of anti-feudal ritual empowerment in Northern Kerala.
+  </p>
+<div class="bg-brandYellow p-3 rounded-lg border-2 border-brandBlack text-xs font-mono text-brandBlack shadow-[2px_2px_0px_#080808]">
+<strong class="font-black">Key Concept:</strong> <em>"Daivakolam"</em> — The human body becoming the living vessel of the forest goddess.
+  </div>
+</div>
+<div class="pt-4 mt-4 border-t-2 border-brandBlack flex items-center justify-between">
+<span class="text-xs font-black text-neutral-600 font-mono">18 MIN READ • CHANT</span>
+<a class="inline-flex items-center gap-1.5 text-xs font-black bg-brandPink text-white hover:bg-brandPinkDark border-2 border-brandBlack px-4 py-2 rounded-full transition shadow-[3px_3px_0px_#080808]" href="#story-read">
+<span>Read Story</span> <span>→</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Story 03: Panchatantra -->
+<article class="bg-white border-2 border-brandBlack rounded-2xl overflow-hidden shadow-[7px_7px_0px_#080808] flex flex-col justify-between group hover:-translate-y-1 transition duration-200">
+<div class="relative bg-brandYellow border-b-2 border-brandBlack p-5 pt-7 overflow-hidden flex flex-col items-center">
+<div class="w-28 h-6 scrapbook-tape absolute -top-1 left-10 -rotate-3 z-20 border border-brandBlack"></div>
+<div class="relative w-full h-72 sm:h-80 overflow-hidden rounded-xl border-2 border-brandBlack shadow-[5px_5px_0px_#080808] -rotate-1 group-hover:rotate-0 transition-transform duration-200 bg-brandBlue">
+<img alt="The Panchatantra Tales - Traditional Storytelling Artisans" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn2-Bby43Bi-9AZG_nnBEP1bnShdW9qdOd2az2jTN-7Wlk6-wE_obmMnUUDoR3zD_bQKxe3VxBsnkjxDsv-iWRQGIfn_ppE8ymsjTx_Db0zZ4scCyq1K3NOP0VytjcsR58RskNvpfhadeD-T0gCrzcGyuNrSgnOYJpHki4-Q83sa1sXHh3TfWAocGow0_H6FKH2m_PkXfWJqJjqxCnXCpivW6VOAaVf48ib-2X5jOSxUArbKQLHoS5BA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+<span class="absolute bottom-3 left-3 text-[11px] font-mono font-black tracking-widest bg-brandPink text-white px-2.5 py-1 rounded border border-brandBlack shadow-[2px_2px_0px_#080808]">CLASSICAL ALLEGORY</span>
+</div>
+<div class="absolute top-3 right-4 flex gap-1.5 z-20">
+<span class="bg-brandPink text-white text-[10px] font-mono font-black px-2.5 py-1 rounded border-2 border-brandBlack rotate-1 shadow-[2px_2px_0px_#080808]">SANSKRIT</span>
+<span class="bg-brandYellow text-brandBlack text-[10px] font-mono font-black px-2.5 py-1 rounded border-2 border-brandBlack -rotate-2 shadow-[2px_2px_0px_#080808]">ENGLISH</span>
+</div>
+</div>
+<!-- Story Content -->
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="text-xs font-mono text-brandPink font-black mb-1">STORY // 03 • ANCIENT FABULIST LIT</div>
+<h3 class="font-editorial text-2xl font-black text-brandBlack mb-3 group-hover:text-brandPink transition-colors">
+    The Panchatantra Tales
+  </h3>
+<p class="text-brandBlack text-sm font-semibold leading-relaxed mb-4">
+    Interlocking animal fables penned by Vishnu Sharma to teach statecraft, social harmony, and friendship through razor-sharp strategic wit.
+  </p>
+<div class="bg-brandYellow p-3 rounded-lg border-2 border-brandBlack text-xs font-mono text-brandBlack shadow-[2px_2px_0px_#080808]">
+<strong class="font-black">Key Concept:</strong> <em>"Mitra-bheda"</em> — The subtle mechanics of preserving friendship amidst rumors.
+  </div>
+</div>
+<div class="pt-4 mt-4 border-t-2 border-brandBlack flex items-center justify-between">
+<span class="text-xs font-black text-neutral-600 font-mono">10 MIN READ • ART</span>
+<a class="inline-flex items-center gap-1.5 text-xs font-black bg-brandPink text-white hover:bg-brandPinkDark border-2 border-brandBlack px-4 py-2 rounded-full transition shadow-[3px_3px_0px_#080808]" href="#story-read">
+<span>Read Story</span> <span>→</span>
+</a>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- =================================================================== -->
+<!-- SECTION 4: EXPLORE CULTURES ("EXPLORE THE MANY VOICES OF INDIA.") -->
+<!-- =================================================================== -->
+<section class="w-full max-w-[1440px] mx-auto px-6 lg:px-12 py-16 lg:py-24" data-purpose="explore-cultures" id="explore">
+<div class="flex items-center justify-between border-b-2 border-brandBlack pb-4 mb-10">
+<div>
+<div class="font-mono text-xs md:text-sm font-black text-white bg-brandPink px-3 py-0.5 rounded border border-brandBlack inline-block tracking-widest shadow-[2px_2px_0px_#080808]">[ 03 / CATEGORIES ]</div>
+<h2 class="font-editorial text-3xl sm:text-5xl font-black text-brandBlack tracking-tight mt-2">
+  EXPLORE THE MANY VOICES OF INDIA.
+</h2>
+</div>
+<div class="hidden md:block font-mono text-xs font-black text-brandBlack bg-white border-2 border-brandBlack px-3.5 py-1.5 rounded-lg shadow-[3px_3px_0px_#080808]">
+  TOTAL ARCHIVED NODES: 6 SECTORS
+</div>
+</div>
+<!-- 6 Illustrated Grid Tiles -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- 01 Folk Tales -->
+<div class="bg-white border-2 border-brandBlack rounded-2xl shadow-[6px_6px_0px_#080808] hover:-translate-y-1 transition duration-150 flex flex-col justify-between group relative overflow-hidden">
+<div class="w-20 h-5 scrapbook-tape absolute -top-1 right-6 rotate-6 z-10 border border-brandBlack"></div>
+<div class="relative w-full h-44 overflow-hidden border-b-2 border-brandBlack bg-brandYellow">
+<img alt="Folk Tale Narrator Portrait" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEncaUVKm-aSqzNs08bMiOzQL9wtfLgBS4zYPYbgzDpixmVo1ogs0F1LWIMDFnca_c5dCXFTcKo50CmImyWOjUR16Eca7XVVmvvMweiQhVEcUZGOvnusx5oiUBaeuIyH0L83UEzTQ3g13W9Jp1QM0XAVSmuX4zO0-fTfnVlei1dEQB-aKBHjsJvVDR6ZFllc3pqeNY5wDS78lPDq8_SMQ_ch7iZTZd_Klnwi4fBFMACKFvaAri0_EMLQ"/>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<div class="w-10 h-10 rounded-lg bg-brandYellow border-2 border-brandBlack flex items-center justify-center text-xl shadow-[2px_2px_0px_#080808]">📖</div>
+<span class="text-[10px] font-mono font-black bg-brandPink text-white px-2 py-0.5 rounded border border-brandBlack uppercase shadow-[1px_1px_0px_#080808]">ORAL ANTHOLOGY</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="font-mono text-[11px] text-brandPink font-black uppercase tracking-wider mb-1">01 • ORAL ANTHOLOGY</div>
+<h3 class="font-editorial text-2xl font-black text-brandBlack mb-2">Folk Tales</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">Generational lore passed around evening hearths, kitchen verandas, and village banyan trees with regional proverbs intact.</p>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs font-mono font-black text-brandBlack pt-3 border-t-2 border-brandBlack">
+<span class="bg-brandYellow px-2 py-0.5 rounded border border-brandBlack">140+ TALES</span>
+<span class="text-brandPink group-hover:translate-x-1 transition-transform">EXPLORE →</span>
+</div>
+</div>
+</div>
+<!-- 02 Classical Lit -->
+<div class="bg-white border-2 border-brandBlack rounded-2xl shadow-[6px_6px_0px_#080808] hover:-translate-y-1 transition duration-150 flex flex-col justify-between group relative overflow-hidden">
+<div class="w-20 h-5 scrapbook-tape absolute -top-1 left-8 -rotate-3 z-10 border border-brandBlack"></div>
+<div class="relative w-full h-44 overflow-hidden border-b-2 border-brandBlack bg-brandYellow">
+<img alt="Ancient Sanskrit Scholars and Manuscripts" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw1YX1EDP2bufNgWd5l5dNWQmBEdT_iHchKtsUmbL2irTDDuz9wv2IiV8jdPvVNRc9cQhgkarEDv9lKxiJkveyLI3c1GPew_1vD08R4ScCszW2R7dBBbW2iXvLnFFphDGt0F-9OlmbNJKNYotKNfZyb1qskSjMEOO_DU4ZWyawRl0OqLG2Y95w3wnZYK034BenG2K5gTinuUBn-PDsWIToyi0XEpYskmjyz6zmNq-ZArR6sI3NI4JQjQ"/>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<div class="w-10 h-10 rounded-lg bg-brandPink text-white border-2 border-brandBlack flex items-center justify-center text-xl shadow-[2px_2px_0px_#080808]">📜</div>
+<span class="text-[10px] font-mono font-black bg-brandBlack text-brandYellow px-2 py-0.5 rounded border border-brandBlack uppercase shadow-[1px_1px_0px_#080808]">POETRY &amp; PROSE</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="font-mono text-[11px] text-brandPink font-black uppercase tracking-wider mb-1">02 • POETRY &amp; PROSE</div>
+<h3 class="font-editorial text-2xl font-black text-brandBlack mb-2">Classical Literature</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">Epic poetry, Sangam verse, and timeless Sanskrit dramaturgies decoded sentence-by-sentence with original metered rhythm.</p>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs font-mono font-black text-brandBlack pt-3 border-t-2 border-brandBlack">
+<span class="bg-brandYellow px-2 py-0.5 rounded border border-brandBlack">85+ MANUSCRIPTS</span>
+<span class="text-brandPink group-hover:translate-x-1 transition-transform">EXPLORE →</span>
+</div>
+</div>
+</div>
+<!-- 03 Traditional Performances -->
+<div class="bg-white border-2 border-brandBlack rounded-2xl shadow-[6px_6px_0px_#080808] hover:-translate-y-1 transition duration-150 flex flex-col justify-between group relative overflow-hidden">
+<div class="w-20 h-5 scrapbook-tape-yellow absolute -top-1 right-8 rotate-3 z-10"></div>
+<div class="relative w-full h-44 overflow-hidden border-b-2 border-brandBlack bg-brandPink">
+<img alt="Traditional Folk Theatre and Royal Dancers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDoCaztyhjOT1BFwroxyNrd6s-b8TnBJrF-epSxV2OJn-KgQG8L_G5-qDYJiAAcS23bCrLnUDRlO4g2yxbpy_0KJs0gOJQvTF2REu-um_CRWJIYXGV_teKRLA6Ph2cXSQ9mkvRpPmhH5M1Uz8a7K0nQaluf22vbPsLATlKA2laTIOIz_j0eH9TnrCoHrwlbaInNf7_v3GkUfZA2Shg73mJZPPpae4q7cL9cRN78kLcptwp0Np2qRplHQ"/>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<div class="w-10 h-10 rounded-lg bg-brandYellow text-brandBlack border-2 border-brandBlack flex items-center justify-center text-xl shadow-[2px_2px_0px_#080808]">🎭</div>
+<span class="text-[10px] font-mono font-black bg-brandBlack text-white px-2 py-0.5 rounded border border-brandBlack uppercase shadow-[1px_1px_0px_#080808]">LIVING THEATRE</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="font-mono text-[11px] text-brandPink font-black uppercase tracking-wider mb-1">03 • LIVING THEATRE</div>
+<h3 class="font-editorial text-2xl font-black text-brandBlack mb-2">Traditional Performances</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">Kathakali mudras, Yakshagana epics, and Koodiyattam dramas analyzed alongside sensory stage descriptions and makeup symbolism.</p>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs font-mono font-black text-brandBlack pt-3 border-t-2 border-brandBlack">
+<span class="bg-brandYellow px-2 py-0.5 rounded border border-brandBlack">62+ DOCUMENTED ACTS</span>
+<span class="text-brandPink group-hover:translate-x-1 transition-transform">EXPLORE →</span>
+</div>
+</div>
+</div>
+<!-- 04 Regional Art -->
+<div class="bg-white border-2 border-brandBlack rounded-2xl shadow-[6px_6px_0px_#080808] hover:-translate-y-1 transition duration-150 flex flex-col justify-between group relative overflow-hidden">
+<div class="w-20 h-5 scrapbook-tape absolute -top-1 left-10 -rotate-2 z-10 border border-brandBlack"></div>
+<div class="relative w-full h-44 overflow-hidden border-b-2 border-brandBlack bg-brandYellow">
+<img alt="Regional Folk Art Poster Artwork" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLGRGqKk_wc6UxLrs2BO4G6hVuMFgcIQtcRAWAhavEa3srmO2eT293Zd7Z-IoerixFlcrF56D8mB5QQ0mk2_PubOSv7WRssZWJwbc4bXOr9dHgmwWmavmfgSBivkvGPeQN8grDlDFtNLP_a_Bv8YoF7WQaIsi_T-BoGlV9yU9NpZ_jGo5V3c9a_YfYx2UGhG-5_C6Qk360OQ8sMolIxd3vlVald7NUumSAaY_-BEc5wqZldvYl93YwEQ"/>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<div class="w-10 h-10 rounded-lg bg-brandPink text-white border-2 border-brandBlack flex items-center justify-center text-xl shadow-[2px_2px_0px_#080808]">🎨</div>
+<span class="text-[10px] font-mono font-black bg-brandBlack text-brandYellow px-2 py-0.5 rounded border border-brandBlack uppercase shadow-[1px_1px_0px_#080808]">VISUAL LANGUAGE</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="font-mono text-[11px] text-brandPink font-black uppercase tracking-wider mb-1">04 • VISUAL LANGUAGE</div>
+<h3 class="font-editorial text-2xl font-black text-brandBlack mb-2">Regional Art</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">Madhubani geometries, Warli tribal iconography, and Kerala temple murals read as pictorial records of ancient community chronicles.</p>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs font-mono font-black text-brandBlack pt-3 border-t-2 border-brandBlack">
+<span class="bg-brandYellow px-2 py-0.5 rounded border border-brandBlack">95+ ART ESSAYS</span>
+<span class="text-brandPink group-hover:translate-x-1 transition-transform">EXPLORE →</span>
+</div>
+</div>
+</div>
+<!-- 05 Music & Oral -->
+<div class="bg-white border-2 border-brandBlack rounded-2xl shadow-[6px_6px_0px_#080808] hover:-translate-y-1 transition duration-150 flex flex-col justify-between group relative overflow-hidden">
+<div class="w-20 h-5 scrapbook-tape absolute -top-1 right-8 rotate-3 z-10 border border-brandBlack"></div>
+<div class="relative w-full h-44 overflow-hidden border-b-2 border-brandBlack bg-brandYellow">
+<img alt="Meera Bai and Folk Veena Music Art" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCum8JF7KgA3oA19Lz_B11db7mt1VRQ63DRbGetIiCMU3Jm6RFRYfj0HYnwJbkKlL_e-TW6iBwYaEickWOsGM5ln87rSkGKad7RCGfRjAFaYjGlnPX8U07fuvhsEuFPvv7FfQXAZDSOg0g61BfYV3b4fXhlUiPDbTMg1xWHXb8P5xQkDM2dLwxZ6AitRYXjel1LYr4xyHGm6VwCJgrUyBZu0njE610Va5kVt8tAL5HUwnIh7jTq6yP71w"/>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<div class="w-10 h-10 rounded-lg bg-brandYellow border-2 border-brandBlack flex items-center justify-center text-xl shadow-[2px_2px_0px_#080808]">🪕</div>
+<span class="text-[10px] font-mono font-black bg-brandPink text-white px-2 py-0.5 rounded border border-brandBlack uppercase shadow-[1px_1px_0px_#080808]">SOUND &amp; RHYTHM</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="font-mono text-[11px] text-brandPink font-black uppercase tracking-wider mb-1">05 • SOUND &amp; RHYTHM</div>
+<h3 class="font-editorial text-2xl font-black text-brandBlack mb-2">Music &amp; Oral Traditions</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">Baul mysticism, Sopana Sangeetham hymns, and work songs sung by agrarian workers captured with audio-synced phonetics.</p>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs font-mono font-black text-brandBlack pt-3 border-t-2 border-brandBlack">
+<span class="bg-brandYellow px-2 py-0.5 rounded border border-brandBlack">110+ AUDIO TRACKS</span>
+<span class="text-brandPink group-hover:translate-x-1 transition-transform">EXPLORE →</span>
+</div>
+</div>
+</div>
+<!-- 06 Festivals -->
+<div class="bg-white border-2 border-brandBlack rounded-2xl shadow-[6px_6px_0px_#080808] hover:-translate-y-1 transition duration-150 flex flex-col justify-between group relative overflow-hidden">
+<div class="w-20 h-5 scrapbook-tape-yellow absolute -top-1 left-8 -rotate-2 z-10"></div>
+<div class="relative w-full h-44 overflow-hidden border-b-2 border-brandBlack bg-brandBlack">
+<img alt="Festivals and Pop Cultural Folk Elements" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzCgN5IelVrb6QGR9m1y-xyCDEPgyXSlTVTYLjpnNXZyhSWyX0O4ZwWdI1PjvynVmnx7_rwWYpbpGKrWeZoqNkyQesVB-SSbnoxW760WLZ8h7UM7Khf6vFWRxGCKK8UlVDPapX9NMQDG10I0BAuL97ScZ1kLNnLAhhSUt0yI0OFOCuQRAOUgFVLO30nLDn60BZp4ToQ9f2Vnh8wKrREZS9pdtzDB0TyRFMBsho0wmWy7JPhTq7xCnpGg"/>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<div class="w-10 h-10 rounded-lg bg-brandPink text-white border-2 border-brandBlack flex items-center justify-center text-xl shadow-[2px_2px_0px_#080808]">🏮</div>
+<span class="text-[10px] font-mono font-black bg-brandYellow text-brandBlack px-2 py-0.5 rounded border border-brandBlack uppercase shadow-[1px_1px_0px_#080808]">LIVING CALENDAR</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="font-mono text-[11px] text-brandPink font-black uppercase tracking-wider mb-1">06 • LIVING CALENDAR</div>
+<h3 class="font-editorial text-2xl font-black text-brandBlack mb-2">Festivals &amp; Heritage</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">Seasonal transitions, harvest alignments, boat races, and sacred grove rituals decoded beyond tourist spectacle into deep reverence.</p>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs font-mono font-black text-brandBlack pt-3 border-t-2 border-brandBlack">
+<span class="bg-brandYellow px-2 py-0.5 rounded border border-brandBlack">50+ CELEBRATIONS</span>
+<span class="text-brandPink group-hover:translate-x-1 transition-transform">EXPLORE →</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =================================================================== -->
+<!-- SECTION 5: SIGNATURE FEATURE ("MEANING BEHIND THE WORDS.") -->
+<!-- =================================================================== -->
+<section class="w-full max-w-[1440px] mx-auto px-6 lg:px-12 py-16 lg:py-24" data-purpose="meaning-behind-words">
+<!-- Section Title -->
+<div class="text-center max-w-3xl mx-auto mb-14">
+<div class="inline-block bg-brandPink text-white text-xs font-mono font-black px-4 py-1.5 rounded-full mb-3 border-2 border-brandBlack shadow-[3px_3px_0px_#080808]">
+  [ 04 / SIGNATURE ARCHIVAL ENGINE ]
+</div>
+<h2 class="font-editorial text-3xl sm:text-5xl font-black text-brandBlack tracking-tight">
+  MEANING BEHIND THE WORDS.
+</h2>
+<p class="text-brandBlack text-base sm:text-lg font-bold mt-3">
+  Direct translation only translates letters. KathaBridge decodes the underlying cultural heartbeat.
+</p>
+</div>
+<!-- Interactive 3-Column Comparative Breakdown -->
+<div class="bg-white border-2 border-brandBlack rounded-2xl shadow-[9px_9px_0px_#080808] overflow-hidden">
+<!-- Comparative Header Bar -->
+<div class="grid grid-cols-1 md:grid-cols-3 border-b-2 border-brandBlack bg-brandYellow font-mono font-black text-xs uppercase tracking-wider divide-y-2 md:divide-y-0 md:divide-x-2 divide-brandBlack">
+<div class="p-4 flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-brandPink border border-brandBlack"></span>
+<span>01. ORIGINAL EXPRESSION (MALAYALAM)</span>
+</div>
+<div class="p-4 flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-brandBlack"></span>
+<span>02. CONTEXTUAL TRANSLATION (ENGLISH)</span>
+</div>
+<div class="p-4 flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-brandPink border border-brandBlack"></span>
+<span>03. CULTURAL MEANING &amp; SUBTEXT</span>
+</div>
+</div>
+<!-- Comparative Row 1 -->
+<div class="grid grid-cols-1 md:grid-cols-3 divide-y-2 md:divide-y-0 md:divide-x-2 divide-brandBlack border-b-2 border-brandBlack hover:bg-brandYellowLight transition-colors">
+<!-- Col 1 -->
+<div class="p-6 lg:p-8 flex flex-col justify-center">
+<span class="text-xs font-mono text-brandPink font-black mb-2">MALAYALAM IDIOM // REGION: VALLUVANAD</span>
+<div class="text-2xl sm:text-3xl font-extrabold text-brandBlack font-sans leading-tight">
+    "കാക്ക കുളിച്ചാൽ കൊക്കാവുമോ?"
+  </div>
+<div class="text-xs font-mono text-neutral-700 mt-2 font-bold">
+    Transliteration: <em>Kakka kulichal kokkavumo?</em>
+</div>
+</div>
+<!-- Col 2 -->
+<div class="p-6 lg:p-8 flex flex-col justify-center">
+<div class="text-xs font-mono text-neutral-500 font-black mb-2">LITERAL VS CONTEXTUAL</div>
+<p class="text-brandBlack font-black text-lg mb-1">
+    "If a crow bathes in the pond, will it turn into a white stork?"
+  </p>
+<p class="text-neutral-700 text-sm font-semibold">
+    Idiomatic English equivalent: <em>A leopard cannot change its spots.</em>
+</p>
+</div>
+<!-- Col 3 -->
+<div class="p-6 lg:p-8 flex flex-col justify-center bg-brandYellow/30">
+<div class="inline-flex items-center gap-1.5 text-xs font-mono font-black text-brandPink mb-2 bg-white px-2 py-0.5 rounded border border-brandBlack w-fit shadow-[1px_1px_0px_#080808]">
+<span>✓</span> HUMAN VERIFIED CONTEXT
+  </div>
+<p class="text-brandBlack text-sm leading-relaxed font-bold">
+    Used philosophically to accept inherent authentic natures rather than feigning superficial identity. Rooted in Kerala’s wetland bird ecosystems where crows and pond herons cohabit daily water tanks.
+  </p>
+</div>
+</div>
+<!-- Comparative Row 2 -->
+<div class="grid grid-cols-1 md:grid-cols-3 divide-y-2 md:divide-y-0 md:divide-x-2 divide-brandBlack hover:bg-brandYellowLight transition-colors">
+<!-- Col 1 -->
+<div class="p-6 lg:p-8 flex flex-col justify-center">
+<span class="text-xs font-mono text-brandPink font-black mb-2">PERFORMANCE DIALOGUE // THEYYAM CHANT</span>
+<div class="text-2xl sm:text-3xl font-extrabold text-brandBlack font-sans leading-tight">
+    "തീയിൽ പിറന്നവൾ, നാടിന്റെ കാവൽ."
+  </div>
+<div class="text-xs font-mono text-neutral-700 mt-2 font-bold">
+    Transliteration: <em>Theeyil pirannaval, naadinte kaaval.</em>
+</div>
+</div>
+<!-- Col 2 -->
+<div class="p-6 lg:p-8 flex flex-col justify-center">
+<div class="text-xs font-mono text-neutral-500 font-black mb-2">LITERAL VS CONTEXTUAL</div>
+<p class="text-brandBlack font-black text-lg mb-1">
+    "Born of fire, she stands as the vigilant guardian of the soil."
+  </p>
+<p class="text-neutral-700 text-sm font-semibold">
+    Spoken during the nocturnal entry of the <em>Muchilot Bhagavathi</em> performer stepping over glowing charcoal embers.
+  </p>
+</div>
+<!-- Col 3 -->
+<div class="p-6 lg:p-8 flex flex-col justify-center bg-brandYellow/30">
+<div class="inline-flex items-center gap-1.5 text-xs font-mono font-black text-brandPink mb-2 bg-white px-2 py-0.5 rounded border border-brandBlack w-fit shadow-[1px_1px_0px_#080808]">
+<span>✓</span> HUMAN VERIFIED CONTEXT
+  </div>
+<p class="text-brandBlack text-sm leading-relaxed font-bold">
+    Represents defiant rebirth after unjust caste persecution. Fire in this North Malabar lore is not destructive wrath; it is moral cleansing and maternal protection against societal cruelty.
+  </p>
+</div>
+</div>
+</div>
+</section>
+<!-- =================================================================== -->
+<!-- SECTION 6: ACCESSIBILITY ("STORIES FOR EVERYONE.") -->
+<!-- =================================================================== -->
+<section class="w-full max-w-[1440px] mx-auto px-6 lg:px-12 py-16 lg:py-24" data-purpose="accessibility-features" id="about">
+<div class="bg-white border-2 border-brandBlack rounded-3xl p-8 sm:p-12 lg:p-16 shadow-[10px_10px_0px_#080808] relative overflow-hidden">
+<!-- Starburst ornament in corner -->
+<div class="absolute -top-10 -right-10 pointer-events-none">
+<svg class="w-44 h-44 text-brandYellow fill-current opacity-90" viewbox="0 0 100 100">
+<polygon points="50,0 60,35 100,50 60,65 50,100 40,65 0,50 40,35"></polygon>
+</svg>
+</div>
+<div class="max-w-3xl mb-12 relative z-10">
+<div class="font-mono text-xs md:text-sm font-black text-white bg-brandPink px-3 py-1 rounded-full border-2 border-brandBlack inline-block tracking-widest mb-2 shadow-[2px_2px_0px_#080808]">[ 05 / UNIVERSAL DESIGN ]</div>
+<h2 class="font-editorial text-3xl sm:text-5xl font-black text-brandBlack tracking-tight">
+  STORIES FOR EVERYONE.
+</h2>
+<p class="text-brandBlack text-base sm:text-lg font-bold mt-3">
+  Folklore belongs to every human being regardless of eyesight, hearing capability, literacy level, or assistive device choice.
+</p>
+</div>
+<!-- 4 Solid Feature Blocks -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+<!-- Feature 1: Read Along -->
+<div class="bg-brandYellow border-2 border-brandBlack p-6 rounded-2xl shadow-[5px_5px_0px_#080808] flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-brandPink text-white border-2 border-brandBlack flex items-center justify-center text-xl mb-4 shadow-[2px_2px_0px_#080808]">
+    📝
+  </div>
+<h3 class="font-editorial text-xl font-black text-brandBlack mb-2">Read Along</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">
+    Synchronized karaoke-style subtitles highlight sentence by sentence in both regional scripts and Latin alphabets.
+  </p>
+</div>
+<div class="mt-4 pt-3 border-t-2 border-brandBlack font-mono text-xs text-brandBlack font-black">
+  WCAG 2.1 AAA CAPTIONS
+</div>
+</div>
+<!-- Feature 2: Listen & Experience -->
+<div class="bg-brandYellow border-2 border-brandBlack p-6 rounded-2xl shadow-[5px_5px_0px_#080808] flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-brandPink text-white border-2 border-brandBlack flex items-center justify-center text-xl mb-4 shadow-[2px_2px_0px_#080808]">
+    🎧
+  </div>
+<h3 class="font-editorial text-xl font-black text-brandBlack mb-2">Listen &amp; Experience</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">
+    Full dramatized regional vocal narrations, ambient ritual background soundscapes, and voice-speed control options.
+  </p>
+</div>
+<div class="mt-4 pt-3 border-t-2 border-brandBlack font-mono text-xs text-brandBlack font-black">
+  IMMERSIVE SPATIAL AUDIO
+</div>
+</div>
+<!-- Feature 3: Accessible Reading -->
+<div class="bg-brandYellow border-2 border-brandBlack p-6 rounded-2xl shadow-[5px_5px_0px_#080808] flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-brandPink text-white border-2 border-brandBlack flex items-center justify-center text-xl mb-4 shadow-[2px_2px_0px_#080808]">
+    👁️
+  </div>
+<h3 class="font-editorial text-xl font-black text-brandBlack mb-2">Accessible Reading</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">
+    Instantly adjust font sizes, swap to OpenDyslexic typography, and toggle pure high-contrast monochrome themes.
+  </p>
+</div>
+<div class="mt-4 pt-3 border-t-2 border-brandBlack font-mono text-xs text-brandBlack font-black">
+  HIGH CONTRAST &amp; SCALING
+</div>
+</div>
+<!-- Feature 4: Inclusive Navigation -->
+<div class="bg-brandYellow border-2 border-brandBlack p-6 rounded-2xl shadow-[5px_5px_0px_#080808] flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-brandPink text-white border-2 border-brandBlack flex items-center justify-center text-xl mb-4 shadow-[2px_2px_0px_#080808]">
+    ⌨️
+  </div>
+<h3 class="font-editorial text-xl font-black text-brandBlack mb-2">Inclusive Navigation</h3>
+<p class="text-brandBlack font-semibold text-sm leading-relaxed">
+    Engineered from ground up with complete keyboard navigation, aria-live announce regions, and screen-reader tags.
+  </p>
+</div>
+<div class="mt-4 pt-3 border-t-2 border-brandBlack font-mono text-xs text-brandBlack font-black">
+  FULL KEYBOARD SHORTCUTS
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =================================================================== -->
+<!-- SECTION 7: HUMAN REVIEW SYSTEM ("TECHNOLOGY TRANSLATES. PEOPLE PRESERVE MEANING.") -->
+<!-- =================================================================== -->
+<section class="w-full max-w-[1440px] mx-auto px-6 lg:px-12 py-16 lg:py-24" data-purpose="human-review-system" id="contribute">
+<div class="flex items-center justify-between border-b-2 border-brandBlack pb-4 mb-12">
+<div>
+<div class="font-mono text-xs md:text-sm font-black text-white bg-brandPink px-3 py-0.5 rounded border border-brandBlack inline-block tracking-widest shadow-[2px_2px_0px_#080808]">[ 06 / METHODOLOGY ]</div>
+<h2 class="font-editorial text-3xl sm:text-5xl font-black text-brandBlack tracking-tight mt-2">
+  TECHNOLOGY TRANSLATES.<br class="hidden sm:inline"/> PEOPLE PRESERVE MEANING.
+</h2>
+</div>
+<div class="hidden lg:flex items-center gap-2 bg-brandPink text-white border-2 border-brandBlack px-3.5 py-1.5 font-mono text-xs font-black shadow-[3px_3px_0px_#080808]">
+  HUMAN-IN-THE-LOOP PROTOCOL
+</div>
+</div>
+<!-- Pipeline Step Visualizer -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10 relative">
+<!-- Step 1 -->
+<div class="bg-white border-2 border-brandBlack p-5 rounded-xl shadow-[5px_5px_0px_#080808] relative">
+<div class="font-mono text-[11px] font-black text-brandPink mb-1">STAGE 01</div>
+<div class="font-editorial text-lg font-black text-brandBlack mb-2">Original Cultural Text</div>
+<p class="text-xs text-neutral-800 font-bold leading-relaxed">
+    Native audio recordings, handwritten palm-leaf scrolls, or regional community publications transcribed.
+  </p>
+<div class="mt-3 text-[10px] font-mono bg-brandYellow text-brandBlack font-black px-2 py-1 rounded border border-brandBlack">
+    INPUT: RAW DIALECT
+  </div>
+</div>
+<!-- Step 2 -->
+<div class="bg-white border-2 border-brandBlack p-5 rounded-xl shadow-[5px_5px_0px_#080808] relative">
+<div class="font-mono text-[11px] font-black text-brandPink mb-1">STAGE 02</div>
+<div class="font-editorial text-lg font-black text-brandBlack mb-2">AI Initial Draft</div>
+<p class="text-xs text-neutral-800 font-bold leading-relaxed">
+    High-throughput multi-lingual neural language model produces first-pass literal vocabulary translation.
+  </p>
+<div class="mt-3 text-[10px] font-mono bg-brandYellow text-brandBlack font-black px-2 py-1 rounded border border-brandBlack">
+    PROCESS: BASELINE SYNTAX
+  </div>
+</div>
+<!-- Step 3 (Highlighted) -->
+<div class="bg-brandPink text-white border-2 border-brandBlack p-5 rounded-xl shadow-[6px_6px_0px_#080808] relative">
+<div class="absolute -top-3 right-3 bg-brandYellow text-brandBlack text-[10px] font-mono font-black px-2.5 py-0.5 rounded border border-brandBlack shadow-[2px_2px_0px_#080808]">
+    CRUCIAL STEP
+  </div>
+<div class="font-mono text-[11px] font-black text-brandYellow mb-1">STAGE 03</div>
+<div class="font-editorial text-lg font-black text-white mb-2">Scholar Peer-Review</div>
+<p class="text-xs text-white/95 leading-relaxed font-bold">
+    Folklorists, native speakers, and anthropology scholars correct nuances, humor, idioms, and rituals.
+  </p>
+<div class="mt-3 text-[10px] font-mono bg-brandYellow text-brandBlack px-2 py-1 rounded border border-brandBlack font-black">
+    HUMAN VALIDATION 100%
+  </div>
+</div>
+<!-- Step 4 -->
+<div class="bg-white border-2 border-brandBlack p-5 rounded-xl shadow-[5px_5px_0px_#080808] relative">
+<div class="font-mono text-[11px] font-black text-brandPink mb-1">STAGE 04</div>
+<div class="font-editorial text-lg font-black text-brandBlack mb-2">Verified &amp; Published</div>
+<p class="text-xs text-neutral-800 font-bold leading-relaxed">
+    Story cataloged into KathaBridge with audio narration, glossaries, and regional credits publicly preserved.
+  </p>
+<div class="mt-3 text-[10px] font-mono bg-brandYellow text-brandBlack px-2 py-1 rounded border border-brandBlack font-black">
+    STATUS: IMMUTABLE ARCHIVE
+  </div>
+</div>
+</div>
+<!-- Reviewer Badge Card Preview -->
+<div class="bg-white border-2 border-brandBlack p-6 sm:p-8 rounded-2xl shadow-[7px_7px_0px_#080808] flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-brandPink text-white border-2 border-brandBlack flex items-center justify-center font-black text-xl shrink-0 shadow-[3px_3px_0px_#080808]">
+  AN
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-editorial font-black text-lg text-brandBlack">Dr. Ananya Nair</span>
+<span class="bg-brandYellow text-brandBlack text-[11px] font-mono font-black px-2.5 py-0.5 rounded-full border border-brandBlack flex items-center gap-1 shadow-[1px_1px_0px_#080808]">
+<span>✓</span> VERIFIED SCHOLAR
+  </span>
+</div>
+<div class="text-xs font-mono text-neutral-700 mt-0.5 font-bold">
+  Senior Folklorist • Kerala Folklore Society &amp; Calicut Heritage Circle
+</div>
+<p class="text-brandBlack text-xs mt-2 italic font-semibold">
+  "Verified 14 North Kerala ritual chants, correcting 8 idioms where standard AI misidentified ritual offering terms as domestic cooking items."
+</p>
+</div>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-6 py-3 rounded-full border-2 border-brandBlack bg-brandYellow hover:bg-brandPink hover:text-white text-xs font-mono font-black transition shadow-[3px_3px_0px_#080808]">
+  BECOME A CONTRIBUTOR →
+</button>
+</div>
+</div>
+</section>
+<!-- =================================================================== -->
+<!-- SECTION 8: FINAL CALL-TO-ACTION ("KEEP STORIES ALIVE.") -->
+<!-- =================================================================== -->
+<section class="w-full max-w-[1440px] mx-auto px-6 lg:px-12 py-16 lg:py-24" data-purpose="final-call-to-action" id="explore-stories">
+<div class="bg-brandPink text-white border-2 border-brandBlack rounded-3xl p-8 sm:p-14 lg:p-20 relative overflow-hidden shadow-[12px_12px_0px_#080808]">
+<!-- Giant Background Sunburst & Folk Spirals -->
+<div class="absolute -right-20 -bottom-20 pointer-events-none opacity-25">
+<svg class="w-96 h-96 text-brandYellow fill-current animate-spin" style="animation-duration: 40s;" viewbox="0 0 200 200">
+<polygon points="100,0 120,70 190,40 145,95 200,100 145,105 190,160 120,130 100,200 80,130 10,160 55,105 0,100 55,95 10,40 80,70"></polygon>
+</svg>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center relative z-10">
+<div class="flex flex-col justify-center">
+<div class="inline-flex items-center gap-2 bg-brandYellow text-brandBlack text-xs font-mono font-black px-3.5 py-1 rounded-full mb-6 border-2 border-brandBlack w-fit shadow-[2px_2px_0px_#080808]">
+<span>✦</span> OPEN DIGITAL HERITAGE ARCHIVE
+  </div>
+<h2 class="font-editorial text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.0] tracking-tight mb-6">
+    KEEP STORIES ALIVE.<br/><span class="text-brandYellow">SHARE THEM WITH THE WORLD.</span>
+</h2>
+<p class="text-white text-lg sm:text-xl font-bold max-w-xl leading-relaxed mb-10">
+    Whether you are a grandmother holding memories of village bedtime tales, an academic researcher, or a curious reader—every voice enriches our collective bridge across tongues.
+  </p>
+<div class="flex flex-wrap items-center gap-4">
+<a class="inline-flex items-center gap-3 bg-brandYellow hover:bg-white text-brandBlack border-2 border-brandBlack px-8 py-4 rounded-full font-black text-base transition-all duration-200 transform hover:-translate-y-1 shadow-[5px_5px_0px_#080808]" href="#stories">
+<span>Explore the Story Collection</span>
+<span class="text-xl">→</span>
+</a>
+<a class="inline-flex items-center gap-3 bg-brandBlack hover:bg-neutral-900 text-white border-2 border-brandBlack px-8 py-4 rounded-full font-black text-base transition-all duration-200 shadow-[5px_5px_0px_#FFFC00]" href="#contribute">
+<span>Submit a Folk Tale</span>
+</a>
+</div>
+</div>
+<div class="relative flex justify-center items-center w-full">
+<div class="w-36 h-7 scrapbook-tape-yellow absolute -top-3 right-12 rotate-3 z-30"></div>
+<div class="relative bg-white p-4 rounded-2xl border-2 border-brandBlack polaroid-tilt-2 shadow-[12px_12px_0px_#080808] w-full max-w-lg">
+<img alt="Incredible India Cultural Folk Heritage Collage" class="w-full h-96 sm:h-[420px] object-cover rounded-xl border-2 border-brandBlack" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLGRGqKk_wc6UxLrs2BO4G6hVuMFgcIQtcRAWAhavEa3srmO2eT293Zd7Z-IoerixFlcrF56D8mB5QQ0mk2_PubOSv7WRssZWJwbc4bXOr9dHgmwWmavmfgSBivkvGPeQN8grDlDFtNLP_a_Bv8YoF7WQaIsi_T-BoGlV9yU9NpZ_jGo5V3c9a_YfYx2UGhG-5_C6Qk360OQ8sMolIxd3vlVald7NUumSAaY_-BEc5wqZldvYl93YwEQ"/>
+<div class="mt-3.5 px-2 flex items-center justify-between font-mono text-xs font-black text-brandBlack">
+<span class="bg-brandYellow px-2.5 py-1 rounded border border-brandBlack shadow-[1px_1px_0px_#080808]">COMMUNITY REPOSITORY</span>
+<span class="text-brandPink">KATHABRIDGE ARCHIVE</span>
+</div>
+</div>
+<div class="absolute -bottom-4 -left-4 bg-brandYellow text-brandBlack border-2 border-brandBlack px-5 py-2.5 rounded-xl text-xs font-mono font-black -rotate-6 shadow-[5px_5px_0px_#080808] z-20 hidden sm:block">
+    ★ 100% PRESERVED HERITAGE
+  </div>
+</div>
+</div>
+</div>
+</section>
+<!-- =================================================================== -->
+<!-- SECTION 9: EDITORIAL FOOTER -->
+<!-- =================================================================== -->
+<footer class="w-full bg-brandBlack text-white pt-16 border-t-2 border-brandBlack z-20" data-purpose="editorial-footer">
+<div class="max-w-[1440px] mx-auto px-6 lg:px-12 pb-12">
+<!-- Footer Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-neutral-800">
+<!-- Col 1: Brand Info -->
+<div class="md:col-span-4 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="text-2xl font-black tracking-tight text-white font-sans">KathaBridge</span>
+<svg class="w-5 h-5 text-brandPink fill-current" viewbox="0 0 24 24">
+<path d="M12 0L14.7 9.3L24 12L14.7 14.7L12 24L9.3 14.7L0 12L9.3 9.3L12 0Z"></path>
+</svg>
+</div>
+<p class="text-[10px] tracking-[0.25em] font-black text-brandYellow uppercase mb-4">
+    STORIES BEYOND LANGUAGE
+  </p>
+<p class="text-neutral-300 text-sm leading-relaxed max-w-sm mb-6 font-sans font-medium">
+    A nonprofit cultural initiative preserving Indian folklore, classical verse, and performance heritage through inclusive, verified translation.
+  </p>
+</div>
+<div class="flex items-center gap-3">
+<span class="w-3 h-3 rounded-full bg-brandYellow animate-ping"></span>
+<span class="text-xs font-mono text-brandYellow font-bold">ARCHIVE SYSTEMS ONLINE • v2.4</span>
+</div>
+</div>
+<!-- Col 2: Navigation -->
+<div class="md:col-span-2">
+<div class="font-mono text-xs font-black text-brandYellow uppercase tracking-wider mb-4">NAVIGATION</div>
+<ul class="space-y-2.5 text-sm text-neutral-300 font-sans font-semibold">
+<li><a class="hover:text-brandPink transition-colors" href="#home">Home</a></li>
+<li><a class="hover:text-brandPink transition-colors" href="#stories">Stories Archive</a></li>
+<li><a class="hover:text-brandPink transition-colors" href="#explore">Explore Cultures</a></li>
+<li><a class="hover:text-brandPink transition-colors" href="#our-mission">Our Mission</a></li>
+<li><a class="hover:text-brandPink transition-colors" href="#contribute">Contribute Tales</a></li>
+</ul>
+</div>
+<!-- Col 3: Accessibility & Legal -->
+<div class="md:col-span-3">
+<div class="font-mono text-xs font-black text-brandYellow uppercase tracking-wider mb-4">ETHICS &amp; ACCESS</div>
+<ul class="space-y-2.5 text-sm text-neutral-300 font-sans font-semibold">
+<li><a class="hover:text-brandPink transition-colors" href="#accessibility">WCAG 2.1 Statement</a></li>
+<li><a class="hover:text-brandPink transition-colors" href="#terms">Indigenous Oral Rights</a></li>
+<li><a class="hover:text-brandPink transition-colors" href="#privacy">Scholar Attribution Policy</a></li>
+<li><a class="hover:text-brandPink transition-colors" href="#privacy">Privacy &amp; Open Access</a></li>
+<li><a class="hover:text-brandPink transition-colors" href="#contact">Contact Curators</a></li>
+</ul>
+</div>
+<!-- Col 4: Newsletter / Connect -->
+<div class="md:col-span-3">
+<div class="font-mono text-xs font-black text-brandYellow uppercase tracking-wider mb-4">WEEKLY FOLKLORE DISPATCH</div>
+<p class="text-neutral-300 text-xs leading-relaxed mb-4 font-semibold">
+  Receive one forgotten regional folk tale every Friday with audio chant and dialect breakdown.
+</p>
+<form class="space-y-2" onsubmit="event.preventDefault();">
+<input class="w-full bg-neutral-900 border-2 border-neutral-700 text-white px-3.5 py-2.5 rounded-lg text-xs font-mono focus:border-brandYellow focus:ring-1 focus:ring-brandYellow outline-none" placeholder="enter your email address" type="email"/>
+<button class="w-full bg-brandPink hover:bg-brandPinkDark text-white py-2.5 rounded-lg font-black text-xs uppercase tracking-wider transition border-2 border-brandBlack shadow-[2px_2px_0px_#FFFC00]" type="submit">
+    Subscribe to KathaBridge
+  </button>
+</form>
+</div>
+</div>
+<!-- Sub-footer credits -->
+<div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-400 font-mono gap-4 font-bold">
+<div>
+  © 2025 KathaBridge Cultural Foundation. Built with community love &amp; scholarly care.
+</div>
+<div class="flex items-center gap-6">
+<a class="hover:text-brandYellow transition" href="#twitter">TWITTER / X</a>
+<a class="hover:text-brandYellow transition" href="#instagram">INSTAGRAM</a>
+<a class="hover:text-brandYellow transition" href="#github">OPEN REPO</a>
+</div>
+</div>
+</div>
+<!-- Repeating Bottom Ticker Ribbon Strip -->
+<div class="w-full bg-brandPink text-brandYellow overflow-hidden py-3 border-t-2 border-brandBlack" data-purpose="footer-marquee">
+<div class="flex whitespace-nowrap select-none font-bold text-base sm:text-lg items-center tracking-wider pixel-marquee">
+<div class="flex items-center gap-6 shrink-0">
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-brandYellow font-extrabold">STORIES BEYOND LANGUAGE</span>
+<span class="text-white text-base">✦</span>
+<span class="text-white font-extrabold">PRESERVING ORAL TRADITION</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+</div>
+<div aria-hidden="true" class="flex items-center gap-6 shrink-0 ml-6">
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-brandYellow font-extrabold">STORIES BEYOND LANGUAGE</span>
+<span class="text-white text-base">✦</span>
+<span class="text-white font-extrabold">PRESERVING ORAL TRADITION</span>
+<span class="text-brandYellow text-base">✦</span>
+<span class="text-white font-extrabold">KATHABRIDGE</span>
+<span class="text-brandYellow text-base">✦</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: Editorial Footer -->
+<!-- BEGIN: Interactive Accessibility Script -->
+<script data-purpose="accessibility-actions">
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle font size for inclusive reading
+      const fontBtn = document.querySelector('button[aria-label="Adjust font size"]');
+      let isEnlarged = false;
+      if (fontBtn) {
+        fontBtn.addEventListener('click', () => {
+          isEnlarged = !isEnlarged;
+          document.body.classList.toggle('text-lg', isEnlarged);
+          fontBtn.classList.toggle('bg-brandPink', isEnlarged);
+          fontBtn.classList.toggle('text-white', isEnlarged);
+        });
+      }
+    });
+  </script>
+<!-- END: Interactive Accessibility Script -->
+</body></html>

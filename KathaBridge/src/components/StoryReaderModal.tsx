@@ -1,0 +1,473 @@
+import React, { useState, useEffect, useRef } from "react";
+import { Story, LanguageCode, CulturalExpression } from "../types";
+import { AudioNarrationService, AudioPlaybackState } from "../services/audioNarrationService";
+import { StorageService } from "../services/storageService";
+import { CulturalTermPopover } from "./CulturalTermPopover";
+
+interface Props {
+  story: Story;
+  initialLanguage?: LanguageCode;
+  onClose: () => void;
+  onFavoriteToggle?: (storyId: string) => void;
+  isFavorite?: boolean;
+}
+
+export const StoryReaderModal: React.FC<Props> = ({
+  story,
+  initialLanguage = "EN",
+  onClose,
+  onFavoriteToggle,
+  isFavorite = false
+}) => {
+  const [activeLang, setActiveLang] = useState<LanguageCode>(initialLanguage);
+  const [activeTerm, setActiveTerm] = useState<CulturalExpression | null>(null);
+  const [fontSizeOffset, setFontSizeOffset] = useState<number>(0);
+  const [contrastMode, setContrastMode] = useState<"normal" | "dark" | "high-contrast">("normal");
+  const [audioState, setAudioState] = useState<AudioPlaybackState>({
+    isPlaying: false,
+    isPaused: false,
+    currentSentenceIndex: 0,
+    totalSentences: story.sentences.length,
+    rate: 1.0,
+    volume: 1.0,
+    currentTimeSeconds: 0,
+    durationSeconds: 60,
+    activeLanguage: initialLanguage
+  });
+
+  const audioServiceRef = useRef<AudioNarrationService | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Initialize Audio Service
+  useEffect(() => {
+    const service = new AudioNarrationService();
+    audioServiceRef.current = service;
+
+    service.subscribe((state) => {
+      setAudioState(state);
+    });
+
+    // Prepare sentences for current language
+    loadStoryAudio(service, activeLang);
+
+    return () => {
+      service.stop();
+    };
+  }, []);
+
+  const loadStoryAudio = (service: AudioNarrationService, lang: LanguageCode) => {
+    const sentenceItems = story.sentences.map((s) => ({
+      id: s.id,
+      text: lang === "ML" ? s.originalText : s.translatedText.EN
+    }));
+    service.loadSentences(sentenceItems, lang);
+  };
+
+  const handleLanguageChange = (lang: LanguageCode) => {
+    setActiveLang(lang);
+    if (audioServiceRef.current) {
+      loadStoryAudio(audioServiceRef.current, lang);
+    }
+  };
+
+  // Scroll listener for reading progress bar
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const progress = (target.scrollTop / (target.scrollHeight - target.clientHeight)) * 100;
+    setScrollProgress(Math.min(100, Math.max(0, progress)));
+    StorageService.recordReadingHistory(story.id, Math.round(progress));
+  };
+
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+
+  // Find expression from story by ID
+  const getExpressionById = (id: string): CulturalExpression | undefined => {
+    return story.culturalExpressions.find((exp) => exp.id === id);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-md animate-fade-in">
+      <div
+        className={`w-full max-w-4xl max-h-[94vh] rounded-3xl border-4 border-brandBlack flex flex-col overflow-hidden shadow-[14px_14px_0px_#FF087D] relative transition-colors duration-200 ${
+          contrastMode === "dark"
+            ? "bg-neutral-950 text-neutral-100"
+            : contrastMode === "high-contrast"
+            ? "bg-black text-brandYellow"
+            : "bg-[#FFFDE0] text-brandBlack"
+        }`}
+      >
+        {/* Top Reading Progress Bar */}
+        <div className="w-full bg-neutral-200 h-1.5 overflow-hidden">
+          <div
+            className="h-full bg-brandPink transition-all duration-150"
+            style={{ width: `${scrollProgress}%` }}
+          ></div>
+        </div>
+
+        {/* Header Bar */}
+        <div className="px-6 py-4 border-b-2 border-brandBlack flex flex-wrap items-center justify-between gap-3 bg-brandYellow shrink-0">
+          <div className="flex items-center gap-3">
+            <span className="bg-brandPink text-white text-xs font-mono font-black px-3 py-1 rounded-full border border-brandBlack shadow-[2px_2px_0px_#080808]">
+              {story.categoryLabel}
+            </span>
+            <span className="text-xs font-mono font-black text-brandBlack hidden sm:inline">
+              REGION: {story.originRegion.toUpperCase()}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Language Switcher */}
+            <div className="flex bg-white rounded-full p-1 border-2 border-brandBlack shadow-[2px_2px_0px_#080808]">
+              <button
+                onClick={() => handleLanguageChange("EN")}
+                className={`px-3 py-1 rounded-full text-xs font-mono font-black transition ${
+                  activeLang === "EN" ? "bg-brandPink text-white shadow-sm" : "text-brandBlack hover:bg-neutral-100"
+                }`}
+              >
+                ENGLISH
+              </button>
+              <button
+                onClick={() => handleLanguageChange("ML")}
+                className={`px-3 py-1 rounded-full text-xs font-mono font-black transition ${
+                  activeLang === "ML" ? "bg-brandPink text-white shadow-sm" : "text-brandBlack hover:bg-neutral-100"
+                }`}
+              >
+                മലയാളം
+              </button>
+            </div>
+
+            {/* Font Size Scaling */}
+            <div className="flex items-center gap-1 bg-white border-2 border-brandBlack rounded-full px-2 py-1 text-xs font-black shadow-[2px_2px_0px_#080808]">
+              <button
+                onClick={() => setFontSizeOffset(Math.max(-2, fontSizeOffset - 1))}
+                className="hover:text-brandPink px-1"
+                title="Decrease font size"
+              >
+                A-
+              </button>
+              <span className="text-[10px] font-mono text-neutral-400">|</span>
+              <button
+                onClick={() => setFontSizeOffset(Math.min(4, fontSizeOffset + 1))}
+                className="hover:text-brandPink px-1"
+                title="Increase font size"
+              >
+                A+
+              </button>
+            </div>
+
+            {/* Reading Contrast Mode */}
+            <button
+              onClick={() => {
+                if (contrastMode === "normal") setContrastMode("dark");
+                else if (contrastMode === "dark") setContrastMode("high-contrast");
+                else setContrastMode("normal");
+              }}
+              className="p-2 bg-white border-2 border-brandBlack rounded-full text-xs font-black shadow-[2px_2px_0px_#080808] hover:bg-neutral-100"
+              title="Toggle reading contrast theme"
+            >
+              {contrastMode === "normal" ? "☀️" : contrastMode === "dark" ? "🌙" : "⚡"}
+            </button>
+
+            {/* Favorite Button */}
+            {onFavoriteToggle && (
+              <button
+                onClick={() => onFavoriteToggle(story.id)}
+                className={`p-2 border-2 border-brandBlack rounded-full text-xs transition shadow-[2px_2px_0px_#080808] ${
+                  isFavorite ? "bg-brandPink text-white" : "bg-white text-brandBlack hover:bg-brandPink hover:text-white"
+                }`}
+                title="Save to favorites"
+              >
+                ★
+              </button>
+            )}
+
+            {/* Close Button */}
+            <button
+              onClick={onClose}
+              aria-label="Close reader"
+              className="w-9 h-9 rounded-full border-2 border-brandBlack bg-white hover:bg-brandPink hover:text-white flex items-center justify-center font-black text-lg transition shadow-[2px_2px_0px_#080808]"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        {/* Scrollable Story Content Area */}
+        <div
+          ref={containerRef}
+          onScroll={handleScroll}
+          className="flex-1 overflow-y-auto px-6 sm:px-12 py-8 space-y-8"
+        >
+          {/* Title & Cover Artwork */}
+          <div>
+            <h1
+              className="font-editorial text-3xl sm:text-5xl font-black tracking-tight mb-4"
+              style={{ fontSize: `calc(${fontSizeOffset * 2}px + 2.5rem)` }}
+            >
+              {activeLang === "ML" ? story.title.ML : story.title.EN}
+            </h1>
+            <p className="font-bold text-base sm:text-lg opacity-90 leading-relaxed max-w-3xl mb-6">
+              {activeLang === "ML" ? story.summary.ML : story.summary.EN}
+            </p>
+
+            <div className="relative rounded-2xl overflow-hidden border-2 border-brandBlack max-h-80 w-full shadow-[6px_6px_0px_#080808]">
+              <img
+                src={story.image}
+                alt={story.title.EN}
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute top-3 left-3 bg-brandPink text-white font-mono text-xs font-black px-3 py-1 rounded border border-brandBlack shadow-[2px_2px_0px_#080808]">
+                {story.pillTag} • {story.readingDurationMinutes} MIN READ
+              </div>
+            </div>
+          </div>
+
+          {/* Key Concept Box */}
+          <div className="bg-brandYellow border-2 border-brandBlack p-5 rounded-2xl shadow-[5px_5px_0px_#080808] text-brandBlack">
+            <span className="font-mono text-xs font-black text-brandPink block mb-1">
+              {story.keyConcept.title}
+            </span>
+            <blockquote className="font-extrabold text-lg sm:text-xl font-sans mb-2 italic">
+              {story.keyConcept.quote}
+            </blockquote>
+            <p className="text-sm font-semibold opacity-90">
+              {story.keyConcept.explanation}
+            </p>
+          </div>
+
+          {/* Sentence-by-Sentence Synchronized Reading Body */}
+          <div className="space-y-4 pt-2">
+            <div className="flex items-center justify-between border-b-2 border-brandBlack pb-2 mb-4">
+              <span className="font-mono text-xs font-black uppercase tracking-wider text-brandPink">
+                ✦ Synchronized Narrative ({story.sentences.length} Sentences)
+              </span>
+              <span className="text-[11px] font-mono opacity-70">
+                Click any line to jump narration
+              </span>
+            </div>
+
+            {story.sentences.map((sentence, idx) => {
+              const isCurrentSpoken =
+                audioState.isPlaying && audioState.currentSentenceIndex === idx;
+
+              const sentenceText =
+                activeLang === "ML" ? sentence.originalText : sentence.translatedText.EN;
+
+              return (
+                <div
+                  key={sentence.id}
+                  onClick={() => {
+                    if (audioServiceRef.current) {
+                      audioServiceRef.current.seekSentence(idx);
+                      audioServiceRef.current.play();
+                    }
+                  }}
+                  className={`p-4 rounded-xl border-2 transition-all cursor-pointer leading-relaxed ${
+                    isCurrentSpoken
+                      ? "bg-brandYellow border-brandBlack text-brandBlack shadow-[4px_4px_0px_#FF087D] scale-[1.01]"
+                      : contrastMode === "dark"
+                      ? "border-neutral-800 hover:border-brandYellow/60 bg-neutral-900/60"
+                      : contrastMode === "high-contrast"
+                      ? "border-brandYellow hover:bg-neutral-900"
+                      : "border-transparent hover:border-brandBlack/40 hover:bg-white"
+                  }`}
+                  style={{
+                    fontSize: `calc(${fontSizeOffset * 1.5}px + 1.1rem)`
+                  }}
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="font-mono text-xs font-black opacity-50 select-none pt-1">
+                      {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
+                    </span>
+
+                    <div className="flex-1 font-medium">
+                      <span>{sentenceText}</span>
+
+                      {/* Highlighted In-Story Cultural Terms Stickers */}
+                      {sentence.highlightedTermIds && sentence.highlightedTermIds.length > 0 && (
+                        <div className="inline-flex flex-wrap gap-1.5 ml-2 align-middle">
+                          {sentence.highlightedTermIds.map((termId) => {
+                            const termObj = getExpressionById(termId);
+                            if (!termObj) return null;
+                            return (
+                              <button
+                                key={termId}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setActiveTerm(termObj);
+                                }}
+                                className="inline-flex items-center gap-1 bg-brandPink hover:bg-brandPinkDark text-white text-[11px] font-mono font-black px-2 py-0.5 rounded-full border border-brandBlack shadow-[1px_1px_0px_#080808] transition"
+                              >
+                                <span>✦</span>
+                                <span>{termObj.term}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Cultural Background Section */}
+          <div className="p-6 bg-white border-2 border-brandBlack rounded-2xl text-brandBlack shadow-[4px_4px_0px_#080808]">
+            <span className="font-mono text-xs font-black text-brandPink uppercase block mb-1">
+              [ HISTORICAL &amp; CULTURAL GENESIS ]
+            </span>
+            <h3 className="font-editorial text-2xl font-black mb-3">
+              Understanding the Heritage
+            </h3>
+            <p className="text-sm font-semibold leading-relaxed text-neutral-800">
+              {story.culturalBackground}
+            </p>
+
+            {story.sourceAttribution && (
+              <div className="mt-4 pt-3 border-t border-neutral-200 text-xs font-mono text-neutral-600 flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <span className="font-bold text-brandBlack">Research Source: </span>
+                  {story.sourceUrl ? (
+                    <a
+                      href={story.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brandPink hover:underline"
+                    >
+                      {story.sourceAttribution} ↗
+                    </a>
+                  ) : (
+                    story.sourceAttribution
+                  )}
+                </div>
+                {story.license && (
+                  <span className="bg-brandYellowLight text-brandBlack px-2 py-0.5 rounded border border-neutral-400 font-black text-[10px]">
+                    {story.license}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Audio Player Bottom Bar */}
+        <div className="p-4 bg-brandYellow border-t-2 border-brandBlack flex flex-col gap-2 shrink-0">
+          <div className="flex items-center justify-between text-xs font-mono font-black text-brandBlack">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-brandPink animate-ping"></span>
+              <span>
+                {audioState.isLoading
+                  ? "LOADING NATIVE VOICE..."
+                  : audioState.isPlaying
+                  ? activeLang === "ML"
+                    ? "NATIVE MALAYALAM NARRATION (SOBHANA NEURAL)"
+                    : "ENGLISH NARRATION (NEERJA NEURAL)"
+                  : audioState.isPaused
+                  ? "AUDIO PAUSED"
+                  : "READY TO LISTEN"}
+              </span>
+              <span className="opacity-60">
+                (Sentence {audioState.currentSentenceIndex + 1} of {audioState.totalSentences})
+              </span>
+            </div>
+            <div>
+              <span>{formatTime(audioState.currentTimeSeconds)}</span> /{" "}
+              <span>{formatTime(audioState.durationSeconds)}</span>
+            </div>
+          </div>
+
+          {/* Scrubber */}
+          <input
+            type="range"
+            min={0}
+            max={Math.max(1, audioState.totalSentences - 1)}
+            value={audioState.currentSentenceIndex}
+            onChange={(e) => {
+              if (audioServiceRef.current) {
+                audioServiceRef.current.seekSentence(parseInt(e.target.value));
+              }
+            }}
+            className="w-full h-2 bg-white rounded-lg appearance-none cursor-pointer border border-brandBlack accent-brandPink"
+          />
+
+          {/* Playback Controls Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div className="flex items-center gap-2">
+              {!audioState.isPlaying ? (
+                <button
+                  onClick={() => audioServiceRef.current?.play()}
+                  className="bg-brandPink hover:bg-brandPinkDark text-white px-5 py-2 rounded-full font-mono text-xs font-black border-2 border-brandBlack shadow-[2px_2px_0px_#080808] flex items-center gap-1.5 transition"
+                >
+                  <span>▶</span>
+                  <span>Play Narration</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => audioServiceRef.current?.pause()}
+                  className="bg-brandBlack hover:bg-neutral-800 text-brandYellow px-5 py-2 rounded-full font-mono text-xs font-black border-2 border-brandBlack shadow-[2px_2px_0px_#FFFC00] flex items-center gap-1.5 transition"
+                >
+                  <span>⏸</span>
+                  <span>Pause</span>
+                </button>
+              )}
+
+              <button
+                onClick={() => audioServiceRef.current?.stop()}
+                className="bg-white hover:bg-neutral-100 text-brandBlack px-3.5 py-2 rounded-full font-mono text-xs font-black border-2 border-brandBlack shadow-[2px_2px_0px_#080808] transition"
+              >
+                ⏹ Stop
+              </button>
+            </div>
+
+            {/* Playback Speed Controls */}
+            <div className="flex items-center gap-1 font-mono text-xs font-black">
+              <span className="opacity-70 text-[11px] mr-1">SPEED:</span>
+              {[0.75, 1.0, 1.25, 1.5].map((speed) => (
+                <button
+                  key={speed}
+                  onClick={() => audioServiceRef.current?.setRate(speed)}
+                  className={`px-2.5 py-1 rounded border border-brandBlack text-xs transition ${
+                    audioState.rate === speed
+                      ? "bg-brandPink text-white font-black shadow-[1px_1px_0px_#080808]"
+                      : "bg-white text-brandBlack hover:bg-neutral-100"
+                  }`}
+                >
+                  {speed}x
+                </button>
+              ))}
+            </div>
+
+            {/* Volume Control */}
+            <div className="flex items-center gap-2 font-mono text-xs font-black">
+              <span>🔊</span>
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.1}
+                value={audioState.volume}
+                onChange={(e) => audioServiceRef.current?.setVolume(parseFloat(e.target.value))}
+                className="w-16 h-1.5 bg-white rounded border border-brandBlack accent-brandPink"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Cultural Expression Popover */}
+      {activeTerm && (
+        <CulturalTermPopover
+          expression={activeTerm}
+          onClose={() => setActiveTerm(null)}
+        />
+      )}
+    </div>
+  );
+};
+
