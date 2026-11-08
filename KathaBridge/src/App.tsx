@@ -57,7 +57,6 @@ export default function App() {
 
   // Audio speech intro state
   const [isIntroSpeaking, setIsIntroSpeaking] = useState(false);
-  const [selectedPersona, setSelectedPersona] = useState<"explorer" | "scholar" | "contributor" | "inclusive">("explorer");
 
   // Feedback & Newsletter
   const [newsletterEmail, setNewsletterEmail] = useState("");
@@ -235,7 +234,7 @@ export default function App() {
         </div>
       )}
 
-      {/* =================================================================== */}
+      {/*       {/* =================================================================== */}
       {/* TOP NAVIGATION BAR (Sticky with Scroll Transition) */}
       {/* =================================================================== */}
       <header
@@ -289,29 +288,18 @@ export default function App() {
                   key={item.id}
                   href={`#${item.id}`}
                   onClick={() => Soundtrack.playClick()}
-                  className={`px-4 py-2 rounded-full border transition duration-150 font-bold ${
+                  className={`px-4 py-1.5 rounded-full border-2 border-brandBlack font-extrabold transition-all duration-150 ${
                     activeSection === item.id
-                      ? "bg-brandPink text-white font-extrabold border-brandBlack shadow-[2px_2px_0px_#080808]"
-                      : "text-brandBlack border-transparent hover:bg-white hover:border-brandBlack"
+                      ? "bg-brandPink text-white shadow-[2px_2px_0px_#080808]"
+                      : "bg-transparent text-brandBlack hover:bg-brandPink hover:text-white"
                   }`}
                 >
                   {item.label}
                 </a>
               ))}
-
-              <button
-                onClick={() => {
-                  Soundtrack.playModalPop();
-                  setContributionModalOpen(true);
-                }}
-                className="text-brandBlack px-4 py-2 hover:bg-white rounded-full border border-transparent hover:border-brandBlack transition duration-150 font-bold"
-              >
-                {t.nav.contribute}
-              </button>
             </nav>
           </div>
 
-          {/* Right Controls: Accessibility, Audio, Language, Auth, Mobile Menu */}
           <div className="flex items-center gap-2.5 relative" data-purpose="accessibility-controls">
             {/* Malayalam Neural Voice Lab */}
             <button
@@ -503,446 +491,262 @@ export default function App() {
       </header>
 
       {/* =================================================================== */}
-      {/* SECTION 1: HERO SECTION (Exact KathaBridge Intro Page) */}
+      {/* SECTION 1: HERO SECTION */}
       {/* =================================================================== */}
       <main
-        className="w-full bg-[#0B0B0B] text-white pt-8 pb-16 lg:pb-24 relative overflow-hidden"
+        className="w-full max-w-[1720px] mx-auto px-6 sm:px-10 lg:px-14 xl:px-18 2xl:px-24 pt-4 pb-8 flex flex-col justify-center relative overflow-hidden"
         data-purpose="hero-content"
         id="home"
       >
-        <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10 lg:px-14 xl:px-18 2xl:px-24">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
-            {/* Left Column: Headline & Exploration */}
-            <div className="lg:col-span-7 flex flex-col justify-center" data-purpose="hero-copy">
-              {/* Yellow Pill Badge matching exact screenshot */}
-              <div className="inline-flex items-center gap-2 border-2 border-[#FFFC00] text-[#FFFC00] px-4 py-1.5 rounded-full text-xs font-mono font-black uppercase tracking-wider w-fit mb-8 shadow-[0_0_15px_rgba(255,252,0,0.2)]">
-                CULTURE · LANGUAGE · ACCESSIBILITY
-              </div>
+        {/* Starburst Ornaments - element behind BEYOND was removed as requested */}
+        <div className="absolute right-2 sm:right-6 lg:right-10 bottom-12 -z-0 pointer-events-none select-none opacity-40 lg:opacity-75">
+          <svg className="w-40 h-40 lg:w-52 lg:h-52 text-brandPink fill-current rotate-12" viewBox="0 0 100 100">
+            <path d="M0,50 L35,28 L50,0 L65,28 L100,50 L65,72 L50,100 L35,72 Z"></path>
+          </svg>
+        </div>
 
-              {/* Exact High-Impact Headline from screenshot */}
-              <h1 className="font-sans font-black text-white text-5xl sm:text-7xl lg:text-8xl xl:text-[94px] leading-[1.02] tracking-tight mb-8">
+        {/* Hero Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center relative z-10">
+          <div className="flex flex-col justify-center pr-0 lg:pr-4" data-purpose="hero-copy">
+            <div className="relative mb-6 select-none">
+              <div className="inline-flex items-center gap-2 bg-brandPink text-white border-2 border-brandBlack px-3.5 py-1 text-xs font-mono font-black mb-4 shadow-[3px_3px_0px_#080808] rotate-[-1.5deg]">
+                ✦ {selectedLanguage === "ML" ? "വാമൊഴി പൈതൃകവും സാംസ്കാരിക ആർക്കൈവും" : "FOLKLORE MEETS HIGH-ENERGY ARCHIVE"} ✦
+              </div>
+              <div className="pixel-heading text-[52px] sm:text-[68px] md:text-[80px] font-black text-brandBlack leading-[0.98]">
                 {selectedLanguage === "ML" ? (
                   <>
-                    ഭാഷകൾക്കപ്പുറം<br />
-                    സഞ്ചരിക്കുന്ന<br />
-                    <span className="text-[#FFFC00]">കഥകൾ.</span>
+                    <div>ഭാഷകൾക്കപ്പുറം</div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-brandPink">സഞ്ചരിക്കുന്ന</span>
+                      <svg
+                        className="w-12 h-12 md:w-16 md:h-16 text-brandPink fill-current -mt-2 animate-bounce"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z"></path>
+                      </svg>
+                    </div>
+                    <div>കഥകൾ</div>
                   </>
                 ) : (
                   <>
-                    Stories<br />
-                    Beyond<br />
-                    <span className="text-[#FFFC00]">Language.</span>
+                    <div>STORIES</div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-brandPink">BEYOND</span>
+                      <svg
+                        className="w-12 h-12 md:w-16 md:h-16 text-brandPink fill-current -mt-2 animate-bounce"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z"></path>
+                      </svg>
+                    </div>
+                    <div>LANGUAGE</div>
                   </>
                 )}
-              </h1>
-
-              {/* Subtitle from exact screenshot */}
-              <p className="text-neutral-300 text-lg sm:text-xl lg:text-2xl font-medium leading-relaxed max-w-xl mb-10">
-                Discover India's rich cultural stories across languages with accessible, meaningful and human-reviewed storytelling.
-              </p>
-
-              {/* Call-to-action buttons */}
-              <div className="flex flex-wrap items-center gap-4 mb-10" data-purpose="call-to-action-buttons">
-                <a
-                  className="inline-flex items-center gap-3 bg-[#FFFC00] hover:bg-white text-black font-black px-8 py-4 rounded-full text-base transition-all duration-200 transform hover:-translate-y-1 shadow-[5px_5px_0px_#FF087D] cursor-pointer"
-                  href="#stories"
-                  onClick={() => Soundtrack.playClick()}
-                >
-                  <span>Explore Stories</span>
-                  <span className="text-xl leading-none font-bold">→</span>
-                </a>
-
-                <button
-                  onClick={toggleIntroAudio}
-                  className={`inline-flex items-center gap-2.5 px-6 py-4 rounded-full text-sm font-black border-2 border-white/60 transition shadow-[4px_4px_0px_rgba(255,255,255,0.15)] ${
-                    isIntroSpeaking
-                      ? "bg-brandPink text-white border-brandPink animate-pulse"
-                      : "bg-transparent text-white hover:bg-white hover:text-black"
-                  }`}
-                >
-                  <span className="text-base">🔊</span>
-                  <span>{isIntroSpeaking ? "Stop Narration" : "Listen Spoken Intro"}</span>
-                </button>
-              </div>
-
-              {/* Quick Persona Highlights bar */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/20 max-w-2xl">
-                <div
-                  onClick={() => {
-                    setSelectedPersona("explorer");
-                    Soundtrack.playClick();
-                  }}
-                  className={`p-3 rounded-xl border cursor-pointer transition ${
-                    selectedPersona === "explorer"
-                      ? "bg-[#FFFC00]/15 border-[#FFFC00] text-white"
-                      : "bg-white/5 border-white/10 text-neutral-300 hover:border-white/30"
-                  }`}
-                >
-                  <div className="text-lg mb-1">🎧</div>
-                  <div className="text-xs font-black">Story Explorer</div>
-                  <div className="text-[10px] text-neutral-400">Audio & Karaoke</div>
-                </div>
-
-                <div
-                  onClick={() => {
-                    setSelectedPersona("scholar");
-                    Soundtrack.playClick();
-                  }}
-                  className={`p-3 rounded-xl border cursor-pointer transition ${
-                    selectedPersona === "scholar"
-                      ? "bg-brandPink/20 border-brandPink text-white"
-                      : "bg-white/5 border-white/10 text-neutral-300 hover:border-white/30"
-                  }`}
-                >
-                  <div className="text-lg mb-1">🎓</div>
-                  <div className="text-xs font-black">Scholar Review</div>
-                  <div className="text-[10px] text-neutral-400">Verify Dialects</div>
-                </div>
-
-                <div
-                  onClick={() => {
-                    setSelectedPersona("contributor");
-                    Soundtrack.playClick();
-                  }}
-                  className={`p-3 rounded-xl border cursor-pointer transition ${
-                    selectedPersona === "contributor"
-                      ? "bg-[#FFFC00]/15 border-[#FFFC00] text-white"
-                      : "bg-white/5 border-white/10 text-neutral-300 hover:border-white/30"
-                  }`}
-                >
-                  <div className="text-lg mb-1">🎙️</div>
-                  <div className="text-xs font-black">Oral Contributor</div>
-                  <div className="text-[10px] text-neutral-400">Preserve Lore</div>
-                </div>
-
-                <div
-                  onClick={() => {
-                    setSelectedPersona("inclusive");
-                    Soundtrack.playClick();
-                  }}
-                  className={`p-3 rounded-xl border cursor-pointer transition ${
-                    selectedPersona === "inclusive"
-                      ? "bg-brandPink/20 border-brandPink text-white"
-                      : "bg-white/5 border-white/10 text-neutral-300 hover:border-white/30"
-                  }`}
-                >
-                  <div className="text-lg mb-1">♿</div>
-                  <div className="text-xs font-black">Universal Access</div>
-                  <div className="text-[10px] text-neutral-400">WCAG 2.1 AAA</div>
-                </div>
               </div>
             </div>
 
-            {/* Right Column: Exact Cultural Collage from Figma Mockup */}
-            <div
-              className="lg:col-span-5 relative flex justify-center items-center min-h-[480px] lg:min-h-[580px] w-full"
-              data-purpose="pop-art-hero-illustration"
-            >
-              {/* Pink floating stars matching screenshot */}
-              <svg className="w-8 h-8 text-brandPink fill-current absolute -top-2 right-8 animate-pulse" viewBox="0 0 24 24">
-                <path d="M12 0L14.7 9.3L24 12L14.7 14.7L12 24L9.3 14.7L0 12L9.3 9.3L12 0Z"/>
-              </svg>
-              <svg className="w-6 h-6 text-[#FFFC00] fill-current absolute bottom-20 left-6" viewBox="0 0 24 24">
-                <path d="M12 0L14.7 9.3L24 12L14.7 14.7L12 24L9.3 14.7L0 12L9.3 9.3L12 0Z"/>
-              </svg>
-              <svg className="w-6 h-6 text-brandPink fill-current absolute top-1/3 -left-4 animate-bounce" viewBox="0 0 24 24">
-                <path d="M12 0L14.7 9.3L24 12L14.7 14.7L12 24L9.3 14.7L0 12L9.3 9.3L12 0Z"/>
-              </svg>
+            <p className="text-brandBlack text-[18px] sm:text-[20px] leading-relaxed max-w-2xl xl:max-w-3xl font-bold mb-8">
+              {t.hero.subtitle}
+            </p>
 
-              <div className="relative w-full flex flex-col items-center">
-                <img
-                  alt="KathaBridge Stories Beyond Language Cultural Collage"
-                  className="w-full max-w-[480px] lg:max-w-[540px] xl:max-w-[580px] h-auto object-contain select-none animate-float filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)] cursor-pointer"
-                  onClick={() => {
-                    Soundtrack.playModalPop();
-                    setActiveStoryReader(mockStories[0]);
-                  }}
-                  src="/images/landing/hero_collage_transparent.png"
-                />
+            <div className="flex flex-wrap items-center gap-4 mb-10" data-purpose="call-to-action-buttons">
+              <a
+                className="inline-flex items-center gap-3 bg-brandPink hover:bg-brandPinkDark text-white border-2 border-brandBlack px-8 py-4 rounded-full font-black text-base transition-all duration-200 transform hover:-translate-y-1 shadow-[5px_5px_0px_#080808]"
+                href="#stories"
+                onClick={() => Soundtrack.playClick()}
+              >
+                <span className="text-xs bg-brandYellow text-brandBlack font-black p-1.5 rounded-full leading-none border border-brandBlack">
+                  ▶
+                </span>
+                <span>{t.hero.exploreBtn}</span>
+              </a>
+
+              <button
+                onClick={toggleIntroAudio}
+                className={`inline-flex items-center gap-2.5 bg-white hover:bg-brandYellow text-brandBlack border-2 border-brandBlack px-8 py-4 rounded-full font-black text-base transition-all duration-200 transform hover:-translate-y-1 shadow-[5px_5px_0px_#080808] ${
+                  isIntroSpeaking ? "bg-brandYellow animate-pulse" : ""
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path
+                    d="M15.536 8.464a5 5 0 0 1 0 7.072m2.828-9.9a9 9 0 0 1 0 12.728M5.586 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  ></path>
+                </svg>
+                <span>{isIntroSpeaking ? t.hero.stopSpeech : t.hero.listenSpeech}</span>
+              </button>
+            </div>
+
+            {/* Quick 4-Feature Icons Bar */}
+            <div className="grid grid-cols-4 gap-2 pt-6 border-t-2 border-brandBlack max-w-xl xl:max-w-2xl w-full">
+              <div
+                onClick={() => {
+                  Soundtrack.playModalPop();
+                  setActiveStoryReader(mockStories[0]);
+                }}
+                className="flex flex-col items-center text-center px-1 cursor-pointer hover:scale-105 transition"
+              >
+                <div className="mb-2 bg-white p-2 rounded-xl border-2 border-brandBlack shadow-[2px_2px_0px_#080808]">
+                  <svg className="w-6 h-6 text-brandBlack" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </svg>
+                </div>
+                <span className="text-xs font-black leading-tight text-brandBlack">
+                  Multilingual<br />Stories
+                </span>
+              </div>
+
+              <div
+                onClick={() => {
+                  Soundtrack.playModalPop();
+                  setGlossaryModalOpen(true);
+                }}
+                className="flex flex-col items-center text-center px-1 border-l-2 border-brandBlack cursor-pointer hover:scale-105 transition"
+              >
+                <div className="mb-2 bg-white p-2 rounded-xl border-2 border-brandBlack shadow-[2px_2px_0px_#080808]">
+                  <svg className="w-6 h-6 text-brandBlack" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </svg>
+                </div>
+                <span className="text-xs font-black leading-tight text-brandBlack">
+                  Cultural<br />Explanations
+                </span>
+              </div>
+
+              <div
+                onClick={() => {
+                  Soundtrack.playModalPop();
+                  setA11yModalOpen(true);
+                }}
+                className="flex flex-col items-center text-center px-1 border-l-2 border-brandBlack cursor-pointer hover:scale-105 transition"
+              >
+                <div className="mb-2 bg-white p-2 rounded-xl border-2 border-brandBlack shadow-[2px_2px_0px_#080808]">
+                  <svg className="w-6 h-6 text-brandBlack" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <circle cx="12" cy="5" r="2"></circle>
+                    <path d="M4 11h16M12 11v10m-3-6 3 3 3-3" strokeLinecap="round" strokeLinejoin="round"></path>
+                  </svg>
+                </div>
+                <span className="text-xs font-black leading-tight text-brandBlack">
+                  Accessible<br />for All
+                </span>
+              </div>
+
+              <div
+                onClick={() => {
+                  Soundtrack.playModalPop();
+                  setReviewerModalOpen(true);
+                }}
+                className="flex flex-col items-center text-center px-1 border-l-2 border-brandBlack cursor-pointer hover:scale-105 transition"
+              >
+                <div className="mb-2 bg-white p-2 rounded-xl border-2 border-brandBlack shadow-[2px_2px_0px_#080808]">
+                  <svg className="w-6 h-6 text-brandBlack" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path
+                      d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </svg>
+                </div>
+                <span className="text-xs font-black leading-tight text-brandBlack">
+                  Human<br />Reviewed
+                </span>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Dynamic Tilted Yellow Ribbon crossing across the bottom */}
-        <div className="relative w-full overflow-hidden py-3.5 bg-[#FFFC00] text-black border-y-2 border-black transform -rotate-1 scale-105 z-20 shadow-[0_6px_25px_rgba(0,0,0,0.6)] mt-12 mb-0">
-          <div className="flex whitespace-nowrap select-none font-mono font-black text-sm tracking-widest uppercase pixel-marquee items-center gap-8">
-            {[...Array(14)].map((_, i) => (
-              <div key={i} className="flex items-center gap-6 shrink-0">
-                <span className="text-brandPink text-lg">✦</span>
-                <span className="text-black font-extrabold tracking-widest">KATHABRIDGE</span>
-                <span className="text-brandPink text-lg">✦</span>
-                <span className="text-black font-extrabold tracking-widest">STORIES BEYOND LANGUAGE</span>
-                <span className="text-brandPink text-lg">✦</span>
-                <span className="text-black font-extrabold tracking-widest">CULTURE IN EVERY VOICE</span>
-              </div>
-            ))}
+          {/* Pop Art Hero Illustration */}
+          <div
+            className="relative flex justify-center items-center min-h-[580px] lg:min-h-[640px] w-full"
+            data-purpose="pop-art-hero-illustration"
+          >
+            <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none opacity-90">
+              <svg
+                className="w-full max-w-[620px] h-[620px] text-brandPink/30 fill-current animate-pulse"
+                style={{ animationDuration: "7s" }}
+                viewBox="0 0 400 400"
+              >
+                <polygon points="200,200 180,0 220,0"></polygon>
+                <polygon points="200,200 320,40 350,75"></polygon>
+                <polygon points="200,200 400,180 400,220"></polygon>
+                <polygon points="200,200 360,320 330,355"></polygon>
+                <polygon points="200,200 220,400 180,400"></polygon>
+                <polygon points="200,200 75,360 40,325"></polygon>
+                <polygon points="200,200 0,220 0,180"></polygon>
+                <polygon points="200,200 400,75 75,40"></polygon>
+              </svg>
+            </div>
+            <div className="absolute right-0 top-1/4 w-96 h-80 bg-brandPink/30 rounded-full blur-3xl -z-10"></div>
+            <div className="absolute left-0 bottom-16 w-80 h-72 bg-white/50 rounded-full blur-2xl -z-10"></div>
+            <div className="relative w-full flex flex-col items-center">
+              <img
+                alt="KathaBridge Cultural Pop Art Storyteller"
+                className="w-full h-auto max-h-[640px] object-contain select-none animate-float filter drop-shadow-[10px_10px_0px_#080808] cursor-pointer"
+                onClick={() => {
+                  Soundtrack.playModalPop();
+                  setActiveStoryReader(mockStories[0]);
+                }}
+                src="/images/landing/asset_9.png"
+              />
+            </div>
           </div>
         </div>
       </main>
 
       {/* =================================================================== */}
-      {/* SECTION: INTERACTIVE USER SELECTION & PERSONA EXPERIENCE */}
+      {/* CONTINUOUS TICKER MARQUEE 1 */}
       {/* =================================================================== */}
-      <section
-        className="w-full max-w-[1720px] mx-auto px-6 sm:px-10 lg:px-14 xl:px-18 2xl:px-24 py-16 lg:py-20"
-        id="user-selection"
-        data-purpose="user-persona-selection"
+      <div
+        className="w-full bg-brandPink text-brandYellow overflow-hidden py-3.5 border-y-2 border-brandBlack z-20 shadow-[0_4px_0_#080808]"
+        data-purpose="announcement-marquee"
       >
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b-2 border-brandBlack pb-6 mb-12 gap-6">
-          <div>
-            <div className="inline-flex items-center gap-2 bg-brandPink text-white border-2 border-brandBlack px-3.5 py-1 text-xs font-mono font-black mb-3 shadow-[2px_2px_0px_#080808]">
-              ✦ [ 00 / USER PERSONA SELECTION ] ✦
-            </div>
-            <h2 className="font-editorial text-3xl sm:text-5xl font-black text-brandBlack tracking-tight">
-              CHOOSE HOW YOU EXPERIENCE KATHABRIDGE.
-            </h2>
-            <p className="text-brandBlack text-base sm:text-lg font-bold mt-2 max-w-2xl">
-              Personalize your storytelling interface. Switch between immersive folklore listening, scholarly transcript verification, community contribution, and universal accessibility.
-            </p>
+        <div className="animate-marquee select-none font-bold text-lg sm:text-xl items-center tracking-wider pixel-marquee flex whitespace-nowrap">
+          {/* Repeating Ribbon Text Pattern matching reference */}
+          <div className="flex items-center gap-6 shrink-0">
+            <span className="text-white font-extrabold">KATHABRIDGE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">STORIES BEYOND LANGUAGE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">ORAL TRADITION</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">KATHABRIDGE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">VERIFIED FOLKLORE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">KATHABRIDGE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">STORIES BEYOND LANGUAGE</span>
+            <span className="text-brandYellow text-base">✦</span>
           </div>
-
-          {/* Quick Language Switcher Pills */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-mono font-black text-brandBlack uppercase">Quick Language:</span>
-            {[
-              { code: "EN" as LanguageCode, label: "English" },
-              { code: "ML" as LanguageCode, label: "മലയാളം" },
-              { code: "SA" as LanguageCode, label: "संस्कृतम्" }
-            ].map((lang) => (
-              <button
-                key={lang.code}
-                onClick={() => {
-                  Soundtrack.playClick();
-                  setSelectedLanguage(lang.code);
-                  showToast(`Language switched to ${lang.label}`);
-                }}
-                className={`px-3.5 py-1.5 rounded-full border-2 border-brandBlack text-xs font-black transition shadow-[2px_2px_0px_#080808] ${
-                  selectedLanguage === lang.code
-                    ? "bg-brandPink text-white"
-                    : "bg-white text-brandBlack hover:bg-brandYellow"
-                }`}
-              >
-                {lang.label}
-              </button>
-            ))}
+          <div className="flex items-center gap-6 shrink-0" aria-hidden="true">
+            <span className="text-white font-extrabold">KATHABRIDGE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">STORIES BEYOND LANGUAGE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">ORAL TRADITION</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">KATHABRIDGE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">VERIFIED FOLKLORE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">KATHABRIDGE</span>
+            <span className="text-brandYellow text-base">✦</span>
+            <span className="text-white font-extrabold">STORIES BEYOND LANGUAGE</span>
+            <span className="text-brandYellow text-base">✦</span>
           </div>
         </div>
+      </div>
 
-        {/* 4 Interactive Persona Selection Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-          {/* Card 1: Story Explorer */}
-          <div
-            onClick={() => {
-              Soundtrack.playClick();
-              setSelectedPersona("explorer");
-              showToast("Switched to Story Explorer Mode");
-            }}
-            className={`border-2 border-brandBlack rounded-2xl p-6 flex flex-col justify-between transition-all duration-200 cursor-pointer shadow-[6px_6px_0px_#080808] ${
-              selectedPersona === "explorer"
-                ? "bg-white ring-4 ring-brandPink -translate-y-1"
-                : "bg-white/80 hover:bg-white hover:-translate-y-0.5"
-            }`}
-          >
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-3xl">🎧</span>
-                <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded border border-brandBlack ${
-                  selectedPersona === "explorer" ? "bg-brandPink text-white" : "bg-neutral-100 text-brandBlack"
-                }`}>
-                  {selectedPersona === "explorer" ? "✓ ACTIVE MODE" : "STORY EXPLORER"}
-                </span>
-              </div>
-              <h3 className="font-editorial text-xl font-black text-brandBlack mb-2">
-                Oral Story Explorer
-              </h3>
-              <p className="text-xs font-bold text-neutral-700 leading-relaxed mb-6">
-                Immerse in living regional folklore with native neural narration, real-time synchronized karaoke subtitles, and instant cultural term explanations.
-              </p>
-            </div>
-            <div className="pt-4 border-t-2 border-brandBlack/15 flex flex-col gap-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  Soundtrack.playModalPop();
-                  setActiveStoryReader(mockStories[0]);
-                }}
-                className="w-full text-center py-2 bg-brandPink hover:bg-brandPinkDark text-white border-2 border-brandBlack rounded-full font-mono text-xs font-black shadow-[2px_2px_0px_#080808]"
-              >
-                ▶ Listen to Mahabali
-              </button>
-              <a
-                href="#stories"
-                onClick={() => Soundtrack.playClick()}
-                className="w-full text-center py-1.5 bg-brandYellow hover:bg-white text-brandBlack border-2 border-brandBlack rounded-full font-mono text-xs font-black shadow-[2px_2px_0px_#080808]"
-              >
-                Browse All 4 Stories ↓
-              </a>
-            </div>
-          </div>
 
-          {/* Card 2: Cultural Scholar */}
-          <div
-            onClick={() => {
-              Soundtrack.playClick();
-              setSelectedPersona("scholar");
-              showToast("Switched to Cultural Scholar Mode");
-            }}
-            className={`border-2 border-brandBlack rounded-2xl p-6 flex flex-col justify-between transition-all duration-200 cursor-pointer shadow-[6px_6px_0px_#080808] ${
-              selectedPersona === "scholar"
-                ? "bg-white ring-4 ring-brandPink -translate-y-1"
-                : "bg-white/80 hover:bg-white hover:-translate-y-0.5"
-            }`}
-          >
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-3xl">🎓</span>
-                <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded border border-brandBlack ${
-                  selectedPersona === "scholar" ? "bg-brandPink text-white" : "bg-neutral-100 text-brandBlack"
-                }`}>
-                  {selectedPersona === "scholar" ? "✓ ACTIVE MODE" : "PEER-REVIEW"}
-                </span>
-              </div>
-              <h3 className="font-editorial text-xl font-black text-brandBlack mb-2">
-                Cultural Scholar
-              </h3>
-              <p className="text-xs font-bold text-neutral-700 leading-relaxed mb-6">
-                Compare raw oral field recordings against AI draft translations, verify cultural idioms, and audit regional dialect etymologies.
-              </p>
-            </div>
-            <div className="pt-4 border-t-2 border-brandBlack/15 flex flex-col gap-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  Soundtrack.playModalPop();
-                  setReviewerModalOpen(true);
-                }}
-                className="w-full text-center py-2 bg-brandYellow hover:bg-brandPink hover:text-white text-brandBlack border-2 border-brandBlack rounded-full font-mono text-xs font-black shadow-[2px_2px_0px_#080808]"
-              >
-                ↗ Open Review Queue
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  Soundtrack.playModalPop();
-                  setGlossaryModalOpen(true);
-                }}
-                className="w-full text-center py-1.5 bg-white hover:bg-brandYellow text-brandBlack border-2 border-brandBlack rounded-full font-mono text-xs font-black shadow-[2px_2px_0px_#080808]"
-              >
-                18-Term Cultural Glossary
-              </button>
-            </div>
-          </div>
-
-          {/* Card 3: Folk Narrator */}
-          <div
-            onClick={() => {
-              Soundtrack.playClick();
-              setSelectedPersona("contributor");
-              showToast("Switched to Folk Narrator Mode");
-            }}
-            className={`border-2 border-brandBlack rounded-2xl p-6 flex flex-col justify-between transition-all duration-200 cursor-pointer shadow-[6px_6px_0px_#080808] ${
-              selectedPersona === "contributor"
-                ? "bg-white ring-4 ring-brandPink -translate-y-1"
-                : "bg-white/80 hover:bg-white hover:-translate-y-0.5"
-            }`}
-          >
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-3xl">🎙️</span>
-                <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded border border-brandBlack ${
-                  selectedPersona === "contributor" ? "bg-brandPink text-white" : "bg-neutral-100 text-brandBlack"
-                }`}>
-                  {selectedPersona === "contributor" ? "✓ ACTIVE MODE" : "CONTRIBUTE"}
-                </span>
-              </div>
-              <h3 className="font-editorial text-xl font-black text-brandBlack mb-2">
-                Oral Lore Contributor
-              </h3>
-              <p className="text-xs font-bold text-neutral-700 leading-relaxed mb-6">
-                Contribute community oral heritage, local folk tales, ritual songs, and dialect proverbs from your regional community.
-              </p>
-            </div>
-            <div className="pt-4 border-t-2 border-brandBlack/15 flex flex-col gap-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  Soundtrack.playModalPop();
-                  setContributionModalOpen(true);
-                }}
-                className="w-full text-center py-2 bg-brandPink hover:bg-brandPinkDark text-white border-2 border-brandBlack rounded-full font-mono text-xs font-black shadow-[2px_2px_0px_#080808]"
-              >
-                ↗ Submit Folklore
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  Soundtrack.playModalPop();
-                  setVoiceLabOpen(true);
-                }}
-                className="w-full text-center py-1.5 bg-brandYellow hover:bg-white text-brandBlack border-2 border-brandBlack rounded-full font-mono text-xs font-black shadow-[2px_2px_0px_#080808]"
-              >
-                🎙 Test ML Voice Engine
-              </button>
-            </div>
-          </div>
-
-          {/* Card 4: Universal Accessible Reader */}
-          <div
-            onClick={() => {
-              Soundtrack.playClick();
-              setSelectedPersona("inclusive");
-              showToast("Switched to Universal Accessible Mode");
-            }}
-            className={`border-2 border-brandBlack rounded-2xl p-6 flex flex-col justify-between transition-all duration-200 cursor-pointer shadow-[6px_6px_0px_#080808] ${
-              selectedPersona === "inclusive"
-                ? "bg-white ring-4 ring-brandPink -translate-y-1"
-                : "bg-white/80 hover:bg-white hover:-translate-y-0.5"
-            }`}
-          >
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-3xl">♿</span>
-                <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded border border-brandBlack ${
-                  selectedPersona === "inclusive" ? "bg-brandPink text-white" : "bg-neutral-100 text-brandBlack"
-                }`}>
-                  {selectedPersona === "inclusive" ? "✓ ACTIVE MODE" : "WCAG 2.1 AAA"}
-                </span>
-              </div>
-              <h3 className="font-editorial text-xl font-black text-brandBlack mb-2">
-                Accessible for All
-              </h3>
-              <p className="text-xs font-bold text-neutral-700 leading-relaxed mb-6">
-                Full accessibility suite with font scaling, 4 high-contrast color palettes, relaxed line height, and reduced motion.
-              </p>
-            </div>
-            <div className="pt-4 border-t-2 border-brandBlack/15 flex flex-col gap-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  Soundtrack.playModalPop();
-                  setA11yModalOpen(true);
-                }}
-                className="w-full text-center py-2 bg-brandYellow hover:bg-brandPink hover:text-white text-brandBlack border-2 border-brandBlack rounded-full font-mono text-xs font-black shadow-[2px_2px_0px_#080808]"
-              >
-                ⚙️ Accessibility Center
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  Soundtrack.playClick();
-                  const newMode = accessibilitySettings.contrastMode === "high-contrast" ? "normal" : "high-contrast";
-                  setAccessibilitySettings({ ...accessibilitySettings, contrastMode: newMode });
-                  showToast(`Contrast mode: ${newMode}`);
-                }}
-                className="w-full text-center py-1.5 bg-white hover:bg-brandYellow text-brandBlack border-2 border-brandBlack rounded-full font-mono text-xs font-black shadow-[2px_2px_0px_#080808]"
-              >
-                🌓 Toggle High Contrast
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* =================================================================== */}
       {/* SECTION 2: CULTURAL ARCHIVE & MANIFESTO */}
       {/* =================================================================== */}
       <section

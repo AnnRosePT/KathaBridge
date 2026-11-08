@@ -7,7 +7,7 @@ git init
 git remote remove origin 2>nul
 git remote add origin https://github.com/AnnRosePT/KathaBridge.git
 git add .
-git commit -m "feat: complete KathaBridge platform with dark intro hero, user persona hub, native Malayalam TTS, karaoke player and scholar workstation"
+git commit -m "feat: complete KathaBridge platform with responsive desktop view, native Malayalam TTS, karaoke player and scholar workstation"
 git branch -M main
 git push -u origin main
 

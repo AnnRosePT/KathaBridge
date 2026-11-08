@@ -12,7 +12,7 @@ Write-Host ">>> Staging project files..." -ForegroundColor Cyan
 git add .
 
 Write-Host ">>> Committing KathaBridge..." -ForegroundColor Cyan
-git commit -m "feat: complete KathaBridge platform with dark intro hero, user persona hub, native Malayalam TTS, karaoke player and scholar workstation"
+git commit -m "feat: complete KathaBridge platform with responsive desktop view, native Malayalam TTS, karaoke player and scholar workstation"
 
 Write-Host ">>> Setting branch to main..." -ForegroundColor Cyan
 git branch -M main

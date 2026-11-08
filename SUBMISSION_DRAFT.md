@@ -21,8 +21,7 @@ Develop an inclusive, highly accessible digital storytelling platform that prese
 
 | Required Objective | Implementation in KathaBridge | Verification Status |
 | :--- | :--- | :--- |
-| **Exact Figma Dark Intro Page** | Obsidian luxury intro hero (`#0B0B0B`) featuring high-contrast typography (*Stories Beyond Language.*), cultural collage illustration, pink floating starbursts, and tilted yellow tape banner. | ✅ Fully Implemented |
-| **Interactive User Persona Hub** | 4 customizable exploration modes: **Story Explorer**, **Cultural Scholar**, **Folk Narrator**, and **Universal Accessible Reader** with personalized quick actions. | ✅ Fully Implemented |
+| **High-Energy Cultural Archive Design** | Authentic Google Stitch Neo-Pop Brutalist aesthetic (`#FFFC00`, `#FF087D`, `#080808`, `#FFFDE0`) with responsive `max-w-[1720px]` desktop layout, balanced typography, and floating starburst framing. | ✅ Fully Implemented |
 | **Curated Cultural Story Library** | 4 complete narratives curated: *The Legend of Mahabali*, *Theyyam: The Living Gods of North Malabar*, *Koodiyattam: Living Sanskrit Theatre*, and *Panchatantra: The Blue Jackal*. | ✅ Fully Implemented |
 | **Synchronized Subtitles & Transcripts** | Sentence-by-sentence karaoke highlighting, synchronized audio progress bar, scrub bar, seek control, and jump-to-sentence. | ✅ Fully Implemented |
 | **Bilingual Toggle (English & Malayalam)** | Complete dual-language experience across all stories, interface labels, subtitles, and summaries. | ✅ Fully Implemented |
@@ -127,7 +126,7 @@ KathaBridge/
 │   ├── audio/
 │   │   └── tts/             # Pre-synthesized native MP3 files (all story sentences, intro, glossary)
 │   ├── images/
-│   │   ├── landing/         # Transparent collage assets (hero_collage_transparent.png, etc.)
+│   │   ├── landing/         # Transparent landing art assets (asset_1.png to asset_12.png)
 │   │   └── stories/         # Local high-res story illustrations (mahabali, theyyam, etc.)
 │   └── favicon.png
 ├── src/
@@ -162,10 +161,9 @@ KathaBridge/
 
 ## 7. Instructions for Walkthrough & Evaluation
 
-1. **Verify Exact Intro Page & Persona Selection**:
+1. **Verify Desktop Responsive View**:
    * Open `http://localhost:8443`.
-   * Notice the obsidian dark intro hero with the exact headline typography, floating pink starbursts, the cultural collage illustration, and the tilted yellow tape banner.
-   * Try selecting different personas (**Story Explorer**, **Cultural Scholar**, **Oral Contributor**, **Universal Accessible Reader**) in the User Selection Hub.
+   * Observe the signature yellow Neo-Pop Brutalist aesthetic with expansive `max-w-[1720px]` container, balanced typography, transparent storyteller illustration, and 4-column story library.
 2. **Evaluate Native Malayalam Voice**:
    * Click **"🎙 ML Voice"** in the top navigation bar.
    * Listen to the 4 sample benchmark sentences using `ml-IN-SobhanaNeural` and `ml-IN-MidhunNeural`.
