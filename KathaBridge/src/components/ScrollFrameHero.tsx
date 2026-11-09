@@ -5,38 +5,57 @@ interface Props {
   onExploreClick?: () => void;
 }
 
-const TOTAL_FRAMES = 120;
+// Start from frame 15 (index 14) so the screen is never black on initial load
+const START_FRAME_INDEX = 14; 
+const END_FRAME_INDEX = 119; // Frame 120
+const TOTAL_PLAYABLE_FRAMES = END_FRAME_INDEX - START_FRAME_INDEX + 1; // 106 active visual frames
 
 export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
-  const currentFrameRef = useRef<number>(0);
+  const currentFrameRef = useRef<number>(START_FRAME_INDEX);
   const animationFrameIdRef = useRef<number | null>(null);
 
-  const [loadedCount, setLoadedCount] = useState<number>(0);
+  const [activeFrameIndex, setActiveFrameIndex] = useState<number>(START_FRAME_INDEX);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const [activeFrameDisplay, setActiveFrameDisplay] = useState<number>(1);
+  const [loadedCount, setLoadedCount] = useState<number>(0);
 
   // Helper to format frame filename
-  const getFrameUrl = (index: number) => {
+  const getFrameUrl = useCallback((index: number) => {
     const pad = String(index + 1).padStart(3, "0");
     return `/frames/sequence/ezgif-frame-${pad}.jpg`;
-  };
+  }, []);
 
-  // Draw a specific image to the canvas with "cover" fit math
+  // Draw a frame to canvas with cover fit
   const renderFrame = useCallback((frameIdx: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const img = imagesRef.current[frameIdx];
+    // Find requested or nearest available loaded frame
+    let img = imagesRef.current[frameIdx];
+    if (!img || !img.complete || img.naturalWidth === 0) {
+      for (let offset = 1; offset < TOTAL_PLAYABLE_FRAMES; offset++) {
+        const prev = imagesRef.current[frameIdx - offset];
+        if (prev && prev.complete && prev.naturalWidth > 0) {
+          img = prev;
+          break;
+        }
+        const next = imagesRef.current[frameIdx + offset];
+        if (next && next.complete && next.naturalWidth > 0) {
+          img = next;
+          break;
+        }
+      }
+    }
+
     if (!img || !img.complete || img.naturalWidth === 0) return;
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
+    const width = canvas.clientWidth || window.innerWidth;
+    const height = canvas.clientHeight || window.innerHeight;
 
     if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
       canvas.width = width * dpr;
@@ -47,7 +66,6 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, width, height);
 
-    // Cover math: preserve aspect ratio, centered crop
     const imgRatio = img.naturalWidth / img.naturalHeight;
     const canvasRatio = width / height;
 
@@ -68,42 +86,46 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
     ctx.restore();
   }, []);
 
-  // 1. Preload frame sequence
+  // 1. Preload visual frame sequence
   useEffect(() => {
     const images: HTMLImageElement[] = [];
     imagesRef.current = images;
-
     let loaded = 0;
 
-    // Load Frame 0 first so screen isn't black
+    // Load initial frame (START_FRAME_INDEX) immediately
     const firstImg = new Image();
-    firstImg.src = getFrameUrl(0);
-    images[0] = firstImg;
+    firstImg.src = getFrameUrl(START_FRAME_INDEX);
+    images[START_FRAME_INDEX] = firstImg;
     firstImg.onload = () => {
       loaded++;
       setLoadedCount(loaded);
-      renderFrame(0);
+      renderFrame(START_FRAME_INDEX);
     };
 
-    // Load remaining frames asynchronously
-    for (let i = 1; i < TOTAL_FRAMES; i++) {
+    // Preload remaining frames
+    for (let i = START_FRAME_INDEX; i <= END_FRAME_INDEX; i++) {
+      if (i === START_FRAME_INDEX) continue;
       const img = new Image();
       img.src = getFrameUrl(i);
       images[i] = img;
       img.onload = () => {
         loaded++;
         setLoadedCount(loaded);
-        // If current frame happens to be this one, render it
         if (currentFrameRef.current === i) {
           renderFrame(i);
         }
       };
     }
 
+    // Force an initial draw
+    setTimeout(() => {
+      renderFrame(START_FRAME_INDEX);
+    }, 100);
+
     return () => {
       imagesRef.current = [];
     };
-  }, [renderFrame]);
+  }, [getFrameUrl, renderFrame]);
 
   // 2. Handle scroll progress
   useEffect(() => {
@@ -117,10 +139,15 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
 
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(1, scrolled / scrollable));
-      const targetFrame = Math.min(TOTAL_FRAMES - 1, Math.floor(progress * TOTAL_FRAMES));
+      
+      // Map progress across the visual frames
+      const targetFrame = Math.min(
+        END_FRAME_INDEX,
+        START_FRAME_INDEX + Math.floor(progress * TOTAL_PLAYABLE_FRAMES)
+      );
 
       setScrollProgress(progress);
-      setActiveFrameDisplay(targetFrame + 1);
+      setActiveFrameIndex(targetFrame);
 
       if (currentFrameRef.current !== targetFrame) {
         currentFrameRef.current = targetFrame;
@@ -136,7 +163,6 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", () => renderFrame(currentFrameRef.current), { passive: true });
 
-    // Initial check
     handleScroll();
 
     return () => {
@@ -153,133 +179,138 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
     if (onExploreClick) {
       onExploreClick();
     } else {
-      const el = document.getElementById("stories");
+      const el = document.getElementById("home");
       if (el) el.scrollIntoView({ behavior: "smooth" });
     }
   };
 
+  const currentDisplayNumber = activeFrameIndex + 1;
+
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[320vh] bg-black text-white"
+      className="relative w-full h-[300vh] bg-neutral-950 text-white"
       id="scroll-intro-animation"
       data-purpose="scroll-controlled-frame-animation"
     >
-      {/* Sticky full-screen stage */}
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-black select-none">
-        {/* Canvas viewport */}
+      {/* Sticky full-screen viewport */}
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-neutral-950 select-none">
+        
+        {/* Layer 1: Hardware-Accelerated Fallback Image (Guarantees NEVER black) */}
+        <img
+          src={getFrameUrl(activeFrameIndex)}
+          alt="KathaBridge Living Heritage Cinema"
+          className="absolute inset-0 w-full h-full object-cover z-0 filter brightness-105"
+        />
+
+        {/* Layer 2: High-Performance Canvas */}
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
         />
 
-        {/* Ambient Dark Gradient Vignette for Readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/70 pointer-events-none z-10" />
+        {/* Subtle, soft vignette (keeps artwork vivid) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/50 pointer-events-none z-10" />
 
-        {/* Top Control Bar inside Animation */}
+        {/* Top Control Bar */}
         <div className="absolute top-6 left-6 right-6 z-20 flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
             <svg
-              className="w-7 h-7 text-brandPink animate-spin"
-              style={{ animationDuration: "10s" }}
+              className="w-6 h-6 text-[#FF2D78] animate-spin"
+              style={{ animationDuration: "12s" }}
               fill="currentColor"
               viewBox="0 0 24 24"
             >
               <path d="M12 0L14.5 8.5L23.5 9.5L16.5 15.5L18.5 24L12 19L5.5 24L7.5 15.5L0.5 9.5L9.5 8.5L12 0Z"></path>
             </svg>
             <div>
-              <span className="font-editorial text-2xl font-black tracking-tight text-white block leading-none">
+              <span className="font-editorial text-xl font-black tracking-tight text-white block leading-none">
                 KathaBridge
               </span>
-              <span className="text-[10px] font-mono tracking-widest text-[#FFFC00] uppercase font-bold">
-                Scroll Cinema Experience
+              <span className="text-[9px] font-mono tracking-widest text-[#FFFC00] uppercase font-bold">
+                Cinematic Heritage Scroll
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Frame counter badge */}
-            <div className="hidden sm:flex items-center gap-2 bg-neutral-900/80 border border-neutral-700/80 px-3 py-1.5 rounded-full text-xs font-mono">
+            {/* Frame Counter Badge */}
+            <div className="hidden sm:flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full text-xs font-mono">
               <span className="text-neutral-400">FRAME</span>
               <span className="text-brandYellow font-bold">
-                {String(activeFrameDisplay).padStart(3, "0")} / {TOTAL_FRAMES}
+                {String(currentDisplayNumber).padStart(3, "0")} / 120
               </span>
             </div>
 
-            {/* Skip directly to main app */}
+            {/* Skip Button */}
             <button
               onClick={handleSkipToStories}
-              className="bg-brandPink hover:bg-brandPinkDark text-white border-2 border-brandBlack px-4 py-1.5 rounded-full text-xs font-black transition-all transform hover:scale-105 shadow-[2px_2px_0px_#FFFC00] cursor-pointer flex items-center gap-1.5"
+              className="bg-brandPink hover:bg-brandPinkDark text-white border-2 border-brandBlack px-4 py-2 rounded-full text-xs font-black transition-all transform hover:scale-105 shadow-[2px_2px_0px_#FFFC00] cursor-pointer flex items-center gap-1.5"
             >
-              <span>Skip Animation</span>
+              <span>Skip to Stories</span>
               <span>↓</span>
             </button>
           </div>
         </div>
 
-        {/* Scrollytelling Stage 1: 0% - 30% */}
+        {/* Narrative Stage 1: 0% - 33% */}
         <div
           className={`absolute z-20 max-w-2xl text-center px-6 transition-all duration-500 transform ${
-            scrollProgress < 0.32
+            scrollProgress < 0.35
               ? "opacity-100 translate-y-0 pointer-events-auto"
-              : "opacity-0 -translate-y-8 pointer-events-none"
+              : "opacity-0 -translate-y-6 pointer-events-none"
           }`}
         >
-          <div className="inline-flex items-center gap-2 border border-[#FFFC00]/60 bg-black/70 px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider text-[#FFFC00] mb-4 shadow-[0_0_15px_rgba(255,252,0,0.3)]">
-            <span>✦ CULTURE IN MOTION ✦</span>
+          <div className="inline-flex items-center gap-2 border border-[#FFFC00]/60 bg-black/75 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider text-[#FFFC00] mb-4 shadow-[0_0_20px_rgba(255,252,0,0.3)]">
+            <span>✦ FOLKLORE IN MOTION ✦</span>
           </div>
-          <h1 className="font-editorial text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-4">
+          <h1 className="font-editorial text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-4 drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
             Stories Beyond <span className="text-brandYellow underline decoration-brandPink decoration-wavy decoration-2">Language.</span>
           </h1>
-          <p className="text-neutral-200 text-sm sm:text-lg max-w-lg mx-auto font-medium leading-relaxed drop-shadow-md">
+          <p className="text-neutral-100 text-sm sm:text-lg max-w-lg mx-auto font-semibold leading-relaxed bg-black/40 backdrop-blur-sm p-3 rounded-2xl border border-white/10">
             Translating centuries of oral folklore into a living, scroll-driven visual journey.
           </p>
           <div className="mt-8 flex flex-col items-center gap-2 animate-bounce text-xs font-mono text-brandYellow">
-            <span>↓ Scroll down to play frames</span>
-            <div className="w-5 h-8 border-2 border-brandYellow rounded-full flex justify-center pt-1">
-              <div className="w-1 h-2 bg-brandYellow rounded-full animate-pulse"></div>
-            </div>
+            <span className="bg-black/60 px-3 py-1 rounded-full border border-[#FFFC00]/40">
+              ↓ Scroll down to play sequence
+            </span>
           </div>
         </div>
 
-        {/* Scrollytelling Stage 2: 33% - 66% */}
+        {/* Narrative Stage 2: 35% - 68% */}
         <div
           className={`absolute z-20 max-w-2xl text-center px-6 transition-all duration-500 transform ${
-            scrollProgress >= 0.33 && scrollProgress < 0.68
+            scrollProgress >= 0.35 && scrollProgress < 0.70
               ? "opacity-100 translate-y-0 pointer-events-auto"
-              : "opacity-0 translate-y-8 pointer-events-none"
+              : "opacity-0 translate-y-6 pointer-events-none"
           }`}
         >
-          <div className="inline-flex items-center gap-2 border border-brandPink/70 bg-black/70 px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider text-brandPink mb-4 shadow-[0_0_15px_rgba(255,45,120,0.3)]">
+          <div className="inline-flex items-center gap-2 border border-brandPink/70 bg-black/75 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider text-brandPink mb-4 shadow-[0_0_20px_rgba(255,45,120,0.3)]">
             <span>RITUAL FOLKLORE • SUBALTERN VOICES</span>
           </div>
-          <h2 className="font-editorial text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-4">
+          <h2 className="font-editorial text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-4 drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
             Living Gods &amp; Sacred Groves.
           </h2>
-          <p className="text-neutral-200 text-sm sm:text-lg max-w-lg mx-auto font-medium leading-relaxed drop-shadow-md">
+          <p className="text-neutral-100 text-sm sm:text-lg max-w-lg mx-auto font-semibold leading-relaxed bg-black/40 backdrop-blur-sm p-3 rounded-2xl border border-white/10">
             Theyyam trance dances, Sanskrit theatrical masterworks, and egalitarian folk memories preserved with authentic native voice.
           </p>
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <span className="text-xs font-mono text-neutral-400">Keep scrolling to enter archive</span>
-            <span className="text-brandYellow font-bold">↓</span>
-          </div>
         </div>
 
-        {/* Scrollytelling Stage 3: 68% - 100% */}
+        {/* Narrative Stage 3: 70% - 100% */}
         <div
           className={`absolute z-20 max-w-2xl text-center px-6 transition-all duration-500 transform ${
-            scrollProgress >= 0.68
+            scrollProgress >= 0.70
               ? "opacity-100 translate-y-0 pointer-events-auto"
-              : "opacity-0 translate-y-8 pointer-events-none"
+              : "opacity-0 translate-y-6 pointer-events-none"
           }`}
         >
-          <div className="inline-flex items-center gap-2 border border-[#FFFC00]/60 bg-black/70 px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider text-[#FFFC00] mb-4 shadow-[0_0_15px_rgba(255,252,0,0.3)]">
-            <span>✦ KATHABRIDGE ARCHIVE IS READY ✦</span>
+          <div className="inline-flex items-center gap-2 border border-[#FFFC00]/60 bg-black/75 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider text-[#FFFC00] mb-4 shadow-[0_0_20px_rgba(255,252,0,0.3)]">
+            <span>✦ KATHABRIDGE ARCHIVE READY ✦</span>
           </div>
-          <h2 className="font-editorial text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-4">
-            Welcome to the Full Archive.
+          <h2 className="font-editorial text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-4 drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
+            Enter the Full Archive.
           </h2>
-          <p className="text-neutral-200 text-sm sm:text-lg max-w-lg mx-auto font-medium leading-relaxed mb-6 drop-shadow-md">
+          <p className="text-neutral-100 text-sm sm:text-lg max-w-lg mx-auto font-semibold leading-relaxed mb-6 bg-black/40 backdrop-blur-sm p-3 rounded-2xl border border-white/10">
             Explore bilingual stories, synchronized Malayalam karaoke audio, cultural glossary, and scholar review tools below.
           </p>
           <button
@@ -292,24 +323,24 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
         </div>
 
         {/* Bottom Progress Tracker Ribbon */}
-        <div className="absolute bottom-4 left-6 right-6 z-20 flex items-center justify-between text-xs font-mono text-neutral-400 max-w-7xl mx-auto">
+        <div className="absolute bottom-6 left-6 right-6 z-20 flex items-center justify-between text-xs font-mono text-neutral-300 max-w-7xl mx-auto bg-black/60 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/10">
           <div className="flex items-center gap-2">
-            <span>SCROLL PROGRESS</span>
+            <span className="text-neutral-400">SCROLL PROGRESS</span>
             <span className="text-brandYellow font-bold">
               {Math.round(scrollProgress * 100)}%
             </span>
           </div>
 
-          {/* Mini progress bar */}
-          <div className="w-48 sm:w-64 h-1.5 bg-neutral-800 rounded-full overflow-hidden border border-neutral-700">
+          {/* Progress bar */}
+          <div className="w-36 sm:w-64 h-2 bg-neutral-800 rounded-full overflow-hidden border border-neutral-700">
             <div
               className="h-full bg-gradient-to-r from-brandPink to-brandYellow transition-all duration-100"
               style={{ width: `${Math.round(scrollProgress * 100)}%` }}
             />
           </div>
 
-          <div className="text-[11px] text-neutral-500 hidden sm:block">
-            {loadedCount < TOTAL_FRAMES ? `Loading frames (${loadedCount}/${TOTAL_FRAMES})...` : "120 Frames Loaded"}
+          <div className="text-[11px] text-neutral-400 hidden sm:block">
+            {loadedCount < TOTAL_PLAYABLE_FRAMES ? `Loading frames (${loadedCount}/${TOTAL_PLAYABLE_FRAMES})...` : "Sequence Ready"}
           </div>
         </div>
       </div>
