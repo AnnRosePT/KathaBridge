@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd KathaBridge && pnpm install && pnpm run build",
+  "outputDirectory": "KathaBridge/dist",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
