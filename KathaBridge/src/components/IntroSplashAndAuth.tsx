@@ -268,6 +268,19 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
     setIsLoginModalOpen(false);
   };
 
+  const handleStartScrollAnimation = () => {
+    Soundtrack.playClick();
+    onComplete();
+    setTimeout(() => {
+      const el = document.getElementById("scroll-intro-animation");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }, 100);
+  };
+
   const handleExploreStories = () => {
     Soundtrack.playClick();
     onComplete();
@@ -510,15 +523,24 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
-                className="bg-[#FFFC00] hover:bg-[#ffe600] text-black font-extrabold text-sm sm:text-base px-8 py-4 rounded-full shadow-[0_0_30px_rgba(255,252,0,0.4)] hover:shadow-[0_0_40px_rgba(255,252,0,0.6)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 cursor-pointer"
-                onClick={handleExploreStories}
+                className="bg-[#FFFC00] hover:bg-[#ffe600] text-black font-extrabold text-sm sm:text-base px-8 py-4 rounded-full shadow-[0_0_35px_rgba(255,252,0,0.5)] hover:shadow-[0_0_45px_rgba(255,252,0,0.7)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 cursor-pointer group"
+                onClick={handleStartScrollAnimation}
               >
-                <span>Explore Stories</span>
-                <span className="text-base font-bold">→</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-brandPink animate-ping"></span>
+                <span>Start Scroll Animation</span>
+                <span className="text-lg group-hover:translate-y-0.5 transition-transform">↓</span>
               </button>
 
               <button
-                className="bg-neutral-900/80 hover:bg-neutral-800 text-white font-semibold text-sm px-6 py-4 rounded-full border border-neutral-800 hover:border-neutral-700 transition-all cursor-pointer"
+                className="bg-neutral-900/90 hover:bg-neutral-800 text-white font-bold text-sm px-6 py-4 rounded-full border border-neutral-700 hover:border-brandYellow transition-all flex items-center gap-2 cursor-pointer shadow-md"
+                onClick={handleExploreStories}
+              >
+                <span>Explore Stories</span>
+                <span>→</span>
+              </button>
+
+              <button
+                className="bg-black/60 hover:bg-neutral-900 text-neutral-300 hover:text-white font-semibold text-xs px-5 py-4 rounded-full border border-neutral-800 transition-all cursor-pointer"
                 onClick={() => {
                   Soundtrack.playModalPop();
                   setIsLoginModalOpen(true);
@@ -581,7 +603,7 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
                   alt="KathaBridge Cultural Folklore Ensemble"
                   className="w-full h-auto object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] drop-shadow-[0_0_60px_rgba(255,45,120,0.25)] select-none cursor-pointer"
                   src="/images/landing/login_ensemble_transparent.png"
-                  onClick={handleExploreStories}
+                  onClick={handleStartScrollAnimation}
                 />
               </div>
             </div>
