@@ -438,5 +438,140 @@
         ]
       }
     ]
+  },
+  {
+    "id": "muthappan",
+    "number": "05",
+    "title": {
+      "EN": "The Divine Hunter: The Legend of Parassini Muthappan",
+      "ML": "വേട്ടക്കാരന്റെ ദൈവികത: പറശ്ശിനിക്കടവ് മുത്തപ്പൻ"
+    },
+    "category": "RITUAL_THEATRE",
+    "categoryLabel": "NORTH MALABAR FOLKLORE",
+    "originRegion": "Kannur, North Malabar",
+    "originalLanguage": "Malayalam",
+    "availableLanguages": ["EN", "ML"],
+    "pillTag": "SUBALTERN FOLKLORE",
+    "image": "/images/landing/asset_11.png",
+    "imageBg": "bg-brandYellow",
+    "tapeColor": "pink",
+    "sourceAttribution": "Oral Lore of North Malabar & Thottam Pattu Field Collections",
+    "sourceUrl": "https://www.keralatourism.org/malabar/",
+    "license": "Oral Folk Tradition / Creative Commons Adaptation",
+    "imageAttribution": "KathaBridge Living Heritage Archive",
+    "summary": {
+      "EN": "The egalitarian folk deity of Malabar who walked among forest-dwellers with canine companions, rejecting caste taboos and embracing all seekers.",
+      "ML": "ജാതിമത ഭേദങ്ങളില്ലാതെ പാവപ്പെട്ടവർക്കൊപ്പം ജീവിച്ച വേട്ടക്കാരനായ മുത്തപ്പന്റെ കാരുണ്യത്തിന്റെയും സമത്വത്തിന്റെയും കഥ."
+    },
+    "keyConcept": {
+      "title": "Key Concept: Sarva Jana Samatvam",
+      "quote": "\"മനുഷ്യരെല്ലാം ഒരേ ആത്മാവിന്റെ തുടിപ്പുകൾ...\"",
+      "explanation": "Universal equality where no temple walls, birth heritage, or ritual purity barriers can divide human beings."
+    },
+    "culturalBackground": "Worshipped primarily at Parassinikkadavu Madappura on the banks of Valapattanam river. Muthappan Theyyam is distinct because dried fish, toddy, and boiled gram are shared equally among all devotees.",
+    "readingDurationMinutes": 6,
+    "isFeatured": true,
+    "viewsCount": 2840,
+    "likesCount": 490,
+    "culturalExpressionIds": [
+      "exp-daivakolam",
+      "exp-thottam"
+    ],
+    "sentences": [
+      {
+        "id": "mu-1",
+        "originalText": "വളപട്ടണം പുഴയുടെ തീരത്ത് പാവപ്പെട്ട വേടർക്കൊപ്പം കാട്ടിൽ വേട്ടയാടി നടന്ന മുത്തപ്പൻ അടിച്ചമർത്തപ്പെട്ടവരുടെ ആശ്രയമായിരുന്നു.",
+        "translatedText": {
+          "EN": "On the lush banks of the Valapattanam river, Lord Muthappan walked with forest hunters as an egalitarian guardian of the oppressed.",
+          "ML": "വളപട്ടണം പുഴയുടെ തീരത്ത് പാവപ്പെട്ട വേടർക്കൊപ്പം കാട്ടിൽ വേട്ടയാടി നടന്ന മുത്തപ്പൻ അടിച്ചമർത്തപ്പെട്ടവരുടെ ആശ്രയമായിരുന്നു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "mu-2",
+        "originalText": "നായാട്ടുനായ്ക്കളെ തന്റെ വിശ്വസ്ത മക്കളായി കണ്ട അദ്ദേഹം ആചാരപരമായ വിലക്കുകളെല്ലാം കാറ്റിൽപ്പറത്തി.",
+        "translatedText": {
+          "EN": "Treating hunting hounds as his own loyal children, he gently shattered orthodox social taboos and purity barriers.",
+          "ML": "നായാട്ടുനായ്ക്കളെ തന്റെ വിശ്വസ്ത മക്കളായി കണ്ട അദ്ദേഹം ആചാരപരമായ വിലക്കുകളെല്ലാം കാറ്റിൽപ്പറത്തി."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "mu-3",
+        "originalText": "തെയ്യം കെട്ടിയാടുമ്പോൾ ഭക്തരെ ചേർത്തുപിടിച്ച് 'എന്റെ കുട്ടികളേ' എന്ന് വിളിച്ച് ആശ്വസിപ്പിക്കുന്ന സ്നേഹരൂപമാണ് മുത്തപ്പൻ.",
+        "translatedText": {
+          "EN": "During the sacred Theyyam manifestation, the deity embraces weeping devotees, whispering affectionate solace: 'My beloved children'.",
+          "ML": "തെയ്യം കെട്ടിയാടുമ്പോൾ ഭക്തരെ ചേർത്തുപിടിച്ച് 'എന്റെ കുട്ടികളേ' എന്ന് വിളിച്ച് ആശ്വസിപ്പിക്കുന്ന സ്നേഹരൂപമാണ് മുത്തപ്പൻ."
+        },
+        "highlightedTermIds": [
+          "exp-daivakolam"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "naranath",
+    "number": "06",
+    "title": {
+      "EN": "Naranath Bhranthan: The Philosopher of Rayiranelloor Hill",
+      "ML": "നാറാണത്ത് ഭ്രാന്തൻ: രായിരനെല്ലൂർ മലയിലെ ജ്ഞാനി"
+    },
+    "category": "FOLK_TALES",
+    "categoryLabel": "CENTRAL KERALA LORE",
+    "originRegion": "Palakkad, Valluvanad",
+    "originalLanguage": "Malayalam",
+    "availableLanguages": ["EN", "ML"],
+    "pillTag": "PHILOSOPHICAL LORE",
+    "image": "/images/landing/asset_12.png",
+    "imageBg": "bg-brandYellowWarm",
+    "tapeColor": "yellow",
+    "sourceAttribution": "Aithihyamala by Kottarathil Sankunni (1909 Heritage Publication)",
+    "sourceUrl": "https://archive.org/details/aithihyamala",
+    "license": "Public Domain Heritage Literature",
+    "imageAttribution": "KathaBridge Living Heritage Archive",
+    "summary": {
+      "EN": "The profound ascetic who rolled enormous boulders up steep hilltops only to laugh with joy as they rolled down, mocking human vanity.",
+      "ML": "വലിയ പാറക്കല്ലുകൾ മലമുകളിലേക്ക് ഉരുറ്റിക്കയറ്റി താഴേക്ക് തള്ളിയിട്ട് പൊട്ടിച്ചിരിച്ച അവധൂതനായ ജ്ഞാനിയുടെ സന്ദേശം."
+    },
+    "keyConcept": {
+      "title": "Key Concept: Karma and Detachment",
+      "quote": "\"കഷ്ടപ്പെട്ട് നേടുന്നതെല്ലാം ഒരു നിമിഷം കൊണ്ട് താഴേക്ക് പതിക്കും...\"",
+      "explanation": "The ultimate cycle of human ambition, reminding mortals not to cling to worldly ego or temporary triumph."
+    },
+    "culturalBackground": "One of the twelve revered children born to Vararuchi and Panchami in the legendary 'Parayi Petta Panthirukulam' lore of Kerala.",
+    "readingDurationMinutes": 5,
+    "isFeatured": false,
+    "viewsCount": 1980,
+    "likesCount": 380,
+    "culturalExpressionIds": [],
+    "sentences": [
+      {
+        "id": "nb-1",
+        "originalText": "രായിരനെല്ലൂർ മലയുടെ അടിവാരത്തിൽ നിന്ന് നാറാണത്ത് ഭ്രാന്തൻ ഭാരമുള്ള വലിയ ഉരുളൻ കല്ലുകൾ മുകളിലേക്ക് ഉരുട്ടി കയറ്റാറുണ്ടായിരുന്നു.",
+        "translatedText": {
+          "EN": "Every sunrise, the eccentric sage Naranath Bhranthan labored tirelessly to roll a colossal stone boulder up the steep Rayiranelloor hill.",
+          "ML": "രായിരനെല്ലൂർ മലയുടെ അടിവാരത്തിൽ നിന്ന് നാറാണത്ത് ഭ്രാന്തൻ ഭാരമുള്ള വലിയ ഉരുളൻ കല്ലുകൾ മുകളിലേക്ക് ഉരുട്ടി കയറ്റാറുണ്ടായിരുന്നു."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "nb-2",
+        "originalText": "മലമുകളിലെത്തിയാൽ ഉടൻ അദ്ദേഹം ആ കല്ലിനെ താഴേക്ക് തള്ളിയിടുകയും അത് താഴേക്ക് ഉരുണ്ട് വീഴുന്നത് കണ്ട് ആർത്തുചിരിക്കുകയും ചെയ്യും.",
+        "translatedText": {
+          "EN": "Reaching the peak, he would push the stone off the precipice and clap with childlike laughter as it tumbled effortlessly down.",
+          "ML": "മലമുകളിലെത്തിയാൽ ഉടൻ അദ്ദേഹം ആ കല്ലിനെ താഴേക്ക് തള്ളിയിടുകയും അത് താഴേക്ക് ഉരുണ്ട് വീഴുന്നത് കണ്ട് ആർത്തുചിരിക്കുകയും ചെയ്യും."
+        },
+        "highlightedTermIds": []
+      },
+      {
+        "id": "nb-3",
+        "originalText": "മനുഷ്യന്റെ അഹങ്കാരവും സമ്പാദ്യവും അധ്വാനവും ഒടുവിൽ നിഷ്പ്രഭമായി താഴേക്ക് പതിക്കുമെന്ന ആഴമേറിയ വേദാന്ത സത്യമായിരുന്നു ആ പ്രവൃത്തി.",
+        "translatedText": {
+          "EN": "In that eccentric act lay the profound truth of existence: human pride takes lifetimes to build, but vanishes in a fleeting instant.",
+          "ML": "മനുഷ്യന്റെ അഹങ്കാരവും സമ്പാദ്യവും അധ്വാനവും ഒടുവിൽ നിഷ്പ്രഭമായി താഴേക്ക് പതിക്കുമെന്ന ആഴമേറിയ വേദാന്ത സത്യമായിരുന്നു ആ പ്രവൃത്തി."
+        },
+        "highlightedTermIds": []
+      }
+    ]
   }
 ]
