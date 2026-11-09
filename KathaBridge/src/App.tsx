@@ -44,7 +44,7 @@ export default function App() {
   const [reviewerModalOpen, setReviewerModalOpen] = useState(false);
   const [contributionModalOpen, setContributionModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [showIntroSplash, setShowIntroSplash] = useState(true);
+  const [showIntroSplash, setShowIntroSplash] = useState(false);
   const [voiceLabOpen, setVoiceLabOpen] = useState(false);
   const introAudioRef = useRef<HTMLAudioElement | null>(null);
   const [activePolicyModal, setActivePolicyModal] = useState<PolicyType | null>(null);
@@ -256,6 +256,7 @@ export default function App() {
       {/* 0. STARTING SCROLL-CONTROLLED FRAME ANIMATION (120-frame sequence)  */}
       {/* =================================================================== */}
       <ScrollFrameHero
+        onOpenIntroLogin={() => setShowIntroSplash(true)}
         onExploreClick={() => {
           const el = document.getElementById("home");
           if (el) el.scrollIntoView({ behavior: "smooth" });

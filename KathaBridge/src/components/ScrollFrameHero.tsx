@@ -3,6 +3,7 @@ import { Soundtrack } from "../services/soundtrackService";
 
 interface Props {
   onExploreClick?: () => void;
+  onOpenIntroLogin?: () => void;
 }
 
 // Start from frame 16 (index 15) for immediate rich illumination
@@ -10,7 +11,7 @@ const START_FRAME_INDEX = 15;
 const END_FRAME_INDEX = 119; // Frame 120
 const TOTAL_PLAYABLE_FRAMES = END_FRAME_INDEX - START_FRAME_INDEX + 1; // 105 active visual frames
 
-export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
+export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick, onOpenIntroLogin }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
@@ -23,7 +24,6 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
   const [activeFrameIndex, setActiveFrameIndex] = useState<number>(START_FRAME_INDEX);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [loadedCount, setLoadedCount] = useState<number>(0);
-  const [pinState, setPinState] = useState<"top" | "pinned" | "bottom">("top");
   const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(false);
 
   // Helper to format frame filename
@@ -58,7 +58,7 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
 
     if (!img || !img.complete || img.naturalWidth === 0) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
     const width = canvas.clientWidth || window.innerWidth;
     const height = canvas.clientHeight || window.innerHeight;
 
@@ -127,7 +127,7 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
 
     setTimeout(() => {
       renderFrame(START_FRAME_INDEX);
-    }, 80);
+    }, 50);
 
     return () => {
       imagesRef.current = [];
@@ -140,7 +140,7 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
     const lerpLoop = () => {
       const diff = targetFrameRef.current - currentRenderedFrameRef.current;
       if (Math.abs(diff) > 0.04) {
-        currentRenderedFrameRef.current += diff * 0.24; // Smooth interpolation speed
+        currentRenderedFrameRef.current += diff * 0.26; // Snappy yet buttery interpolation
         const currentInt = Math.max(
           START_FRAME_INDEX,
           Math.min(END_FRAME_INDEX, Math.round(currentRenderedFrameRef.current))
@@ -159,7 +159,7 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
     };
   }, [renderFrame]);
 
-  // 3. Scroll Handler with Viewport Pinning
+  // 3. Scroll Handler with Pure CSS Sticky Pinning (Zero Cutoff / Never Goes Black)
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -171,14 +171,6 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
 
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(1, scrolled / scrollable));
-
-      if (scrolled <= 0) {
-        setPinState("top");
-      } else if (scrolled >= scrollable) {
-        setPinState("bottom");
-      } else {
-        setPinState("pinned");
-      }
 
       setScrollProgress(progress);
 
@@ -200,7 +192,6 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", () => {});
     };
   }, [renderFrame]);
 
@@ -222,7 +213,7 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
         return;
       }
 
-      window.scrollBy({ top: 4.5, behavior: "auto" });
+      window.scrollBy({ top: 5, behavior: "auto" });
     }, 16);
 
     return () => clearInterval(autoInterval);
@@ -231,6 +222,19 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
   const toggleAutoPlay = () => {
     Soundtrack.playClick();
     setIsAutoPlaying(!isAutoPlaying);
+  };
+
+  const startAnimationScroll = () => {
+    Soundtrack.playClick();
+    setIsAutoPlaying(true);
+  };
+
+  const handleGoToIntroLogin = () => {
+    Soundtrack.playClick();
+    setIsAutoPlaying(false);
+    if (onOpenIntroLogin) {
+      onOpenIntroLogin();
+    }
   };
 
   const handleSkipToStories = () => {
@@ -249,20 +253,12 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[280vh] bg-neutral-950 text-white"
+      className="relative w-full h-[320vh] bg-neutral-950 text-white"
       id="scroll-intro-animation"
       data-purpose="scroll-controlled-frame-animation"
     >
-      {/* Viewport Stage: Fixed pinning guarantees zero premature cutoff */}
-      <div
-        className={`w-full h-screen flex items-center justify-center overflow-hidden bg-neutral-950 select-none ${
-          pinState === "pinned"
-            ? "fixed top-0 left-0 z-30"
-            : pinState === "bottom"
-            ? "absolute bottom-0 left-0 z-20"
-            : "absolute top-0 left-0 z-20"
-        }`}
-      >
+      {/* Viewport Stage: Native CSS Sticky Pinning guarantees 100% viewport coverage with zero jank or cutoff */}
+      <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden bg-neutral-950 select-none z-20">
         {/* Layer 1: GPU-Accelerated Crisp Image (Always visible fallback) */}
         <img
           src={getFrameUrl(activeFrameIndex)}
@@ -277,11 +273,11 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
         />
 
         {/* Cinematic Vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/55 pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/60 pointer-events-none z-10" />
 
         {/* Top Control Bar */}
-        <div className="absolute top-6 left-6 right-6 z-20 flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 bg-black/70 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 shadow-lg">
+        <div className="absolute top-6 left-6 right-6 z-30 flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 bg-black/75 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 shadow-xl">
             <svg
               className="w-6 h-6 text-[#FF2D78] animate-spin"
               style={{ animationDuration: "10s" }}
@@ -322,12 +318,21 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
               </span>
             </div>
 
+            {/* DIRECT BUTTON TO INTRO / LOGIN */}
+            <button
+              onClick={handleGoToIntroLogin}
+              className="bg-[#FFFC00] hover:bg-[#ffe600] text-black border-2 border-brandBlack px-4 py-1.5 rounded-full text-xs font-black transition-all transform hover:scale-105 shadow-[2px_2px_0px_#FF2D78] cursor-pointer flex items-center gap-1.5"
+            >
+              <span>Intro &amp; Login</span>
+              <span>→</span>
+            </button>
+
             {/* Skip to Main Site */}
             <button
               onClick={handleSkipToStories}
-              className="bg-[#FFFC00] hover:bg-[#ffe600] text-black border-2 border-brandBlack px-4 py-1.5 rounded-full text-xs font-black transition-all transform hover:scale-105 shadow-[2px_2px_0px_#FF2D78] cursor-pointer flex items-center gap-1.5"
+              className="hidden md:flex bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/25 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer items-center gap-1"
             >
-              <span>Skip to Stories</span>
+              <span>Skip</span>
               <span>↓</span>
             </button>
           </div>
@@ -350,9 +355,26 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
           <p className="text-neutral-100 text-sm sm:text-lg max-w-lg mx-auto font-semibold leading-relaxed bg-black/60 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 shadow-xl">
             Translating centuries of oral folklore into a living, scroll-driven visual journey.
           </p>
-          <div className="mt-8 flex flex-col items-center gap-2 animate-bounce text-xs font-mono text-[#FFFC00]">
+
+          {/* Start Buttons on Hero Stage */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <button
+              onClick={startAnimationScroll}
+              className="inline-flex items-center gap-2.5 bg-[#FFFC00] hover:bg-[#ffe600] text-black font-extrabold text-sm sm:text-base px-6 sm:px-8 py-3.5 rounded-full shadow-[0_0_30px_rgba(255,252,0,0.6)] hover:shadow-[0_0_40px_rgba(255,252,0,0.9)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer border-2 border-black"
+            >
+              <span>▶ Start Visual Journey</span>
+            </button>
+            <button
+              onClick={handleGoToIntroLogin}
+              className="inline-flex items-center gap-2 bg-brandPink hover:bg-brandPinkDark text-white font-extrabold text-sm sm:text-base px-6 sm:px-8 py-3.5 rounded-full shadow-[0_0_30px_rgba(255,8,125,0.5)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer border-2 border-white/30"
+            >
+              <span>Intro &amp; Login Page →</span>
+            </button>
+          </div>
+
+          <div className="mt-6 flex flex-col items-center gap-1 text-xs font-mono text-[#FFFC00]">
             <span className="bg-black/70 backdrop-blur-sm px-3.5 py-1 rounded-full border border-[#FFFC00]/40 shadow-md">
-              ↓ Scroll down or press Auto-Play
+              ↓ Or scroll down to control frame animation manually
             </span>
           </div>
         </div>
@@ -374,9 +396,17 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
           <p className="text-neutral-100 text-sm sm:text-lg max-w-lg mx-auto font-semibold leading-relaxed bg-black/60 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 shadow-xl">
             Theyyam trance dances, Sanskrit theatrical masterworks, and egalitarian folk memories preserved with authentic native voice.
           </p>
+          <div className="mt-6">
+            <button
+              onClick={handleGoToIntroLogin}
+              className="inline-flex items-center gap-2 bg-black/80 hover:bg-black text-[#FFFC00] border-2 border-[#FFFC00] px-6 py-2.5 rounded-full text-xs font-mono font-bold transition-all shadow-[0_0_20px_rgba(255,252,0,0.3)] hover:scale-105 cursor-pointer"
+            >
+              <span>Skip Ahead to Intro / Login →</span>
+            </button>
+          </div>
         </div>
 
-        {/* Narrative Stage 3: 70% - 100% */}
+        {/* Narrative Stage 3: 70% - 100% (AFTER SCROLL ANIMATION COMPLETES) */}
         <div
           className={`absolute z-20 max-w-2xl text-center px-6 transition-all duration-500 transform ${
             scrollProgress >= 0.70
@@ -385,25 +415,40 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
           }`}
         >
           <div className="inline-flex items-center gap-2 border border-[#FFFC00]/70 bg-black/80 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider text-[#FFFC00] mb-4 shadow-[0_0_25px_rgba(255,252,0,0.4)]">
-            <span>✦ KATHABRIDGE ARCHIVE READY ✦</span>
+            <span>✦ ANIMATION COMPLETE • KATHABRIDGE GATEWAY ✦</span>
           </div>
           <h2 className="font-editorial text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-4 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]">
             Enter the Full Archive.
           </h2>
           <p className="text-neutral-100 text-sm sm:text-lg max-w-lg mx-auto font-semibold leading-relaxed mb-6 bg-black/60 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 shadow-xl">
-            Explore bilingual stories, synchronized Malayalam karaoke audio, cultural glossary, and scholar review tools below.
+            Sign in to unlock personalized bilingual reading, synchronized Malayalam karaoke audio, cultural glossary, and scholar review tools.
           </p>
-          <button
-            onClick={handleSkipToStories}
-            className="inline-flex items-center gap-3 bg-[#FFFC00] hover:bg-[#ffe600] text-black font-extrabold text-base px-8 py-4 rounded-full shadow-[0_0_35px_rgba(255,252,0,0.6)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
-          >
-            <span>Enter Stories Collection</span>
-            <span className="text-lg">↓</span>
-          </button>
+
+          {/* PRIMARY WORKFLOW BUTTON: GO TO INTRO / LOGIN */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={handleGoToIntroLogin}
+              className="inline-flex items-center gap-3 bg-[#FFFC00] hover:bg-[#ffe600] text-black font-extrabold text-base sm:text-lg px-8 sm:px-10 py-4 rounded-full shadow-[0_0_40px_rgba(255,252,0,0.7)] hover:shadow-[0_0_55px_rgba(255,252,0,0.95)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer border-2 border-black"
+            >
+              <span>Go to Intro / Login</span>
+              <span className="text-xl">→</span>
+            </button>
+
+            <button
+              onClick={handleSkipToStories}
+              className="inline-flex items-center gap-2 bg-black/75 hover:bg-black text-white hover:text-[#FFFC00] border-2 border-white/30 hover:border-[#FFFC00] px-6 py-3.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 cursor-pointer backdrop-blur-md"
+            >
+              <span>Explore Stories Direct</span>
+              <span>↓</span>
+            </button>
+          </div>
+          <p className="text-[11px] font-mono text-neutral-300 mt-3">
+            Click &ldquo;Go to Intro / Login&rdquo; to access authentication, guest explore, and voice settings
+          </p>
         </div>
 
         {/* Bottom Progress Tracker Ribbon */}
-        <div className="absolute bottom-6 left-6 right-6 z-20 flex items-center justify-between text-xs font-mono text-neutral-200 max-w-7xl mx-auto bg-black/70 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/15 shadow-lg">
+        <div className="absolute bottom-6 left-6 right-6 z-30 flex items-center justify-between text-xs font-mono text-neutral-200 max-w-7xl mx-auto bg-black/75 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/15 shadow-lg">
           <div className="flex items-center gap-2">
             <span className="text-neutral-400">SCROLL PROGRESS</span>
             <span className="text-[#FFFC00] font-black">

@@ -100,6 +100,7 @@ export const StorageService = {
     try {
       const user = this.getUser();
       if (!user) return;
+      if (!Array.isArray(user.readingHistory)) user.readingHistory = [];
       const existing = user.readingHistory.find((h) => h.storyId === storyId);
       if (existing) {
         existing.lastReadAt = new Date().toISOString();
