@@ -7,6 +7,9 @@
 
 ## 🌟 Key Features
 
+- **Scroll-Controlled 120-Frame Heritage Cinema**:
+  - High-DPI 60fps lerp-interpolated visual animation sequence transitioning from raw darkness into illuminated Theyyam and Kathakali ritual folk art.
+  - Features Auto-Play Cinema toggle, interactive frame scrubbing, and a seamless **"Go to Intro / Login"** gateway.
 - **Exact Obsidian Dark Intro Hero**: High-contrast modern typography, regional cultural collage illustration, floating starburst ornaments, and a dynamic tilted marquee banner.
 - **Interactive User Persona Hub**: 4 distinct exploration modes:
   - 🎧 **Story Explorer** (`കഥാസ്വാദകൻ`): Oral folk tales with native neural narration, synchronized karaoke subtitles, and instant cultural term popovers.
@@ -54,6 +57,12 @@ cd KathaBridge
 pnpm run build
 pnpm run preview
 ```
+
+### ☁️ Vercel Deployment
+
+1. Import the repository `AnnRosePT/KathaBridge` on [Vercel](https://vercel.com).
+2. Set **Root Directory** to `KathaBridge` (or use the provided root `vercel.json`).
+3. Vercel auto-detects Vite and builds with single-page application rewrites automatically.
 
 ---
 
