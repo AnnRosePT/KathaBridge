@@ -14,6 +14,7 @@ import { ContributionModal } from "./components/ContributionModal";
 import { AuthModal } from "./components/AuthModal";
 import { MalayalamVoiceLabModal } from "./components/MalayalamVoiceLabModal";
 import { IntroSplashAndAuth } from "./components/IntroSplashAndAuth";
+import { ScrollFrameHero } from "./components/ScrollFrameHero";
 import { ContactAndPolicyModals, PolicyType } from "./components/ContactAndPolicyModals";
 import { speakSafely } from "./utils/malayalamPhonetics";
 import { getUIText } from "./utils/translations";
@@ -43,7 +44,7 @@ export default function App() {
   const [reviewerModalOpen, setReviewerModalOpen] = useState(false);
   const [contributionModalOpen, setContributionModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [showIntroSplash, setShowIntroSplash] = useState(true);
+  const [showIntroSplash, setShowIntroSplash] = useState(false);
   const [voiceLabOpen, setVoiceLabOpen] = useState(false);
   const introAudioRef = useRef<HTMLAudioElement | null>(null);
   const [activePolicyModal, setActivePolicyModal] = useState<PolicyType | null>(null);
@@ -251,7 +252,17 @@ export default function App() {
         </div>
       )}
 
-      {/*       {/* =================================================================== */}
+      {/* =================================================================== */}
+      {/* 0. STARTING SCROLL-CONTROLLED FRAME ANIMATION (120-frame sequence)  */}
+      {/* =================================================================== */}
+      <ScrollFrameHero
+        onExploreClick={() => {
+          const el = document.getElementById("home");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }}
+      />
+
+      {/* =================================================================== */}
       {/* TOP NAVIGATION BAR (Sticky with Scroll Transition) */}
       {/* =================================================================== */}
       <header
