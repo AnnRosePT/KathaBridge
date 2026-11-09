@@ -94,29 +94,32 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick, onOpenIntroLo
     ctx.restore();
   }, []);
 
-  // 1. Preload visual frame sequence
+  // 1. Prioritized Progressive Preloading Strategy
   useEffect(() => {
     const images: HTMLImageElement[] = [];
     imagesRef.current = images;
     let loaded = 0;
+    let isCancelled = false;
 
-    // Load initial visual frame immediately
+    // Load initial visual frame immediately for instant first-paint
     const firstImg = new Image();
     firstImg.src = getFrameUrl(START_FRAME_INDEX);
     images[START_FRAME_INDEX] = firstImg;
     firstImg.onload = () => {
+      if (isCancelled) return;
       loaded++;
       setLoadedCount(loaded);
       renderFrame(START_FRAME_INDEX);
     };
 
-    // Preload remaining frames
-    for (let i = START_FRAME_INDEX; i <= END_FRAME_INDEX; i++) {
-      if (i === START_FRAME_INDEX) continue;
+    // Priority 1: High-priority immediate scrub window (next 20 frames)
+    const priorityEnd = Math.min(START_FRAME_INDEX + 20, END_FRAME_INDEX);
+    for (let i = START_FRAME_INDEX + 1; i <= priorityEnd; i++) {
       const img = new Image();
       img.src = getFrameUrl(i);
       images[i] = img;
       img.onload = () => {
+        if (isCancelled) return;
         loaded++;
         setLoadedCount(loaded);
         if (Math.round(currentRenderedFrameRef.current) === i) {
@@ -125,11 +128,48 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick, onOpenIntroLo
       };
     }
 
+    // Priority 2: Progressive background hydration in idle chunks
+    let remainingIdx = priorityEnd + 1;
+    const loadNextChunk = () => {
+      if (isCancelled || remainingIdx > END_FRAME_INDEX) return;
+      const chunkSize = 15;
+      const limit = Math.min(remainingIdx + chunkSize, END_FRAME_INDEX + 1);
+
+      for (let i = remainingIdx; i < limit; i++) {
+        const img = new Image();
+        img.src = getFrameUrl(i);
+        images[i] = img;
+        img.onload = () => {
+          if (isCancelled) return;
+          loaded++;
+          setLoadedCount(loaded);
+          if (Math.round(currentRenderedFrameRef.current) === i) {
+            renderFrame(i);
+          }
+        };
+      }
+      remainingIdx = limit;
+      if (remainingIdx <= END_FRAME_INDEX) {
+        if ("requestIdleCallback" in window) {
+          (window as any).requestIdleCallback(loadNextChunk, { timeout: 400 });
+        } else {
+          setTimeout(loadNextChunk, 120);
+        }
+      }
+    };
+
+    if ("requestIdleCallback" in window) {
+      (window as any).requestIdleCallback(loadNextChunk, { timeout: 300 });
+    } else {
+      setTimeout(loadNextChunk, 80);
+    }
+
     setTimeout(() => {
       renderFrame(START_FRAME_INDEX);
-    }, 50);
+    }, 40);
 
     return () => {
+      isCancelled = true;
       imagesRef.current = [];
     };
   }, [getFrameUrl, renderFrame]);
