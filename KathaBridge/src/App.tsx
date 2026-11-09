@@ -213,7 +213,7 @@ export default function App() {
 
   return (
     <div
-      className={`min-h-screen w-full overflow-x-hidden font-sans selection:bg-brandPink selection:text-white flex flex-col justify-between transition-colors duration-200 ${
+      className={`min-h-screen w-full overflow-x-clip font-sans selection:bg-brandPink selection:text-white flex flex-col justify-between transition-colors duration-200 ${
         accessibilitySettings.contrastMode === "dark"
           ? "bg-neutral-950 text-neutral-100"
           : accessibilitySettings.contrastMode === "high-contrast"

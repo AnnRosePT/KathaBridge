@@ -20,6 +20,8 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
   const [activeFrameIndex, setActiveFrameIndex] = useState<number>(START_FRAME_INDEX);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [loadedCount, setLoadedCount] = useState<number>(0);
+  // Pin state: "top" | "pinned" | "bottom"
+  const [pinState, setPinState] = useState<"top" | "pinned" | "bottom">("top");
 
   // Helper to format frame filename
   const getFrameUrl = useCallback((index: number) => {
@@ -127,7 +129,7 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
     };
   }, [getFrameUrl, renderFrame]);
 
-  // 2. Handle scroll progress
+  // 2. Handle scroll progress and robust viewport pinning
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -140,6 +142,15 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(1, scrolled / scrollable));
       
+      // Update Pin State: fixed pinning while inside the scroll section
+      if (scrolled <= 0) {
+        setPinState("top");
+      } else if (scrolled >= scrollable) {
+        setPinState("bottom");
+      } else {
+        setPinState("pinned");
+      }
+
       // Map progress across the visual frames
       const targetFrame = Math.min(
         END_FRAME_INDEX,
@@ -161,7 +172,10 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", () => renderFrame(currentFrameRef.current), { passive: true });
+    window.addEventListener("resize", () => {
+      handleScroll();
+      renderFrame(currentFrameRef.current);
+    }, { passive: true });
 
     handleScroll();
 
@@ -189,12 +203,20 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[300vh] bg-neutral-950 text-white"
+      className="relative w-full h-[280vh] bg-neutral-950 text-white"
       id="scroll-intro-animation"
       data-purpose="scroll-controlled-frame-animation"
     >
-      {/* Sticky full-screen viewport */}
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-neutral-950 select-none">
+      {/* Viewport Stage: Fixed pinning ensures the stage NEVER scrolls off at 30% */}
+      <div
+        className={`w-full h-screen flex items-center justify-center overflow-hidden bg-neutral-950 select-none ${
+          pinState === "pinned"
+            ? "fixed top-0 left-0 z-30"
+            : pinState === "bottom"
+            ? "absolute bottom-0 left-0 z-20"
+            : "absolute top-0 left-0 z-20"
+        }`}
+      >
         
         {/* Layer 1: Hardware-Accelerated Fallback Image (Guarantees NEVER black) */}
         <img
@@ -209,7 +231,7 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick }) => {
           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
         />
 
-        {/* Subtle, soft vignette (keeps artwork vivid) */}
+        {/* Soft vignette */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/50 pointer-events-none z-10" />
 
         {/* Top Control Bar */}
