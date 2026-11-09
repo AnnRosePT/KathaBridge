@@ -101,6 +101,45 @@ export default function App() {
     }
   }, [accessibilitySettings]);
 
+  // Global Accessibility & Power Keyboard Shortcuts (Escape to dismiss, Alt+A for A11y, Alt+G for Glossary, Alt+V for Voice)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        document.activeElement?.tagName === "INPUT" ||
+        document.activeElement?.tagName === "TEXTAREA"
+      ) {
+        return;
+      }
+
+      if (e.key === "Escape") {
+        setActiveStoryReader(null);
+        setActiveTermPopover(null);
+        setGlossaryModalOpen(false);
+        setA11yModalOpen(false);
+        setReviewerModalOpen(false);
+        setContributionModalOpen(false);
+        setAuthModalOpen(false);
+        setVoiceLabOpen(false);
+        setActivePolicyModal(null);
+      } else if (e.altKey && e.key.toLowerCase() === "a") {
+        e.preventDefault();
+        Soundtrack.playModalPop();
+        setA11yModalOpen((prev) => !prev);
+      } else if (e.altKey && e.key.toLowerCase() === "g") {
+        e.preventDefault();
+        Soundtrack.playModalPop();
+        setGlossaryModalOpen((prev) => !prev);
+      } else if (e.altKey && e.key.toLowerCase() === "v") {
+        e.preventDefault();
+        Soundtrack.playModalPop();
+        setVoiceLabOpen((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => {
@@ -243,6 +282,11 @@ export default function App() {
 
       {/* Floating Cultural Indian BGM Soundtrack Player */}
       <SoundtrackWidget />
+
+      {/* Live Region for Screen Reader Assistive Technologies */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {toastMessage}
+      </div>
 
       {/* Toast Notification */}
       {toastMessage && (
