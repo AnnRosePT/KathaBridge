@@ -1,0 +1,27 @@
+{
+  "name": "KathaBridge – Stories Beyond Language",
+  "short_name": "KathaBridge",
+  "description": "Accessible bilingual Indian folklore and oral heritage storytelling platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#FFFC00",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "books", "culture"],
+  "lang": "en-US",
+  "dir": "ltr"
+}
