@@ -43,13 +43,11 @@ export const StorageService = {
     try {
       const data = localStorage.getItem(KEYS.USER);
       if (!data) {
-        // Initialize demo user
-        this.setUser(defaultDemoUser);
-        return defaultDemoUser;
+        return null;
       }
       return JSON.parse(data);
     } catch {
-      return defaultDemoUser;
+      return null;
     }
   },
 

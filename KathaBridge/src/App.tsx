@@ -18,6 +18,7 @@ import { ScrollFrameHero } from "./components/ScrollFrameHero";
 import { ContactAndPolicyModals, PolicyType } from "./components/ContactAndPolicyModals";
 import { speakSafely } from "./utils/malayalamPhonetics";
 import { getUIText } from "./utils/translations";
+import { subscribeToAuthChanges } from "./services/firebaseAuth";
 
 export default function App() {
   // Navigation & UI State
@@ -87,6 +88,16 @@ export default function App() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Listen to Real Firebase Auth State Changes
+  useEffect(() => {
+    const unsubscribe = subscribeToAuthChanges((user) => {
+      if (user) {
+        setCurrentUser(user);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   // Update Accessibility styling on root
@@ -488,20 +499,24 @@ export default function App() {
             <button
               onClick={() => {
                 Soundtrack.playModalPop();
-                if (!currentUser) {
-                  setShowIntroSplash(true);
-                } else {
-                  setAuthModalOpen(true);
-                }
+                setAuthModalOpen(true);
               }}
               title={currentUser ? `Profile: ${currentUser.name}` : "Sign In / Register"}
               className="flex items-center gap-1.5 px-3 py-1.5 border-2 border-brandBlack rounded-full bg-white hover:bg-brandYellow transition shadow-[3px_3px_0px_#080808] cursor-pointer"
             >
-              <div className="w-6 h-6 rounded-full bg-brandPink text-white font-mono text-[10px] font-black flex items-center justify-center">
-                {currentUser ? currentUser.avatarInitials : "👤"}
-              </div>
+              {currentUser?.photoURL ? (
+                <img
+                  src={currentUser.photoURL}
+                  alt={currentUser.name}
+                  className="w-6 h-6 rounded-full border border-brandBlack object-cover"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-brandPink text-white font-mono text-[10px] font-black flex items-center justify-center">
+                  {currentUser ? currentUser.avatarInitials : "👤"}
+                </div>
+              )}
               <span className="text-xs font-mono font-black text-brandBlack hidden sm:inline">
-                {currentUser ? currentUser.name.split(" ")[0] : "Account"}
+                {currentUser ? currentUser.name.split(" ")[0] : "Sign In"}
               </span>
             </button>
 

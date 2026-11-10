@@ -126,8 +126,10 @@ export interface UserProfile {
   id: string;
   name: string;
   email: string;
-  role: "READER" | "CONTRIBUTOR" | "REVIEWER";
+  role: "READER" | "CONTRIBUTOR" | "REVIEWER" | "SCHOLAR";
   avatarInitials: string;
+  photoURL?: string;
+  authProvider?: "google" | "password" | "phone" | "local";
   favoriteStoryIds: string[];
   readingHistory: {
     storyId: string;
@@ -136,6 +138,7 @@ export interface UserProfile {
   }[];
   preferredLanguage: LanguageCode;
   joinedDate: string;
+  isRealAuth?: boolean;
 }
 
 export interface AccessibilitySettings {

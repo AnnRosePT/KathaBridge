@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UserProfile } from "../types";
 import { Soundtrack } from "../services/soundtrackService";
+import {
+  isFirebaseLive,
+  loginWithGoogle,
+  loginWithEmail,
+  registerWithEmail
+} from "../services/firebaseAuth";
 
 interface Props {
   isOpen: boolean;
@@ -22,6 +28,8 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
   const [statusText, setStatusText] = useState("INITIALIZING ARCHIVE...");
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   // Form input state
   const [email, setEmail] = useState("");
@@ -202,23 +210,46 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
     setIsLoginModalOpen(true);
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     Soundtrack.playModalPop();
-    const mockUser: UserProfile = {
-      id: "usr-google-" + Date.now(),
-      name: "Aarav Sharma",
-      email: "aarav.sharma@gmail.com",
-      avatarInitials: "AS",
-      role: "SCHOLAR",
-      contributionsCount: 3,
-      savedStoriesCount: 4,
-      joinedDate: "November 2026",
-      preferredLanguage: "EN"
-    };
-    onUserLogin(mockUser);
-    Soundtrack.playSuccessChime();
-    setIsLoginModalOpen(false);
-    onComplete();
+    setIsAuthenticating(true);
+    setAuthError(null);
+    try {
+      if (isFirebaseLive()) {
+        const user = await loginWithGoogle();
+        onUserLogin(user);
+        Soundtrack.playSuccessChime();
+        setIsLoginModalOpen(false);
+        onComplete();
+      } else {
+        const mockUser: UserProfile = {
+          id: "usr-google-" + Date.now(),
+          name: "Aarav Sharma",
+          email: "aarav.sharma@gmail.com",
+          avatarInitials: "AS",
+          role: "SCHOLAR",
+          favoriteStoryIds: ["mahabali"],
+          readingHistory: [],
+          joinedDate: new Date().toISOString().split("T")[0],
+          preferredLanguage: "EN",
+          authProvider: "local",
+          isRealAuth: false
+        };
+        onUserLogin(mockUser);
+        Soundtrack.playSuccessChime();
+        setIsLoginModalOpen(false);
+        onComplete();
+      }
+    } catch (err: any) {
+      console.error("Google login failed:", err);
+      let msg = err.message || "Failed to sign in with Google.";
+      if (err.code === "auth/popup-closed-by-user") {
+        msg = "Sign-in popup was closed before completion.";
+      }
+      setAuthError(msg);
+    } finally {
+      setIsAuthenticating(false);
+    }
   };
 
   const handleMobileLogin = () => {
@@ -229,10 +260,12 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
       email: "+91 98470 12345",
       avatarInitials: "KF",
       role: "READER",
-      contributionsCount: 1,
-      savedStoriesCount: 2,
-      joinedDate: "November 2026",
-      preferredLanguage: "ML"
+      favoriteStoryIds: ["mahabali", "theyyam"],
+      readingHistory: [],
+      joinedDate: new Date().toISOString().split("T")[0],
+      preferredLanguage: "ML",
+      authProvider: "phone",
+      isRealAuth: false
     };
     onUserLogin(mockUser);
     Soundtrack.playSuccessChime();
@@ -240,27 +273,62 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
     onComplete();
   };
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     Soundtrack.playModalPop();
-    const namePart = email.split("@")[0] || "Reader";
-    const initials = (namePart.slice(0, 2) || "KB").toUpperCase();
-    const mockUser: UserProfile = {
-      id: "usr-email-" + Date.now(),
-      name: namePart.charAt(0).toUpperCase() + namePart.slice(1),
-      email: email,
-      avatarInitials: initials,
-      role: "READER",
-      contributionsCount: 0,
-      savedStoriesCount: 1,
-      joinedDate: "November 2026",
-      preferredLanguage: "EN"
-    };
-    onUserLogin(mockUser);
-    Soundtrack.playSuccessChime();
-    setIsLoginModalOpen(false);
-    onComplete();
+    setIsAuthenticating(true);
+    setAuthError(null);
+
+    try {
+      if (isFirebaseLive() && password) {
+        try {
+          const user = await loginWithEmail(email, password);
+          onUserLogin(user);
+          Soundtrack.playSuccessChime();
+          setIsLoginModalOpen(false);
+          onComplete();
+          return;
+        } catch (loginErr: any) {
+          if (loginErr.code === "auth/user-not-found" || loginErr.code === "auth/invalid-credential") {
+            const namePart = email.split("@")[0] || "Reader";
+            const displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+            const user = await registerWithEmail(email, password, displayName, "READER");
+            onUserLogin(user);
+            Soundtrack.playSuccessChime();
+            setIsLoginModalOpen(false);
+            onComplete();
+            return;
+          }
+          throw loginErr;
+        }
+      } else {
+        const namePart = email.split("@")[0] || "Reader";
+        const initials = (namePart.slice(0, 2) || "KB").toUpperCase();
+        const mockUser: UserProfile = {
+          id: "usr-email-" + Date.now(),
+          name: namePart.charAt(0).toUpperCase() + namePart.slice(1),
+          email: email,
+          avatarInitials: initials,
+          role: "READER",
+          favoriteStoryIds: ["mahabali"],
+          readingHistory: [],
+          joinedDate: new Date().toISOString().split("T")[0],
+          preferredLanguage: "EN",
+          authProvider: "local",
+          isRealAuth: false
+        };
+        onUserLogin(mockUser);
+        Soundtrack.playSuccessChime();
+        setIsLoginModalOpen(false);
+        onComplete();
+      }
+    } catch (err: any) {
+      console.error("Email auth failed:", err);
+      setAuthError(err.message || "Failed to authenticate with email.");
+    } finally {
+      setIsAuthenticating(false);
+    }
   };
 
   const handleCloseModalOnly = () => {
@@ -682,14 +750,31 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
             <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
               Enter the World of Stories
             </h3>
-            <p className="text-neutral-400 text-sm mb-6 leading-relaxed">
+            <p className="text-neutral-400 text-sm mb-4 leading-relaxed">
               Sign in to save regional bookmarks, explore interactive folk audio, and contribute regional folklore.
             </p>
+
+            {/* Live Auth Indicator & Error Alert */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between text-[11px] font-mono px-3 py-1.5 rounded-lg bg-neutral-900 border border-neutral-800">
+                <span className="flex items-center gap-2 text-neutral-300">
+                  <span className={`w-2 h-2 rounded-full ${isFirebaseLive() ? "bg-emerald-400 animate-pulse" : "bg-brandYellow"}`}></span>
+                  {isFirebaseLive() ? "Firebase Real OAuth Live" : "Local Mode (Add Firebase keys for cloud OAuth)"}
+                </span>
+                <span className="text-[10px] text-neutral-500 font-bold">PROD READY</span>
+              </div>
+              {authError && (
+                <div className="mt-2 text-xs font-mono text-white bg-brandVermillion/90 border border-brandPink p-2.5 rounded-xl">
+                  ✦ {authError}
+                </div>
+              )}
+            </div>
 
             {/* Social Login Options */}
             <div className="space-y-3 mb-6">
               <button
-                className="w-full bg-white hover:bg-neutral-100 text-black font-semibold text-sm py-3 px-4 rounded-full flex items-center justify-center gap-3 transition-transform active:scale-95 shadow-md cursor-pointer"
+                disabled={isAuthenticating}
+                className="w-full bg-white hover:bg-neutral-100 text-black font-semibold text-sm py-3 px-4 rounded-full flex items-center justify-center gap-3 transition-transform active:scale-95 shadow-md cursor-pointer disabled:opacity-60"
                 onClick={handleGoogleLogin}
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
