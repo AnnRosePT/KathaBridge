@@ -18,6 +18,8 @@ import { ScrollFrameHero } from "./components/ScrollFrameHero";
 import { ContactAndPolicyModals, PolicyType } from "./components/ContactAndPolicyModals";
 import { CategoryShowcaseModal, CategoryData } from "./components/CategoryShowcaseModal";
 import { TechnicalInspectorModal } from "./components/TechnicalInspectorModal";
+import { HeritageMapModal } from "./components/HeritageMapModal";
+import { OralTalaMetronomeModal } from "./components/OralTalaMetronomeModal";
 import { speakSafely } from "./utils/malayalamPhonetics";
 import { getUIText } from "./utils/translations";
 import { subscribeToAuthChanges } from "./services/firebaseAuth";
@@ -53,6 +55,8 @@ export default function App() {
   const [activePolicyModal, setActivePolicyModal] = useState<PolicyType | null>(null);
   const [activeCategoryShowcase, setActiveCategoryShowcase] = useState<CategoryData | null>(null);
   const [techInspectorOpen, setTechInspectorOpen] = useState(false);
+  const [heritageMapOpen, setHeritageMapOpen] = useState(false);
+  const [talaMetronomeOpen, setTalaMetronomeOpen] = useState(false);
 
   // Celebratory Confetti & Sound
   const [showConfetti, setShowConfetti] = useState(false);
@@ -143,10 +147,20 @@ export default function App() {
         setVoiceLabOpen(false);
         setActivePolicyModal(null);
         setTechInspectorOpen(false);
+        setHeritageMapOpen(false);
+        setTalaMetronomeOpen(false);
       } else if (e.altKey && e.key.toLowerCase() === "t") {
         e.preventDefault();
         Soundtrack.playModalPop();
         setTechInspectorOpen((prev) => !prev);
+      } else if (e.altKey && e.key.toLowerCase() === "m") {
+        e.preventDefault();
+        Soundtrack.playModalPop();
+        setHeritageMapOpen((prev) => !prev);
+      } else if (e.altKey && e.key.toLowerCase() === "r") {
+        e.preventDefault();
+        Soundtrack.playModalPop();
+        setTalaMetronomeOpen((prev) => !prev);
       } else if (e.altKey && e.key.toLowerCase() === "a") {
         e.preventDefault();
         Soundtrack.playModalPop();
@@ -417,11 +431,39 @@ export default function App() {
                 setTechInspectorOpen(true);
               }}
               aria-label="Technical Architecture Inspector"
-              title="Inspect System Architecture, 334 Assertions & Benchmarks (Alt+T)"
+              title="Inspect System Architecture, 376 Assertions & Benchmarks (Alt+T)"
               className="hidden md:flex items-center gap-1.5 px-3 py-2 border-2 border-brandBlack rounded-full bg-white hover:bg-brandPink hover:text-white text-xs font-mono font-black transition shadow-[3px_3px_0px_#080808]"
             >
               <span>⚡</span>
               <span>Tech Specs</span>
+            </button>
+
+            {/* Kerala Living Heritage Topography GIS Map */}
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setHeritageMapOpen(true);
+              }}
+              aria-label="Kerala Sacred Topography & GIS Provenance Map"
+              title="Explore Sacred Topography & GIS Provenance Map (Alt+M)"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-2 border-2 border-brandBlack rounded-full bg-brandYellow hover:bg-brandPink hover:text-white text-xs font-mono font-black transition shadow-[3px_3px_0px_#080808]"
+            >
+              <span>🗺️</span>
+              <span>Heritage Map</span>
+            </button>
+
+            {/* Oral Folk Rhythm & Meter Metronome */}
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setTalaMetronomeOpen(true);
+              }}
+              aria-label="Oral Tala & Meter Metronome"
+              title="Practice Oral Stanza Meter with Web Audio Metronome (Alt+R)"
+              className="hidden xl:flex items-center gap-1.5 px-3 py-2 border-2 border-brandBlack rounded-full bg-white hover:bg-brandPink hover:text-white text-xs font-mono font-black transition shadow-[3px_3px_0px_#080808]"
+            >
+              <span>🥁</span>
+              <span>Folk Tala</span>
             </button>
 
             {/* Malayalam Neural Voice Lab */}
@@ -620,6 +662,26 @@ export default function App() {
             >
               About &amp; Mission
             </a>
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setMobileMenuOpen(false);
+                setHeritageMapOpen(true);
+              }}
+              className="block py-2 text-brandBlack border-b border-brandBlack/20 text-left w-full font-bold"
+            >
+              🗺️ Sacred Topography GIS Map
+            </button>
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setMobileMenuOpen(false);
+                setTalaMetronomeOpen(true);
+              }}
+              className="block py-2 text-brandBlack border-b border-brandBlack/20 text-left w-full font-bold"
+            >
+              🥁 Oral Tala &amp; Meter Metronome
+            </button>
             <button
               onClick={() => {
                 Soundtrack.playModalPop();
@@ -1247,6 +1309,49 @@ export default function App() {
           </div>
           <div className="hidden md:block font-mono text-xs font-black text-brandBlack bg-white border-2 border-brandBlack px-3.5 py-1.5 rounded-lg shadow-[3px_3px_0px_#080808]">
             {t.categoriesSection.totalArchived} {t.categoriesSection.modesCount}
+          </div>
+        </div>
+
+        {/* Living Cultural Geography & Oral Metronome Feature Callout */}
+        <div className="mb-10 bg-brandYellow border-4 border-brandBlack rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_#080808] flex flex-wrap items-center justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="bg-brandPink text-white font-mono text-[10px] font-black px-2 py-0.5 rounded border border-brandBlack uppercase">
+                GEOSPATIAL TOPOGRAPHY &amp; INDIGENOUS METERS
+              </span>
+              <span className="text-xs font-mono font-bold text-brandBlack hidden sm:inline">
+                • Living Heritage Loci
+              </span>
+            </div>
+            <h3 className="font-editorial text-xl sm:text-2xl font-black text-brandBlack">
+              Trace Sacred Shrines, Ancient Koothambalams &amp; Oral Tala Rhythms
+            </h3>
+            <p className="text-xs sm:text-sm font-semibold text-brandBlack/80 mt-1">
+              Explore pinpointed GPS coordinates of living shrines, UNESCO Sanskrit theatres, and practice oral recitation meters using our Web Audio procedural metronome.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setHeritageMapOpen(true);
+              }}
+              className="bg-brandBlack hover:bg-neutral-800 text-brandYellow font-mono text-xs font-black px-4 py-2.5 rounded-full border-2 border-brandBlack shadow-[3px_3px_0px_#FF087D] transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>🗺️</span>
+              <span>Launch Heritage GIS Map →</span>
+            </button>
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setTalaMetronomeOpen(true);
+              }}
+              className="bg-white hover:bg-brandPink hover:text-white text-brandBlack font-mono text-xs font-black px-4 py-2.5 rounded-full border-2 border-brandBlack shadow-[3px_3px_0px_#080808] transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>🥁</span>
+              <span>Open Folk Tala Metronome →</span>
+            </button>
           </div>
         </div>
 
@@ -2233,6 +2338,31 @@ export default function App() {
         />
       )}
 
+      {/* 12. Kerala Sacred Topography & GIS Map Modal */}
+      {heritageMapOpen && (
+        <HeritageMapModal
+          stories={mockStories}
+          onSelectStory={(st) => {
+            setActiveStoryReader(st);
+            setHeritageMapOpen(false);
+          }}
+          onClose={() => {
+            Soundtrack.playClick();
+            setHeritageMapOpen(false);
+          }}
+        />
+      )}
+
+      {/* 13. Indigenous Oral Tala & Poetic Meter Metronome Modal */}
+      {talaMetronomeOpen && (
+        <OralTalaMetronomeModal
+          onClose={() => {
+            Soundtrack.playClick();
+            setTalaMetronomeOpen(false);
+          }}
+        />
+      )}
+
       {/* Floating Tech Specs Pill (Quick Access for Judges) */}
       <button
         onClick={() => {
@@ -2240,11 +2370,11 @@ export default function App() {
           setTechInspectorOpen(true);
         }}
         aria-label="Inspect System Architecture & Tests"
-        title="Inspect Technical Architecture & 334 Automated Assertions"
+        title="Inspect Technical Architecture & 376 Automated Assertions"
         className="fixed bottom-20 right-6 z-40 bg-brandBlack text-brandYellow hover:bg-brandPink hover:text-white border-2 border-brandBlack px-3.5 py-1.5 rounded-full font-mono text-xs font-black shadow-[4px_4px_0px_#FF087D] flex items-center gap-1.5 transition cursor-pointer"
       >
         <span>⚡</span>
-        <span className="hidden sm:inline">Tech Specs (334 Passing)</span>
+        <span className="hidden sm:inline">Tech Specs (376 Passing)</span>
         <span className="sm:hidden">Specs</span>
       </button>
     </div>

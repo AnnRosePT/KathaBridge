@@ -3,6 +3,8 @@ import { Story, LanguageCode, CulturalExpression } from "../types";
 import { AudioNarrationService, AudioPlaybackState } from "../services/audioNarrationService";
 import { StorageService } from "../services/storageService";
 import { CulturalTermPopover } from "./CulturalTermPopover";
+import { CitationExportModal } from "./CitationExportModal";
+import { OralTalaMetronomeModal } from "./OralTalaMetronomeModal";
 import { mockSources } from "../data/mockData";
 
 interface Props {
@@ -24,6 +26,8 @@ export const StoryReaderModal: React.FC<Props> = ({
   const [activeTerm, setActiveTerm] = useState<CulturalExpression | null>(null);
   const [fontSizeOffset, setFontSizeOffset] = useState<number>(0);
   const [contrastMode, setContrastMode] = useState<"normal" | "dark" | "high-contrast">("normal");
+  const [citationModalOpen, setCitationModalOpen] = useState<boolean>(false);
+  const [talaModalOpen, setTalaModalOpen] = useState<boolean>(false);
   const [audioState, setAudioState] = useState<AudioPlaybackState>({
     isPlaying: false,
     isPaused: false,
@@ -229,6 +233,20 @@ export const StoryReaderModal: React.FC<Props> = ({
               </button>
             </div>
 
+            {/* Oral Tala Metronome */}
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setTalaModalOpen(true);
+              }}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-brandYellow hover:bg-white text-brandBlack border-2 border-brandBlack rounded-full text-xs font-mono font-black shadow-[2px_2px_0px_#080808] transition cursor-pointer"
+              title="Open Oral Folk Rhythm & Meter Metronome (താളക്രമം)"
+              aria-label="Oral Folk Rhythm Metronome"
+            >
+              <span>🥁</span>
+              <span className="hidden md:inline">Folk Tala</span>
+            </button>
+
             {/* Reading Contrast Mode */}
             <button
               onClick={() => {
@@ -350,13 +368,25 @@ export const StoryReaderModal: React.FC<Props> = ({
                 <p className="text-neutral-800 text-[11px] leading-snug mt-0.5">
                   {story.attribution || resolvedSource?.attributionText || "Preserved under Open Cultural Documentation standards."}
                 </p>
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex flex-wrap items-center gap-2 mt-2">
                   <span className="bg-brandYellow/60 text-brandBlack px-2 py-0.5 rounded border border-brandBlack text-[10px] font-bold">
                     {story.license || resolvedSource?.license || "Creative Commons / Public Domain"}
                   </span>
                   <span className="bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded border border-neutral-300 text-[10px] font-bold">
                     Bilingual Transcript Checked
                   </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      Soundtrack.playModalPop();
+                      setCitationModalOpen(true);
+                    }}
+                    className="bg-brandYellow hover:bg-brandBlack hover:text-white text-brandBlack border border-brandBlack px-2.5 py-0.5 rounded text-[10px] font-mono font-black transition shadow-[1px_1px_0px_#080808] flex items-center gap-1 cursor-pointer"
+                    title="Export BibTeX, APA, MLA, or W3C JSON-LD citation"
+                  >
+                    <span>📜</span>
+                    <span>Export Citation &amp; JSON-LD</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -621,6 +651,22 @@ export const StoryReaderModal: React.FC<Props> = ({
           storyTitle={getTitleForLang(story, activeLang)}
           storyId={story.id}
           onClose={() => setActiveTerm(null)}
+        />
+      )}
+
+      {/* Academic Citation & JSON-LD Export Modal */}
+      {citationModalOpen && (
+        <CitationExportModal
+          story={story}
+          source={resolvedSource || null}
+          onClose={() => setCitationModalOpen(false)}
+        />
+      )}
+
+      {/* Oral Tala Metronome Modal */}
+      {talaModalOpen && (
+        <OralTalaMetronomeModal
+          onClose={() => setTalaModalOpen(false)}
         />
       )}
     </div>
