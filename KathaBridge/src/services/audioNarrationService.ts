@@ -1,4 +1,5 @@
 import { LanguageCode } from "../types";
+import { speakSafely } from "../utils/malayalamPhonetics";
 
 export interface AudioPlaybackState {
   isPlaying: boolean;
@@ -26,6 +27,7 @@ export class AudioNarrationService {
   private isPaused = false;
   private isPlaying = false;
   private isLoading = false;
+  private isUsingSpeechSynthesis = false;
   private rate = 1.0;
   private volume = 1.0;
   private activeLanguage: LanguageCode = "EN";
@@ -67,18 +69,11 @@ export class AudioNarrationService {
       this.emitState();
     });
 
-    this.audio.addEventListener("error", (e) => {
-      console.warn("Audio element playback notice:", e);
+    this.audio.addEventListener("error", () => {
       this.isLoading = false;
-
-      // Gracefully advance after brief pause
+      // If audio file playback errors, immediately switch to Web Speech Synthesis fallback!
       if (this.isPlaying && !this.isPaused) {
-        this.currentSentenceIndex++;
-        if (this.currentSentenceIndex < this.sentenceItems.length) {
-          setTimeout(() => this.playSentenceAtIndex(this.currentSentenceIndex), 400);
-        } else {
-          this.stop();
-        }
+        this.playWithSpeechSynthesis(this.currentSentenceIndex);
       }
     });
   }
@@ -90,8 +85,8 @@ export class AudioNarrationService {
 
   private emitState() {
     if (this.onStateChange) {
-      const currentTime = this.audio ? this.audio.currentTime : 0;
-      const duration = this.audio && !isNaN(this.audio.duration) ? this.audio.duration : 4;
+      const currentTime = this.audio && !this.isUsingSpeechSynthesis ? this.audio.currentTime : 0;
+      const duration = this.audio && !isNaN(this.audio.duration) && !this.isUsingSpeechSynthesis ? this.audio.duration : 4;
       this.onStateChange({
         isPlaying: this.isPlaying,
         isPaused: this.isPaused,
@@ -126,14 +121,23 @@ export class AudioNarrationService {
   }
 
   public play(fromIndex?: number) {
-    if (this.isPaused && fromIndex === undefined && this.audio) {
-      this.audio.playbackRate = this.rate;
-      this.audio.volume = this.volume;
-      this.audio.play().catch((err) => console.warn("Resume failed:", err));
-      this.isPaused = false;
-      this.isPlaying = true;
-      this.emitState();
-      return;
+    if (this.isPaused && fromIndex === undefined) {
+      if (this.isUsingSpeechSynthesis && typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.resume();
+        this.isPaused = false;
+        this.isPlaying = true;
+        this.emitState();
+        return;
+      }
+      if (this.audio) {
+        this.audio.playbackRate = this.rate;
+        this.audio.volume = this.volume;
+        this.audio.play().catch(() => this.playWithSpeechSynthesis(this.currentSentenceIndex));
+        this.isPaused = false;
+        this.isPlaying = true;
+        this.emitState();
+        return;
+      }
     }
 
     if (fromIndex !== undefined) {
@@ -158,9 +162,14 @@ export class AudioNarrationService {
     const item = this.sentenceItems[index];
     const langCode = this.activeLanguage.toLowerCase();
 
-    // Prefer pre-synthesized audio asset first, with dynamic /api/tts fallback
+    // For Sanskrit (sa), Tamil (ta), and Hindi (hi), use native Speech Synthesis immediately
+    // For English (en) and Malayalam (ml), attempt pre-rendered static MP3 first
+    if (langCode === "sa" || langCode === "ta" || langCode === "hi") {
+      this.playWithSpeechSynthesis(index);
+      return;
+    }
+
     const directUrl = `/audio/tts/${item.id}_${langCode}.mp3`;
-    const fallbackApiUrl = `/api/tts?sentenceId=${encodeURIComponent(item.id)}&lang=${langCode}&text=${encodeURIComponent(item.text)}`;
 
     if (!this.audio) {
       this.audio = new Audio();
@@ -169,9 +178,9 @@ export class AudioNarrationService {
 
     this.audio.pause();
     this.isLoading = true;
+    this.isUsingSpeechSynthesis = false;
     this.emitState();
 
-    // Try pre-rendered file first
     this.audio.src = directUrl;
     this.audio.playbackRate = this.rate;
     this.audio.volume = this.volume;
@@ -179,28 +188,69 @@ export class AudioNarrationService {
     const playPromise = this.audio.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
-        // Fallback to API if direct asset fails
-        if (this.audio) {
-          this.audio.src = fallbackApiUrl;
-          this.audio.playbackRate = this.rate;
-          this.audio.volume = this.volume;
-          this.audio.play().catch((err) => {
-            console.warn("Fallback TTS playback failed:", err);
-            this.isLoading = false;
-            this.emitState();
-          });
-        }
+        // Fall back to Web Speech Synthesis if audio asset is missing
+        this.playWithSpeechSynthesis(index);
       });
     }
+  }
 
+  private playWithSpeechSynthesis(index: number) {
+    if (!this.isPlaying || index >= this.sentenceItems.length) {
+      this.stop();
+      return;
+    }
+
+    const item = this.sentenceItems[index];
+    if (typeof window === "undefined" || !window.speechSynthesis) {
+      this.isLoading = false;
+      this.emitState();
+      return;
+    }
+
+    if (this.audio) {
+      this.audio.pause();
+    }
+
+    this.isUsingSpeechSynthesis = true;
+    this.isLoading = false;
     this.emitState();
+
+    speakSafely(window.speechSynthesis, item.text, this.activeLanguage, {
+      rate: this.rate,
+      volume: this.volume,
+      onEnd: () => {
+        if (this.isPlaying && !this.isPaused) {
+          this.currentSentenceIndex++;
+          if (this.currentSentenceIndex < this.sentenceItems.length) {
+            this.playSentenceAtIndex(this.currentSentenceIndex);
+          } else {
+            this.stop();
+          }
+        }
+      },
+      onError: (err) => {
+        console.warn("Speech synthesis notice:", err);
+        if (this.isPlaying && !this.isPaused) {
+          this.currentSentenceIndex++;
+          if (this.currentSentenceIndex < this.sentenceItems.length) {
+            setTimeout(() => this.playSentenceAtIndex(this.currentSentenceIndex), 300);
+          } else {
+            this.stop();
+          }
+        }
+      }
+    });
   }
 
   public pause() {
-    if (!this.audio || !this.isPlaying) return;
-    this.audio.pause();
     this.isPaused = true;
     this.isPlaying = false;
+    if (this.isUsingSpeechSynthesis && typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.pause();
+    }
+    if (this.audio) {
+      this.audio.pause();
+    }
     this.emitState();
   }
 
@@ -209,6 +259,9 @@ export class AudioNarrationService {
   }
 
   public stop() {
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
     if (this.audio) {
       this.audio.pause();
       this.audio.currentTime = 0;
@@ -216,6 +269,7 @@ export class AudioNarrationService {
     this.isPlaying = false;
     this.isPaused = false;
     this.isLoading = false;
+    this.isUsingSpeechSynthesis = false;
     this.currentSentenceIndex = 0;
     this.emitState();
   }
@@ -248,8 +302,9 @@ export class AudioNarrationService {
   }
 
   public getPlaybackState(): AudioPlaybackState {
-    const currentTime = this.audio ? this.audio.currentTime : 0;
-    const duration = this.audio && !isNaN(this.audio.duration) ? this.audio.duration : 4;
+    const currentTime = this.audio && !this.isUsingSpeechSynthesis ? this.audio.currentTime : 0;
+    const duration = this.audio && !isNaN(this.audio.duration) && !this.isUsingSpeechSynthesis ? this.audio.duration : 4;
+
     return {
       isPlaying: this.isPlaying,
       isPaused: this.isPaused,

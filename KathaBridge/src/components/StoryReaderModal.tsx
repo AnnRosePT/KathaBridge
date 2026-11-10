@@ -151,7 +151,8 @@ export const StoryReaderModal: React.FC<Props> = ({
                 { code: "EN" as LanguageCode, label: "EN" },
                 { code: "ML" as LanguageCode, label: "മലയാളം" },
                 { code: "SA" as LanguageCode, label: "संस्कृतम्" },
-                { code: "HI" as LanguageCode, label: "हिन्दी" }
+                { code: "HI" as LanguageCode, label: "हिन्दी" },
+                { code: "TA" as LanguageCode, label: "தமிழ்" }
               ].map((lang) => (
                 <button
                   key={lang.code}
@@ -396,6 +397,8 @@ export const StoryReaderModal: React.FC<Props> = ({
                     ? "SANSKRIT CLASSICAL RECITATION"
                     : activeLang === "HI"
                     ? "HINDI NARRATION (SWARA NEURAL)"
+                    : activeLang === "TA"
+                    ? "TAMIL NARRATION (VALLUVAR NEURAL)"
                     : "ENGLISH NARRATION (NEERJA NEURAL)"
                   : audioState.isPaused
                   ? "AUDIO PAUSED"

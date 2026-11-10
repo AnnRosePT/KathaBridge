@@ -139,6 +139,32 @@ export function resolveSpeechVoice(synth: SpeechSynthesis, originalText: string,
     };
   }
 
+  if (langUpper === "TA") {
+    // Look for native Tamil voice
+    const taVoice = voices.find(
+      (v) =>
+        v.lang.toLowerCase().startsWith("ta") ||
+        v.name.toLowerCase().includes("tamil") ||
+        v.name.toLowerCase().includes("valluvar")
+    );
+
+    if (taVoice) {
+      return {
+        voice: taVoice,
+        effectiveLang: taVoice.lang || "ta-IN",
+        textToSpeak: originalText
+      };
+    }
+
+    // Fallback: Indian English
+    const inVoice = voices.find((v) => v.lang.toLowerCase().includes("en-in") || v.name.toLowerCase().includes("india"));
+    return {
+      voice: inVoice || voices[0] || null,
+      effectiveLang: inVoice?.lang || "en-IN",
+      textToSpeak: originalText
+    };
+  }
+
   // English or general target
   const enInVoice = voices.find((v) => v.lang.toLowerCase().includes("en-in") || v.name.toLowerCase().includes("india"));
   const enVoice = enInVoice || voices.find((v) => v.lang.startsWith("en")) || voices[0] || null;

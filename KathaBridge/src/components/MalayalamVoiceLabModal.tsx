@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Soundtrack } from "../services/soundtrackService";
+import { speakSafely } from "../utils/malayalamPhonetics";
 
 interface SampleItem {
   id: string;
   malayalam: string;
   english: string;
   context: string;
+  lang?: string;
 }
 
 const TEST_SAMPLES: SampleItem[] = [
@@ -13,25 +15,43 @@ const TEST_SAMPLES: SampleItem[] = [
     id: "sample-1",
     malayalam: "കേരളം ദൈവത്തിന്റെ സ്വന്തം നാടാണ്.",
     english: "Kerala is God's own country.",
-    context: "Geographical & Cultural Idiom (Checks Samvruthokaram and Conjunct ' ദൈവത്തിന്റെ ')"
+    context: "Geographical & Cultural Idiom (Checks Samvruthokaram and Conjunct ' ദൈവത്തിന്റെ ')",
+    lang: "ML"
   },
   {
     id: "sample-2",
     malayalam: "ഓണത്തിന്റെ ഐതിഹ്യത്തിൽ മഹാബലി രാജാവിന് വലിയ സ്ഥാനമുണ്ട്.",
     english: "King Mahabali holds a significant place in the folklore of Onam.",
-    context: "Historical Folklore (Checks Retroflex ' ഴ് ' in മഹാബലി and Genitive ' ഐതിഹ്യത്തിൽ ')"
+    context: "Historical Folklore (Checks Retroflex ' ഴ് ' in മഹാബലി and Genitive ' ഐതിഹ്യത്തിൽ ')",
+    lang: "ML"
   },
   {
     id: "sample-3",
     malayalam: "തെയ്യം വടക്കൻ കേരളത്തിലെ ഒരു പ്രധാന അനുഷ്ഠാന കലയാണ്.",
     english: "Theyyam is a major ritual folk art of North Kerala.",
-    context: "Ritual Heritage (Checks Geminate ' യ്യ ' in തെയ്യം and ' കലയാണ് ')"
+    context: "Ritual Heritage (Checks Geminate ' യ്യ ' in തെയ്യം and ' കലയാണ് ')",
+    lang: "ML"
   },
   {
     id: "sample-4",
     malayalam: "ഒരിക്കൽ ഒരു കാട്ടിൽ ഒരു സിംഹവും ഒരു എലിയും ജീവിച്ചിരുന്നു.",
     english: "Once upon a time in a forest lived a lion and a mouse.",
-    context: "Panchatantra Narrative (Checks Chillu ' ൽ ' and Storytelling Rhythm)"
+    context: "Panchatantra Narrative (Checks Chillu ' ൽ ' and Storytelling Rhythm)",
+    lang: "ML"
+  },
+  {
+    id: "sample-5",
+    malayalam: "अविमृश्य न कर्तव्यं कर्तव्यं सुविमृश्य यत्।",
+    english: "Actions should never be done without careful contemplation.",
+    context: "Sanskrit Classical Verse (Panchatantra Morals)",
+    lang: "SA"
+  },
+  {
+    id: "sample-6",
+    malayalam: "யாதும் ஊரே யாவரும் கேளிர்; தீதும் நன்றும் பிறர்தர வாரா.",
+    english: "To us all towns are one, all humans our kin; good and evil come from within.",
+    context: "Tamil Sangam Poetry (Purananuru 192)",
+    lang: "TA"
   }
 ];
 
@@ -150,8 +170,64 @@ export const MalayalamVoiceLabModal: React.FC<Props> = ({ onClose }) => {
   };
 
   const playSample = (sampleId: string, voiceId: string) => {
+    const sample = TEST_SAMPLES.find((s) => s.id === sampleId);
+    const playId = `${sampleId}_${voiceId}`;
+    Soundtrack.playClick();
+
+    if (activePlayingId === playId) {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      if (audioRef.current) audioRef.current.pause();
+      setActivePlayingId(null);
+      return;
+    }
+
+    // If sample is Sanskrit or Tamil, speak immediately via Web Speech
+    if (sample && (sample.lang === "SA" || sample.lang === "TA")) {
+      setActivePlayingId(playId);
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        speakSafely(window.speechSynthesis, sample.malayalam, sample.lang, {
+          rate: playbackSpeed,
+          onEnd: () => setActivePlayingId(null),
+          onError: () => setActivePlayingId(null)
+        });
+      }
+      return;
+    }
+
     const url = `/audio/tts/${sampleId}_${voiceId}.mp3`;
-    playAudio(url, `${sampleId}_${voiceId}`);
+    const audio = new Audio(url);
+    audio.playbackRate = playbackSpeed;
+    audioRef.current = audio;
+
+    audio.onplay = () => setActivePlayingId(playId);
+    audio.onended = () => setActivePlayingId(null);
+    audio.onerror = () => {
+      if (sample && typeof window !== "undefined" && window.speechSynthesis) {
+        setActivePlayingId(playId);
+        speakSafely(window.speechSynthesis, sample.malayalam, sample.lang || "ML", {
+          rate: playbackSpeed,
+          onEnd: () => setActivePlayingId(null),
+          onError: () => setActivePlayingId(null)
+        });
+      } else {
+        setActivePlayingId(null);
+      }
+    };
+
+    audio.play().catch(() => {
+      if (sample && typeof window !== "undefined" && window.speechSynthesis) {
+        setActivePlayingId(playId);
+        speakSafely(window.speechSynthesis, sample.malayalam, sample.lang || "ML", {
+          rate: playbackSpeed,
+          onEnd: () => setActivePlayingId(null),
+          onError: () => setActivePlayingId(null)
+        });
+      } else {
+        setActivePlayingId(null);
+      }
+    });
   };
 
   const handleCustomSynthesize = () => {

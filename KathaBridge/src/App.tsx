@@ -16,6 +16,7 @@ import { MalayalamVoiceLabModal } from "./components/MalayalamVoiceLabModal";
 import { IntroSplashAndAuth } from "./components/IntroSplashAndAuth";
 import { ScrollFrameHero } from "./components/ScrollFrameHero";
 import { ContactAndPolicyModals, PolicyType } from "./components/ContactAndPolicyModals";
+import { CategoryShowcaseModal, CategoryData } from "./components/CategoryShowcaseModal";
 import { speakSafely } from "./utils/malayalamPhonetics";
 import { getUIText } from "./utils/translations";
 import { subscribeToAuthChanges } from "./services/firebaseAuth";
@@ -49,6 +50,7 @@ export default function App() {
   const [voiceLabOpen, setVoiceLabOpen] = useState(false);
   const introAudioRef = useRef<HTMLAudioElement | null>(null);
   const [activePolicyModal, setActivePolicyModal] = useState<PolicyType | null>(null);
+  const [activeCategoryShowcase, setActiveCategoryShowcase] = useState<CategoryData | null>(null);
 
   // Celebratory Confetti & Sound
   const [showConfetti, setShowConfetti] = useState(false);
@@ -183,40 +185,34 @@ export default function App() {
       return;
     }
 
-    const audioSrc = selectedLanguage === "ML" ? "/audio/tts/intro_ml.mp3" : "/audio/tts/intro_en.mp3";
-    const audio = new Audio(audioSrc);
-    introAudioRef.current = audio;
-
-    audio.onended = () => {
-      setIsIntroSpeaking(false);
+    const introTexts: Record<LanguageCode, string> = {
+      EN: "Welcome to KathaBridge: Stories beyond language. Discover India's rich cultural stories, living ritual theatre, and regional folklore with deep contextual meaning.",
+      ML: "കഥാബ്രിഡ്ജിലേക്ക് സ്വാഗതം. ഭാഷകൾക്കപ്പുറമുള്ള സാംസ്കാരിക കഥകളും നാടൻ കലകളും അവയുടെ തനതായ സന്ദർഭത്തോടെ മനസ്സിലാക്കാം.",
+      SA: "कथाब्रीड्ज्-मञ्चे स्वागतम्। भाषाभ्यः परे सांस्कृतिककथाः, प्राचीननीतिबोधाः, अनुष्ठानपरम्पराश्च सार्थकरूपेण अन्विषन्तु।",
+      HI: "कथाब्रिज में आपका स्वागत है। भाषा से परे सांस्कृतिक कहानियों, लोक गाथाओं और जीवंत नाट्य परंपराओं को उनके मूल संदर्भ के साथ अनुभव करें।",
+      TA: "கதாபிரிட்ஜ் தளத்திற்கு அன்புடன் வரவேற்கிறோம். மொழிகளுக்கு அப்பாற்பட்ட வாய்மொழி வரலாறுகள் மற்றும் பாரம்பரிய கலாச்சாரக் கதைகளை ஆழமான பொருளுடன் கேட்டு மகிழுங்கள்."
     };
 
-    audio.onerror = () => {
-      const intro =
-        selectedLanguage === "ML"
-          ? "കഥാബ്രിഡ്ജിലേക്ക് സ്വാഗതം. ഭാഷകൾക്കപ്പുറമുള്ള സാംസ്കാരിക കഥകളും നാടൻ കലകളും അവയുടെ തനതായ സന്ദർഭത്തോടെ മനസ്സിലാക്കാം."
-          : "Welcome to KathaBridge: Stories beyond language. Discover cultural stories, folk performances and regional literature with meaning, context and inclusive access for all.";
-      if ("speechSynthesis" in window) {
-        speakSafely(window.speechSynthesis, intro, selectedLanguage, {
-          rate: 0.95,
-          onEnd: () => setIsIntroSpeaking(false),
-          onError: () => setIsIntroSpeaking(false)
-        });
-      } else {
-        setIsIntroSpeaking(false);
-      }
+    const introAnnouncements: Record<LanguageCode, string> = {
+      EN: "Playing KathaBridge audio introduction...",
+      ML: "കഥാബ്രിഡ്ജ് ആമുഖ വിവരണം കേൾക്കുന്നു (Sobhana Neural)...",
+      SA: "कथाब्रीड्ज्-प्रस्तावनां शृण्वन्ति (संस्कृत-वाचनम्)...",
+      HI: "कथाब्रिज परिचय ऑडियो बज रहा है (स्वरा न्यूरल)...",
+      TA: "கதாபிரிட்ஜ் அறிமுகக் குரல் ஒலிக்கிறது (வள்ளுவர் குரல்)..."
     };
 
     setIsIntroSpeaking(true);
-    audio.play().catch(() => {
-      setIsIntroSpeaking(false);
-    });
+    showToast(introAnnouncements[selectedLanguage] || introAnnouncements.EN);
 
-    showToast(
-      selectedLanguage === "ML"
-        ? "കഥാബ്രിഡ്ജ് ആമുഖ വിവരണം കേൾക്കുന്നു (Sobhana Neural)..."
-        : "Playing KathaBridge audio introduction (Neerja Neural)..."
-    );
+    if ("speechSynthesis" in window) {
+      speakSafely(window.speechSynthesis, introTexts[selectedLanguage] || introTexts.EN, selectedLanguage, {
+        rate: selectedLanguage === "SA" ? 0.85 : 0.95,
+        onEnd: () => setIsIntroSpeaking(false),
+        onError: () => setIsIntroSpeaking(false)
+      });
+    } else {
+      setIsIntroSpeaking(false);
+    }
   };
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -243,7 +239,15 @@ export default function App() {
         story.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase()) ||
         story.originRegion.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesCategory = selectedCategory === "ALL" || story.category === selectedCategory;
+      const matchesCategory =
+        selectedCategory === "ALL" ||
+        story.category === selectedCategory ||
+        (selectedCategory === "FOLK_TALES" && (story.category === "FOLK_TALES" || story.id === "mahabali" || story.id === "naranath" || story.id === "muthappan")) ||
+        (selectedCategory === "CLASSICAL_LIT" && (story.category === "CLASSICAL_LIT" || story.id === "panchatantra")) ||
+        (selectedCategory === "PERFORMANCES" && (story.category === "PERFORMANCES" || story.id === "theyyam" || story.id === "koodiyattam" || story.id === "muthappan")) ||
+        (selectedCategory === "REGIONAL_ART" && (story.category === "REGIONAL_ART" || story.id === "koodiyattam" || story.id === "theyyam")) ||
+        (selectedCategory === "MUSIC_ORAL" && (story.category === "MUSIC_ORAL" || story.id === "theyyam" || story.id === "mahabali")) ||
+        (selectedCategory === "FESTIVALS" && (story.category === "FESTIVALS" || story.id === "mahabali" || story.id === "theyyam"));
 
       const matchesLang =
         selectedLanguageFilter === "ALL" ||
@@ -256,6 +260,9 @@ export default function App() {
         (selectedLanguageFilter === "HINDI" &&
           (story.availableLanguages.includes("HI") ||
             story.originalLanguage.toLowerCase().includes("hindi"))) ||
+        (selectedLanguageFilter === "TAMIL" &&
+          (story.availableLanguages.includes("TA") ||
+            story.originalLanguage.toLowerCase().includes("tamil"))) ||
         story.availableLanguages.includes(selectedLanguageFilter as any);
 
       return matchesSearch && matchesCategory && matchesLang;
@@ -1045,6 +1052,7 @@ export default function App() {
               { id: "MALAYALAM", label: selectedLanguage === "ML" ? "മലയാളം" : "MALAYALAM" },
               { id: "SANSKRIT", label: selectedLanguage === "SA" ? "संस्कृतम्" : "SANSKRIT" },
               { id: "HINDI", label: selectedLanguage === "HI" ? "हिन्दी" : "HINDI" },
+              { id: "TAMIL", label: selectedLanguage === "TA" ? "தமிழ்" : "TAMIL" },
             ].map((lang) => (
               <button
                 key={lang.id}
@@ -1061,6 +1069,23 @@ export default function App() {
                 {lang.label}
               </button>
             ))}
+
+            {selectedCategory !== "ALL" && (
+              <div className="flex items-center gap-1.5 bg-brandPink text-white px-3 py-1 rounded-full text-xs font-mono font-black border-2 border-brandBlack shadow-[2px_2px_0px_#080808] animate-fade-in">
+                <span>CATEGORY: {selectedCategory.replace("_", " ")}</span>
+                <button
+                  onClick={() => {
+                    Soundtrack.playClick();
+                    setSelectedCategory("ALL");
+                    showToast("Category filter reset to All");
+                  }}
+                  title="Clear Category Filter"
+                  className="w-4 h-4 rounded-full bg-white text-brandPink flex items-center justify-center font-bold text-[10px] ml-1 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-2 text-xs font-mono">
@@ -1208,10 +1233,10 @@ export default function App() {
               desc: t.categoriesSection.folkLoreDesc,
               stat: "140+ TALES",
               icon: "📖",
-              image:
-                "/images/landing/asset_5.png",
+              image: "/images/landing/asset_5.png",
               subTag: "ORAL ANTHOLOGY",
               tape: "right",
+              categoryKey: "FOLK_TALES"
             },
             {
               id: "classical-lit",
@@ -1220,10 +1245,10 @@ export default function App() {
               desc: t.categoriesSection.classicalDesc,
               stat: "85+ MANUSCRIPTS",
               icon: "📜",
-              image:
-                "/images/landing/asset_4.png",
+              image: "/images/landing/asset_4.png",
               subTag: "POETRY & PROSE",
               tape: "left",
+              categoryKey: "CLASSICAL_LIT"
             },
             {
               id: "performances",
@@ -1232,10 +1257,10 @@ export default function App() {
               desc: t.categoriesSection.theatreDesc,
               stat: "62+ DOCUMENTED ACTS",
               icon: "🎭",
-              image:
-                "/images/stories/koodiyattam.png",
+              image: "/images/stories/koodiyattam.png",
               subTag: "LIVING THEATRE",
               tape: "right-yellow",
+              categoryKey: "PERFORMANCES"
             },
             {
               id: "regional-art",
@@ -1244,10 +1269,10 @@ export default function App() {
               desc: t.categoriesSection.craftsDesc,
               stat: "95+ ART ESSAYS",
               icon: "🎨",
-              image:
-                "/images/landing/asset_1.png",
+              image: "/images/landing/asset_1.png",
               subTag: "VISUAL LANGUAGE",
               tape: "left",
+              categoryKey: "REGIONAL_ART"
             },
             {
               id: "music-traditions",
@@ -1256,27 +1281,31 @@ export default function App() {
               desc: t.categoriesSection.balladsDesc,
               stat: "110+ AUDIO TRACKS",
               icon: "🪕",
-              image:
-                "/images/landing/asset_3.png",
+              image: "/images/landing/asset_3.png",
               subTag: "SOUND & RHYTHM",
               tape: "right",
+              categoryKey: "MUSIC_ORAL"
             },
             {
               id: "festivals",
               tag: "06 • LIVING CALENDAR",
-              title: "Festivals & Heritage",
-              desc: "Seasonal transitions, harvest alignments, boat races, and sacred grove rituals decoded beyond tourist spectacle into deep reverence.",
+              title: t.categoriesSection.festivalsTitle || "Festivals & Heritage",
+              desc: t.categoriesSection.festivalsDesc || "Seasonal transitions, harvest alignments, boat races, and sacred grove rituals decoded beyond tourist spectacle into deep reverence.",
               stat: "50+ CELEBRATIONS",
               icon: "🏮",
-              image:
-                "/images/landing/asset_12.png",
+              image: "/images/landing/asset_12.png",
               subTag: "LIVING CALENDAR",
               tape: "left-yellow",
+              categoryKey: "FESTIVALS"
             },
           ].map((cat) => (
             <div
               key={cat.id}
-              className="bg-white border-2 border-brandBlack rounded-2xl shadow-[6px_6px_0px_#080808] hover:-translate-y-1 transition duration-150 flex flex-col justify-between group relative overflow-hidden"
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setActiveCategoryShowcase(cat as CategoryData);
+              }}
+              className="bg-white border-2 border-brandBlack rounded-2xl shadow-[6px_6px_0px_#080808] hover:-translate-y-1 transition duration-150 flex flex-col justify-between group relative overflow-hidden cursor-pointer hover:border-brandPink"
             >
               <div
                 className={`w-20 h-5 ${
@@ -1313,7 +1342,7 @@ export default function App() {
                   <div className="font-mono text-[11px] text-brandPink font-black uppercase tracking-wider mb-1">
                     {cat.tag}
                   </div>
-                  <h3 className="font-editorial text-2xl font-black text-brandBlack mb-2">
+                  <h3 className="font-editorial text-2xl font-black text-brandBlack mb-2 group-hover:text-brandPink transition">
                     {cat.title}
                   </h3>
                   <p className="text-brandBlack font-semibold text-sm leading-relaxed">
@@ -1325,19 +1354,21 @@ export default function App() {
                   <span className="bg-brandYellow px-2 py-0.5 rounded border border-brandBlack">
                     {cat.stat}
                   </span>
-                  <a
-                    href="#stories"
-                    onClick={() => {
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       Soundtrack.playClick();
-                      if (cat.id === "folk-tales") setSelectedCategory("FOLK_TALES");
-                      else if (cat.id === "classical-lit") setSelectedCategory("CLASSICAL_LIT");
-                      else if (cat.id === "performances") setSelectedCategory("PERFORMANCES");
-                      else setSelectedCategory("ALL");
+                      setSelectedCategory(cat.categoryKey);
+                      showToast(`Filtered archive to: ${cat.title}`);
+                      const el = document.getElementById("stories");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="text-brandPink group-hover:translate-x-1 transition-transform"
+                    className="text-brandPink group-hover:translate-x-1 transition-transform font-bold flex items-center gap-1 cursor-pointer hover:underline"
                   >
-                    EXPLORE →
-                  </a>
+                    <span>EXPLORE</span>
+                    <span>→</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -2129,6 +2160,38 @@ export default function App() {
           onClose={() => {
             Soundtrack.playClick();
             setActivePolicyModal(null);
+          }}
+        />
+      )}
+
+      {/* 10. Heritage Category Deep-Dive Showcase Modal */}
+      {activeCategoryShowcase && (
+        <CategoryShowcaseModal
+          category={activeCategoryShowcase}
+          stories={mockStories.filter((s) => {
+            const k = activeCategoryShowcase.categoryKey;
+            if (k === "FOLK_TALES") return s.category === "FOLK_TALES" || s.id === "mahabali" || s.id === "naranath" || s.id === "muthappan";
+            if (k === "CLASSICAL_LIT") return s.category === "CLASSICAL_LIT" || s.id === "panchatantra";
+            if (k === "PERFORMANCES") return s.category === "PERFORMANCES" || s.id === "theyyam" || s.id === "koodiyattam" || s.id === "muthappan";
+            if (k === "REGIONAL_ART") return s.id === "koodiyattam" || s.id === "theyyam";
+            if (k === "MUSIC_ORAL") return s.id === "theyyam" || s.id === "mahabali";
+            if (k === "FESTIVALS") return s.id === "mahabali" || s.id === "theyyam";
+            return true;
+          })}
+          onSelectStory={(st) => {
+            setActiveStoryReader(st);
+            setActiveCategoryShowcase(null);
+          }}
+          onFilterArchive={(k) => {
+            setSelectedCategory(k);
+            showToast(`Archive filtered to: ${activeCategoryShowcase.title}`);
+            const el = document.getElementById("stories");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+            setActiveCategoryShowcase(null);
+          }}
+          onClose={() => {
+            Soundtrack.playClick();
+            setActiveCategoryShowcase(null);
           }}
         />
       )}
