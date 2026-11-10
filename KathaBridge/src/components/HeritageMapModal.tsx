@@ -129,6 +129,27 @@ export const HERITAGE_SITES: HeritageSite[] = [
   }
 ];
 
+const OSM_RASTER_STYLE: any = {
+  version: 8,
+  sources: {
+    "osm-tiles": {
+      type: "raster",
+      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      tileSize: 256,
+      attribution: "&copy; OpenStreetMap contributors"
+    }
+  },
+  layers: [
+    {
+      id: "osm-layer",
+      type: "raster",
+      source: "osm-tiles",
+      minzoom: 0,
+      maxzoom: 19
+    }
+  ]
+};
+
 interface Props {
   stories: Story[];
   onSelectStory: (story: Story) => void;
@@ -143,7 +164,8 @@ export const HeritageMapModal: React.FC<Props> = ({
   const [selectedSite, setSelectedSite] = useState<HeritageSite>(HERITAGE_SITES[0]);
   const [filterCategory, setFilterCategory] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
-  const [mapError, setMapError] = useState<boolean>(false);
+  const [activeMapView, setActiveMapView] = useState<"OPENFREEMAP" | "OSM" | "ILLUSTRATED">("OPENFREEMAP");
+  const [isMapLoading, setIsMapLoading] = useState<boolean>(true);
 
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -158,78 +180,110 @@ export const HeritageMapModal: React.FC<Props> = ({
     return matchesCategory && matchesSearch;
   });
 
-  // Initialize OpenFreeMap using MapLibre GL
+  // Initialize MapLibre GL instance
   useEffect(() => {
+    if (activeMapView === "ILLUSTRATED") return;
     if (!mapContainerRef.current) return;
 
+    let map: maplibregl.Map | null = null;
+    setIsMapLoading(true);
+
     try {
-      const map = new maplibregl.Map({
+      const initialStyle =
+        activeMapView === "OPENFREEMAP"
+          ? "https://tiles.openfreemap.org/styles/liberty"
+          : OSM_RASTER_STYLE;
+
+      map = new maplibregl.Map({
         container: mapContainerRef.current,
-        // OpenFreeMap vector tile style (https://github.com/hyperknot/openfreemap)
-        style: "https://tiles.openfreemap.org/styles/liberty",
-        center: [76.25, 10.4], // Kerala Center
-        zoom: 7.2,
+        style: initialStyle,
+        center: [selectedSite.coordinates.lng, selectedSite.coordinates.lat],
+        zoom: 8.5,
         minZoom: 5.5,
         maxZoom: 16
       });
 
       map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-      map.on("load", () => {
-        // Render custom pins for each site
-        HERITAGE_SITES.forEach((site) => {
-          const el = document.createElement("div");
-          el.className = "cursor-pointer group";
-          el.innerHTML = `
-            <div style="background: ${site.unescoStatus ? "#080808" : "#FF087D"}; color: #FFFC00; border: 2px solid #080808; border-radius: 9999px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; box-shadow: 3px 3px 0px #080808; transition: transform 0.15s ease;">
-              📍
-            </div>
-          `;
+      // Add pins immediately so they are never blocked by style loading
+      HERITAGE_SITES.forEach((site) => {
+        const el = document.createElement("div");
+        el.className = "cursor-pointer group";
+        el.style.zIndex = "10";
+        el.innerHTML = `
+          <div style="background: ${site.unescoStatus ? "#080808" : "#FF087D"}; color: #FFFC00; border: 2.5px solid #080808; border-radius: 9999px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 3px 3px 0px #080808; cursor: pointer; transform: translate(-50%, -50%);">
+            📍
+          </div>
+        `;
 
-          el.addEventListener("click", () => {
-            Soundtrack.playModalPop();
-            setSelectedSite(site);
-            map.flyTo({
-              center: [site.coordinates.lng, site.coordinates.lat],
-              zoom: 12,
-              speed: 1.2
-            });
+        el.addEventListener("click", () => {
+          Soundtrack.playModalPop();
+          setSelectedSite(site);
+          map?.flyTo({
+            center: [site.coordinates.lng, site.coordinates.lat],
+            zoom: 12,
+            speed: 1.2
           });
-
-          const marker = new maplibregl.Marker({ element: el })
-            .setLngLat([site.coordinates.lng, site.coordinates.lat])
-            .addTo(map);
-
-          markersRef.current.push(marker);
         });
+
+        const marker = new maplibregl.Marker({ element: el })
+          .setLngLat([site.coordinates.lng, site.coordinates.lat])
+          .addTo(map!);
+
+        markersRef.current.push(marker);
       });
 
-      map.on("error", () => {
-        console.warn("OpenFreeMap tile server issue, falling back to vector overlay.");
-        setMapError(true);
+      map.on("load", () => {
+        setIsMapLoading(false);
+        map?.resize();
       });
+
+      // If OpenFreeMap style load errors, switch gracefully to OSM raster tiles
+      map.on("error", (e) => {
+        console.warn("Tile style warning:", e);
+        if (activeMapView === "OPENFREEMAP") {
+          setIsMapLoading(false);
+          try {
+            map?.setStyle(OSM_RASTER_STYLE);
+          } catch (err) {
+            // Ignore style switch if unmounted
+          }
+        }
+      });
+
+      // Force canvas size calculation after layout mounts
+      const t1 = setTimeout(() => {
+        map?.resize();
+        setIsMapLoading(false);
+      }, 150);
+
+      const t2 = setTimeout(() => {
+        map?.resize();
+      }, 500);
 
       mapRef.current = map;
 
       return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
         markersRef.current.forEach((m) => m.remove());
         markersRef.current = [];
-        map.remove();
+        map?.remove();
+        mapRef.current = null;
       };
     } catch (e) {
-      console.warn("MapLibre init error:", e);
-      setMapError(true);
+      console.warn("MapLibre init error, falling back:", e);
+      setIsMapLoading(false);
     }
-  }, []);
+  }, [activeMapView]);
 
-  // Fly to site when selectedSite changes
   const handleSelectSite = (site: HeritageSite) => {
     Soundtrack.playClick();
     setSelectedSite(site);
     if (mapRef.current) {
       mapRef.current.flyTo({
         center: [site.coordinates.lng, site.coordinates.lat],
-        zoom: 11.5,
+        zoom: 12,
         speed: 1.2
       });
     }
@@ -366,40 +420,188 @@ export const HeritageMapModal: React.FC<Props> = ({
 
         {/* Main Content Area: Map / Visual Plot & Details Panel */}
         <div className="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x-4 divide-brandBlack">
-          {/* Left Column: Interactive OpenFreeMap Vector Map */}
+          {/* Left Column: Interactive Map */}
           <div className="lg:col-span-7 p-6 flex flex-col justify-between bg-white relative">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <div>
                 <span className="font-mono text-xs font-black uppercase text-brandPink flex items-center gap-1.5">
                   <span>✦</span>
-                  <span>OPENFREEMAP VECTOR TILES (LIBERTY STYLE)</span>
+                  <span>
+                    {activeMapView === "OPENFREEMAP"
+                      ? "OPENFREEMAP VECTOR TILES (LIBERTY)"
+                      : activeMapView === "OSM"
+                      ? "OPENSTREETMAP TILE LAYER"
+                      : "CULTURAL ILLUSTRATED TOPOGRAPHY"}
+                  </span>
                 </span>
                 <p className="text-xs text-neutral-600 font-sans font-bold">
-                  Powered by openfreemap.org (hyperknot/openfreemap). Click any pin or list item to zoom in.
+                  Powered by openfreemap.org (hyperknot/openfreemap).
                 </p>
               </div>
-              <div className="bg-brandYellow border-2 border-brandBlack px-2.5 py-0.5 rounded font-mono text-[10px] font-black shrink-0">
-                {filteredSites.length} LOCI DOCUMENTED
+
+              {/* Map Layer Switcher */}
+              <div className="flex items-center gap-1 bg-neutral-100 p-1 rounded-full border border-brandBlack">
+                <button
+                  onClick={() => {
+                    Soundtrack.playClick();
+                    setActiveMapView("OPENFREEMAP");
+                  }}
+                  className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full transition ${
+                    activeMapView === "OPENFREEMAP"
+                      ? "bg-brandPink text-white shadow-[1px_1px_0px_#080808]"
+                      : "text-brandBlack hover:text-brandPink"
+                  }`}
+                >
+                  OpenFreeMap
+                </button>
+                <button
+                  onClick={() => {
+                    Soundtrack.playClick();
+                    setActiveMapView("OSM");
+                  }}
+                  className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full transition ${
+                    activeMapView === "OSM"
+                      ? "bg-brandPink text-white shadow-[1px_1px_0px_#080808]"
+                      : "text-brandBlack hover:text-brandPink"
+                  }`}
+                >
+                  OSM Standard
+                </button>
+                <button
+                  onClick={() => {
+                    Soundtrack.playClick();
+                    setActiveMapView("ILLUSTRATED");
+                  }}
+                  className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full transition ${
+                    activeMapView === "ILLUSTRATED"
+                      ? "bg-brandPink text-white shadow-[1px_1px_0px_#080808]"
+                      : "text-brandBlack hover:text-brandPink"
+                  }`}
+                >
+                  Illustrated
+                </button>
               </div>
             </div>
 
-            {/* MapLibre GL OpenFreeMap Container */}
+            {/* Map Frame */}
             <div className="relative w-full h-80 sm:h-96 bg-[#FFFDE0] border-4 border-brandBlack rounded-2xl overflow-hidden shadow-[6px_6px_0px_#080808]">
-              <div ref={mapContainerRef} className="w-full h-full" />
+              {activeMapView !== "ILLUSTRATED" ? (
+                <>
+                  {/* Absolute container guaranteed to fill height and width */}
+                  <div
+                    ref={mapContainerRef}
+                    key={activeMapView}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      width: "100%",
+                      height: "100%"
+                    }}
+                  />
 
-              {/* Attribution overlay */}
-              <div className="absolute bottom-2 left-2 bg-white/90 border border-brandBlack px-2 py-0.5 rounded text-[9px] font-mono font-bold text-neutral-700 pointer-events-auto">
-                Map data:{" "}
-                <a
-                  href="https://openfreemap.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-brandPink hover:underline"
-                >
-                  OpenFreeMap
-                </a>{" "}
-                &copy; OpenStreetMap
-              </div>
+                  {isMapLoading && (
+                    <div className="absolute inset-0 bg-brandYellow/30 backdrop-blur-xs flex items-center justify-center font-mono text-xs font-black text-brandBlack pointer-events-none">
+                      <div className="bg-white px-3 py-1.5 rounded-full border-2 border-brandBlack shadow-[2px_2px_0px_#080808] flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-brandPink animate-ping"></span>
+                        <span>Streaming OpenFreeMap Tiles...</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Attribution overlay */}
+                  <div className="absolute bottom-2 left-2 bg-white/90 border border-brandBlack px-2 py-0.5 rounded text-[9px] font-mono font-bold text-neutral-700 pointer-events-auto z-10">
+                    Tiles:{" "}
+                    <a
+                      href="https://openfreemap.org"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brandPink hover:underline"
+                    >
+                      OpenFreeMap
+                    </a>{" "}
+                    &amp; OpenStreetMap
+                  </div>
+                </>
+              ) : (
+                /* Fallback Illustrated Neo-Pop SVG Map */
+                <div className="w-full h-full flex items-center justify-center relative p-4 bg-[#FFFDE0]">
+                  <div className="absolute top-3 left-3 text-[10px] font-mono font-bold text-neutral-400">
+                    LAT: 8.3°N – 12.8°N<br />
+                    LNG: 74.8°E – 77.4°E
+                  </div>
+                  <div className="absolute top-3 right-3 font-mono text-xs font-black text-brandBlack bg-white px-2 py-0.5 rounded border border-brandBlack">
+                    NORTH ↑
+                  </div>
+
+                  <svg viewBox="0 0 400 320" className="w-full h-full max-w-[380px] drop-shadow-md">
+                    <path
+                      d="M 120 20 C 140 40, 160 80, 180 120 C 200 160, 220 200, 250 250 C 270 280, 290 300, 310 315 L 290 315 C 240 280, 200 230, 160 170 C 130 120, 100 60, 90 25 Z"
+                      fill="#FFFC00"
+                      stroke="#080808"
+                      strokeWidth="3"
+                    />
+                    <path
+                      d="M 140 20 L 290 315"
+                      stroke="#FF087D"
+                      strokeWidth="1.5"
+                      strokeDasharray="4 4"
+                      opacity="0.4"
+                    />
+
+                    <text x="35" y="160" fontFamily="monospace" fontSize="11" fontWeight="bold" fill="#080808" opacity="0.4">
+                      ARABIAN SEA
+                    </text>
+                    <text x="235" y="70" fontFamily="monospace" fontSize="11" fontWeight="bold" fill="#080808" opacity="0.4">
+                      WESTERN GHATS
+                    </text>
+
+                    {HERITAGE_SITES.map((site) => {
+                      const normY = 40 + ((12.2 - site.coordinates.lat) / 3.0) * 250;
+                      const normX = 110 + ((site.coordinates.lng - 75.1) / 1.7) * 170;
+                      const isSelected = selectedSite.id === site.id;
+
+                      return (
+                        <g
+                          key={site.id}
+                          onClick={() => {
+                            Soundtrack.playModalPop();
+                            setSelectedSite(site);
+                          }}
+                          className="cursor-pointer group"
+                        >
+                          {isSelected && (
+                            <circle cx={normX} cy={normY} r="18" fill="#FF087D" opacity="0.3" className="animate-ping" />
+                          )}
+                          <circle
+                            cx={normX}
+                            cy={normY}
+                            r={isSelected ? 10 : 7}
+                            fill={isSelected ? "#FF087D" : site.unescoStatus ? "#080808" : "#FFFFFF"}
+                            stroke="#080808"
+                            strokeWidth="2.5"
+                            className="transition-all duration-150 group-hover:scale-125"
+                          />
+                          <circle cx={normX} cy={normY} r={isSelected ? 4 : 3} fill={isSelected ? "#FFFFFF" : site.unescoStatus ? "#FFFC00" : "#FF087D"} />
+                          <text
+                            x={normX + 12}
+                            y={normY + 4}
+                            fontFamily="monospace"
+                            fontSize={isSelected ? "11" : "9"}
+                            fontWeight="bold"
+                            fill={isSelected ? "#FF087D" : "#080808"}
+                            className="pointer-events-none transition-all drop-shadow-sm"
+                          >
+                            {site.name.split(" ")[0]}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  </svg>
+                </div>
+              )}
             </div>
 
             {/* Quick-Site Selector Pills */}
