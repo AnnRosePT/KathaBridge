@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import * as maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { Story } from "../types";
 import { Soundtrack } from "../services/soundtrackService";
 
@@ -141,6 +143,11 @@ export const HeritageMapModal: React.FC<Props> = ({
   const [selectedSite, setSelectedSite] = useState<HeritageSite>(HERITAGE_SITES[0]);
   const [filterCategory, setFilterCategory] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+  const [mapError, setMapError] = useState<boolean>(false);
+
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const markersRef = useRef<maplibregl.Marker[]>([]);
 
   const filteredSites = HERITAGE_SITES.filter((site) => {
     const matchesCategory = filterCategory === "ALL" || site.category === filterCategory;
@@ -151,6 +158,83 @@ export const HeritageMapModal: React.FC<Props> = ({
     return matchesCategory && matchesSearch;
   });
 
+  // Initialize OpenFreeMap using MapLibre GL
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    try {
+      const map = new maplibregl.Map({
+        container: mapContainerRef.current,
+        // OpenFreeMap vector tile style (https://github.com/hyperknot/openfreemap)
+        style: "https://tiles.openfreemap.org/styles/liberty",
+        center: [76.25, 10.4], // Kerala Center
+        zoom: 7.2,
+        minZoom: 5.5,
+        maxZoom: 16
+      });
+
+      map.addControl(new maplibregl.NavigationControl(), "top-right");
+
+      map.on("load", () => {
+        // Render custom pins for each site
+        HERITAGE_SITES.forEach((site) => {
+          const el = document.createElement("div");
+          el.className = "cursor-pointer group";
+          el.innerHTML = `
+            <div style="background: ${site.unescoStatus ? "#080808" : "#FF087D"}; color: #FFFC00; border: 2px solid #080808; border-radius: 9999px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; box-shadow: 3px 3px 0px #080808; transition: transform 0.15s ease;">
+              📍
+            </div>
+          `;
+
+          el.addEventListener("click", () => {
+            Soundtrack.playModalPop();
+            setSelectedSite(site);
+            map.flyTo({
+              center: [site.coordinates.lng, site.coordinates.lat],
+              zoom: 12,
+              speed: 1.2
+            });
+          });
+
+          const marker = new maplibregl.Marker({ element: el })
+            .setLngLat([site.coordinates.lng, site.coordinates.lat])
+            .addTo(map);
+
+          markersRef.current.push(marker);
+        });
+      });
+
+      map.on("error", () => {
+        console.warn("OpenFreeMap tile server issue, falling back to vector overlay.");
+        setMapError(true);
+      });
+
+      mapRef.current = map;
+
+      return () => {
+        markersRef.current.forEach((m) => m.remove());
+        markersRef.current = [];
+        map.remove();
+      };
+    } catch (e) {
+      console.warn("MapLibre init error:", e);
+      setMapError(true);
+    }
+  }, []);
+
+  // Fly to site when selectedSite changes
+  const handleSelectSite = (site: HeritageSite) => {
+    Soundtrack.playClick();
+    setSelectedSite(site);
+    if (mapRef.current) {
+      mapRef.current.flyTo({
+        center: [site.coordinates.lng, site.coordinates.lat],
+        zoom: 11.5,
+        speed: 1.2
+      });
+    }
+  };
+
   const handleExportGeoJSON = () => {
     Soundtrack.playClick();
     const geoJsonData = {
@@ -158,6 +242,7 @@ export const HeritageMapModal: React.FC<Props> = ({
       metadata: {
         title: "KathaBridge Living Heritage Topography of Kerala",
         standard: "W3C Spatial Data on the Web / OGC GeoJSON",
+        tileProvider: "OpenFreeMap (https://github.com/hyperknot/openfreemap)",
         extractedAt: new Date().toISOString()
       },
       features: HERITAGE_SITES.map((site) => ({
@@ -186,7 +271,7 @@ export const HeritageMapModal: React.FC<Props> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `kathabridge-heritage-gis-${new Date().toISOString().slice(0, 10)}.geojson`;
+    a.download = `kathabridge-openfreemap-${new Date().toISOString().slice(0, 10)}.geojson`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -206,14 +291,16 @@ export const HeritageMapModal: React.FC<Props> = ({
               🗺️
             </div>
             <div>
-              <div className="inline-block bg-brandBlack text-brandYellow text-[10px] font-mono font-black px-2 py-0.5 rounded border border-brandBlack uppercase tracking-widest">
-                GEOSPATIAL HERITAGE GIS
+              <div className="inline-flex items-center gap-2 bg-brandBlack text-brandYellow text-[10px] font-mono font-black px-2 py-0.5 rounded border border-brandBlack uppercase tracking-widest">
+                <span>OPENFREEMAP API INTEGRATION</span>
+                <span>•</span>
+                <span>GEOSPATIAL HERITAGE GIS</span>
               </div>
               <h2
                 id="heritage-map-title"
                 className="font-editorial text-2xl sm:text-3xl font-black text-brandBlack tracking-tight"
               >
-                Sacred Topography &amp; Oral Folklore Loci
+                Kerala Sacred Topography &amp; Oral Folklore Loci
               </h2>
             </div>
           </div>
@@ -279,126 +366,40 @@ export const HeritageMapModal: React.FC<Props> = ({
 
         {/* Main Content Area: Map / Visual Plot & Details Panel */}
         <div className="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x-4 divide-brandBlack">
-          {/* Left Column: Interactive Visual Topography Map */}
+          {/* Left Column: Interactive OpenFreeMap Vector Map */}
           <div className="lg:col-span-7 p-6 flex flex-col justify-between bg-white relative">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <span className="font-mono text-xs font-black uppercase text-brandPink">
-                  ✦ KERALA LIVING TOPOGRAPHY
+                <span className="font-mono text-xs font-black uppercase text-brandPink flex items-center gap-1.5">
+                  <span>✦</span>
+                  <span>OPENFREEMAP VECTOR TILES (LIBERTY STYLE)</span>
                 </span>
                 <p className="text-xs text-neutral-600 font-sans font-bold">
-                  Click any geographical pin to inspect custodianship and provenance.
+                  Powered by openfreemap.org (hyperknot/openfreemap). Click any pin or list item to zoom in.
                 </p>
               </div>
-              <div className="bg-brandYellow border-2 border-brandBlack px-2.5 py-0.5 rounded font-mono text-[10px] font-black">
+              <div className="bg-brandYellow border-2 border-brandBlack px-2.5 py-0.5 rounded font-mono text-[10px] font-black shrink-0">
                 {filteredSites.length} LOCI DOCUMENTED
               </div>
             </div>
 
-            {/* Stylized Neo-Pop Canvas Vector Map of Kerala */}
-            <div className="relative w-full h-80 sm:h-96 bg-[#FFFDE0] border-4 border-brandBlack rounded-2xl p-4 overflow-hidden shadow-[6px_6px_0px_#080808] flex items-center justify-center">
-              {/* Decorative Compass & Lat/Lng Grid */}
-              <div className="absolute top-3 left-3 text-[10px] font-mono font-bold text-neutral-400">
-                LAT: 8.3°N – 12.8°N<br />
-                LNG: 74.8°E – 77.4°E
+            {/* MapLibre GL OpenFreeMap Container */}
+            <div className="relative w-full h-80 sm:h-96 bg-[#FFFDE0] border-4 border-brandBlack rounded-2xl overflow-hidden shadow-[6px_6px_0px_#080808]">
+              <div ref={mapContainerRef} className="w-full h-full" />
+
+              {/* Attribution overlay */}
+              <div className="absolute bottom-2 left-2 bg-white/90 border border-brandBlack px-2 py-0.5 rounded text-[9px] font-mono font-bold text-neutral-700 pointer-events-auto">
+                Map data:{" "}
+                <a
+                  href="https://openfreemap.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brandPink hover:underline"
+                >
+                  OpenFreeMap
+                </a>{" "}
+                &copy; OpenStreetMap
               </div>
-              <div className="absolute top-3 right-3 font-mono text-xs font-black text-brandBlack bg-white px-2 py-0.5 rounded border border-brandBlack">
-                NORTH ↑
-              </div>
-
-              {/* Stylized Coastal Contour Representation */}
-              <svg
-                viewBox="0 0 400 320"
-                className="w-full h-full max-w-[380px] drop-shadow-md"
-              >
-                {/* Kerala State Simplified Coastal Path */}
-                <path
-                  d="M 120 20 C 140 40, 160 80, 180 120 C 200 160, 220 200, 250 250 C 270 280, 290 300, 310 315 L 290 315 C 240 280, 200 230, 160 170 C 130 120, 100 60, 90 25 Z"
-                  fill="#FFFC00"
-                  stroke="#080808"
-                  strokeWidth="3"
-                />
-                <path
-                  d="M 140 20 L 290 315"
-                  stroke="#FF087D"
-                  strokeWidth="1.5"
-                  strokeDasharray="4 4"
-                  opacity="0.4"
-                />
-
-                {/* Arabian Sea Label */}
-                <text x="35" y="160" fontFamily="monospace" fontSize="11" fontWeight="bold" fill="#080808" opacity="0.4">
-                  ARABIAN SEA
-                </text>
-                <text x="235" y="70" fontFamily="monospace" fontSize="11" fontWeight="bold" fill="#080808" opacity="0.4">
-                  WESTERN GHATS
-                </text>
-
-                {/* Interactive Site Pins */}
-                {HERITAGE_SITES.map((site) => {
-                  // Map latitude & longitude to SVG coordinates
-                  // Lat range: 12.0 (North) -> 9.0 (South) => y from 40 to 290
-                  // Lng range: 75.2 (West) -> 76.8 (East) => x from 110 to 290
-                  const normY = 40 + ((12.2 - site.coordinates.lat) / 3.0) * 250;
-                  const normX = 110 + ((site.coordinates.lng - 75.1) / 1.7) * 170;
-                  const isSelected = selectedSite.id === site.id;
-
-                  return (
-                    <g
-                      key={site.id}
-                      onClick={() => {
-                        Soundtrack.playModalPop();
-                        setSelectedSite(site);
-                      }}
-                      className="cursor-pointer group"
-                    >
-                      {/* Pulse Circle for Selected Site */}
-                      {isSelected && (
-                        <circle
-                          cx={normX}
-                          cy={normY}
-                          r="18"
-                          fill="#FF087D"
-                          opacity="0.3"
-                          className="animate-ping"
-                        />
-                      )}
-
-                      {/* Pin Outer Rim */}
-                      <circle
-                        cx={normX}
-                        cy={normY}
-                        r={isSelected ? 10 : 7}
-                        fill={isSelected ? "#FF087D" : site.unescoStatus ? "#080808" : "#FFFFFF"}
-                        stroke="#080808"
-                        strokeWidth="2.5"
-                        className="transition-all duration-150 group-hover:scale-125"
-                      />
-
-                      {/* Pin Center Core */}
-                      <circle
-                        cx={normX}
-                        cy={normY}
-                        r={isSelected ? 4 : 3}
-                        fill={isSelected ? "#FFFFFF" : site.unescoStatus ? "#FFFC00" : "#FF087D"}
-                      />
-
-                      {/* Hover / Selected Label */}
-                      <text
-                        x={normX + 12}
-                        y={normY + 4}
-                        fontFamily="monospace"
-                        fontSize={isSelected ? "11" : "9"}
-                        fontWeight="bold"
-                        fill={isSelected ? "#FF087D" : "#080808"}
-                        className="pointer-events-none transition-all drop-shadow-sm"
-                      >
-                        {site.name.split(" ")[0]}
-                      </text>
-                    </g>
-                  );
-                })}
-              </svg>
             </div>
 
             {/* Quick-Site Selector Pills */}
@@ -406,10 +407,7 @@ export const HeritageMapModal: React.FC<Props> = ({
               {filteredSites.map((site) => (
                 <button
                   key={site.id}
-                  onClick={() => {
-                    Soundtrack.playClick();
-                    setSelectedSite(site);
-                  }}
+                  onClick={() => handleSelectSite(site)}
                   className={`text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg border-2 border-brandBlack transition ${
                     selectedSite.id === site.id
                       ? "bg-brandPink text-white shadow-[2px_2px_0px_#080808]"

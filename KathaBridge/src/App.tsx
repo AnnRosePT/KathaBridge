@@ -17,7 +17,7 @@ import { IntroSplashAndAuth } from "./components/IntroSplashAndAuth";
 import { ScrollFrameHero } from "./components/ScrollFrameHero";
 import { ContactAndPolicyModals, PolicyType } from "./components/ContactAndPolicyModals";
 import { CategoryShowcaseModal, CategoryData } from "./components/CategoryShowcaseModal";
-import { TechnicalInspectorModal } from "./components/TechnicalInspectorModal";
+import { CulturalGuideBotModal } from "./components/CulturalGuideBotModal";
 import { HeritageMapModal } from "./components/HeritageMapModal";
 import { OralTalaMetronomeModal } from "./components/OralTalaMetronomeModal";
 import { speakSafely } from "./utils/malayalamPhonetics";
@@ -54,7 +54,7 @@ export default function App() {
   const introAudioRef = useRef<HTMLAudioElement | null>(null);
   const [activePolicyModal, setActivePolicyModal] = useState<PolicyType | null>(null);
   const [activeCategoryShowcase, setActiveCategoryShowcase] = useState<CategoryData | null>(null);
-  const [techInspectorOpen, setTechInspectorOpen] = useState(false);
+  const [guideBotOpen, setGuideBotOpen] = useState(false);
   const [heritageMapOpen, setHeritageMapOpen] = useState(false);
   const [talaMetronomeOpen, setTalaMetronomeOpen] = useState(false);
 
@@ -146,13 +146,13 @@ export default function App() {
         setAuthModalOpen(false);
         setVoiceLabOpen(false);
         setActivePolicyModal(null);
-        setTechInspectorOpen(false);
+        setGuideBotOpen(false);
         setHeritageMapOpen(false);
         setTalaMetronomeOpen(false);
-      } else if (e.altKey && e.key.toLowerCase() === "t") {
+      } else if (e.altKey && e.key.toLowerCase() === "c") {
         e.preventDefault();
         Soundtrack.playModalPop();
-        setTechInspectorOpen((prev) => !prev);
+        setGuideBotOpen((prev) => !prev);
       } else if (e.altKey && e.key.toLowerCase() === "m") {
         e.preventDefault();
         Soundtrack.playModalPop();
@@ -424,18 +424,18 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2.5 relative" data-purpose="accessibility-controls">
-            {/* Technical Architecture & Live Audit Inspector */}
+            {/* AI Cultural Guide Bot */}
             <button
               onClick={() => {
                 Soundtrack.playModalPop();
-                setTechInspectorOpen(true);
+                setGuideBotOpen(true);
               }}
-              aria-label="Technical Architecture Inspector"
-              title="Inspect System Architecture, 376 Assertions & Benchmarks (Alt+T)"
-              className="hidden md:flex items-center gap-1.5 px-3 py-2 border-2 border-brandBlack rounded-full bg-white hover:bg-brandPink hover:text-white text-xs font-mono font-black transition shadow-[3px_3px_0px_#080808]"
+              aria-label="AI Cultural Guide Bot"
+              title="Ask AI Cultural Guide about Folklore, Rituals & Navigation (Alt+C)"
+              className="flex items-center gap-1.5 px-3 py-2 border-2 border-brandBlack rounded-full bg-white hover:bg-brandPink hover:text-white text-xs font-mono font-black transition shadow-[3px_3px_0px_#080808] cursor-pointer"
             >
-              <span>⚡</span>
-              <span>Tech Specs</span>
+              <span>🤖</span>
+              <span>Guide Bot</span>
             </button>
 
             {/* Kerala Living Heritage Topography GIS Map */}
@@ -2328,12 +2328,19 @@ export default function App() {
         />
       )}
 
-      {/* 11. Technical Architecture & Evaluation Inspector Modal */}
-      {techInspectorOpen && (
-        <TechnicalInspectorModal
+      {/* 11. AI Cultural Guide & Storytelling Assistant Modal */}
+      {guideBotOpen && (
+        <CulturalGuideBotModal
           onClose={() => {
             Soundtrack.playClick();
-            setTechInspectorOpen(false);
+            setGuideBotOpen(false);
+          }}
+          onOpenStory={(storyId) => {
+            const targetStory = mockStories.find((s) => s.id === storyId);
+            if (targetStory) {
+              setActiveStoryReader(targetStory);
+              setGuideBotOpen(false);
+            }
           }}
         />
       )}
@@ -2363,19 +2370,19 @@ export default function App() {
         />
       )}
 
-      {/* Floating Tech Specs Pill (Quick Access for Judges) */}
+      {/* Floating AI Cultural Guide Bot Trigger (Bottom-Right) */}
       <button
         onClick={() => {
           Soundtrack.playModalPop();
-          setTechInspectorOpen(true);
+          setGuideBotOpen(true);
         }}
-        aria-label="Inspect System Architecture & Tests"
-        title="Inspect Technical Architecture & 376 Automated Assertions"
-        className="fixed bottom-20 right-6 z-40 bg-brandBlack text-brandYellow hover:bg-brandPink hover:text-white border-2 border-brandBlack px-3.5 py-1.5 rounded-full font-mono text-xs font-black shadow-[4px_4px_0px_#FF087D] flex items-center gap-1.5 transition cursor-pointer"
+        aria-label="Open AI Cultural Guide Bot"
+        title="Ask Cultural Guide Bot about Folklore & Rituals (Alt+C)"
+        className="fixed bottom-20 right-6 z-40 bg-brandBlack text-brandYellow hover:bg-brandPink hover:text-white border-2 border-brandBlack px-4 py-2 rounded-full font-mono text-xs font-black shadow-[4px_4px_0px_#FF087D] flex items-center gap-2 transition cursor-pointer"
       >
-        <span>⚡</span>
-        <span className="hidden sm:inline">Tech Specs (376 Passing)</span>
-        <span className="sm:hidden">Specs</span>
+        <span className="text-sm">🤖</span>
+        <span className="hidden sm:inline">Ask Guide Bot (സഹചാരി)</span>
+        <span className="sm:hidden">Guide</span>
       </button>
     </div>
   );
