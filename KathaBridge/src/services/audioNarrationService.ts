@@ -60,6 +60,12 @@ export class AudioNarrationService {
     } else {
       if (lang === "ML") {
         this.voiceLabel = "Acoustic Phonetic Synthesis (No ml-IN voice in browser)";
+      } else if (lang === "TA") {
+        this.voiceLabel = "Tamil Acoustic Phonetic Synthesis (Indian Cadence)";
+      } else if (lang === "SA") {
+        this.voiceLabel = "Sanskrit Classical Phonetic Synthesis (Devanagari Cadence)";
+      } else if (lang === "HI") {
+        this.voiceLabel = "Hindi Acoustic Phonetic Synthesis (Devanagari Cadence)";
       } else {
         this.voiceLabel = `Acoustic Fallback (${check.voiceName || "Indian English Accent"})`;
       }

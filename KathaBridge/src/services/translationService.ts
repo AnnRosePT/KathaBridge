@@ -83,8 +83,14 @@ class ExternalAITranslationProvider implements ITranslationProvider {
     }
 
     try {
-      const prompt = `You are a distinguished folklorist and literary translator specializing in Indian languages (especially Malayalam, Sanskrit, Tamil, Hindi) and English.
-Translate the following folklore text from ${fromLang} to ${toLang === "ML" ? "Malayalam" : "English"}.
+      const targetLangName =
+        toLang === "ML" ? "Malayalam" :
+        toLang === "TA" ? "Tamil" :
+        toLang === "SA" ? "Sanskrit" :
+        toLang === "HI" ? "Hindi" : "English";
+
+      const prompt = `You are a distinguished folklorist and literary translator specializing in Indian languages (Malayalam, Sanskrit, Tamil, Hindi) and English.
+Translate the following folklore text from ${fromLang} to ${targetLangName}.
 Preserve cultural nuance, dialect rhythm, and emotional subtext without reducing it to a mechanical translation.
 
 Return a valid JSON object matching this schema:
@@ -97,7 +103,7 @@ Text to translate:
 "${text}"`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: {
@@ -131,7 +137,7 @@ Text to translate:
           targetLanguage: toLang,
           isHumanVerified: false,
           provider: "AI_ASSISTED",
-          explanationNotes: `[AI Draft via Gemini 2.5 Flash]: ${parsed.culturalNotes || "Awaiting scholar peer-review"}`
+          explanationNotes: `[AI Draft via Gemini]: ${parsed.culturalNotes || "Awaiting scholar peer-review"}`
         };
       }
     } catch (err) {
@@ -178,7 +184,7 @@ Return a valid JSON object matching this schema:
 }`;
 
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

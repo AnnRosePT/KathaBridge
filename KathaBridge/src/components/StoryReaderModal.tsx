@@ -494,11 +494,17 @@ export const StoryReaderModal: React.FC<Props> = ({
                       ? "MALAYALAM NARRATION (NATIVE ml-IN VOICE ACTIVE)"
                       : "MALAYALAM NARRATION (ACOUSTIC PHONETIC FALLBACK)"
                     : activeLang === "SA"
-                    ? "SANSKRIT CLASSICAL RECITATION"
+                    ? audioState.isNativeVoice
+                      ? "SANSKRIT RECITATION (NATIVE DEVANAGARI VOICE)"
+                      : "SANSKRIT RECITATION (PHONETIC SYNTHESIS ACTIVE)"
                     : activeLang === "HI"
-                    ? "HINDI NARRATION (SWARA NEURAL)"
+                    ? audioState.isNativeVoice
+                      ? "HINDI NARRATION (NATIVE hi-IN VOICE ACTIVE)"
+                      : "HINDI NARRATION (PHONETIC SYNTHESIS ACTIVE)"
                     : activeLang === "TA"
-                    ? "TAMIL NARRATION (VALLUVAR NEURAL)"
+                    ? audioState.isNativeVoice
+                      ? "TAMIL NARRATION (NATIVE ta-IN VOICE ACTIVE)"
+                      : "TAMIL NARRATION (PHONETIC SYNTHESIS ACTIVE)"
                     : "ENGLISH NARRATION (NEERJA NEURAL)"
                   : audioState.isPaused
                   ? "AUDIO PAUSED"
@@ -515,11 +521,11 @@ export const StoryReaderModal: React.FC<Props> = ({
           </div>
 
           {/* Voice Notification Banner for Honest Audio Reporting */}
-          {activeLang === "ML" && !audioState.isNativeVoice && (
+          {!audioState.isNativeVoice && activeLang !== "EN" && (
             <div className="text-[11px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-400 px-3 py-1 rounded-md flex items-center gap-2">
               <span>⚠️</span>
               <span>
-                Notice: Browser lacks native Malayalam voice (ml-IN). Running acoustic phonetic fallback mode with Indian cadence.
+                Notice: Browser lacks native {activeLang === "ML" ? "Malayalam (ml-IN)" : activeLang === "TA" ? "Tamil (ta-IN)" : activeLang === "SA" ? "Sanskrit" : "Hindi (hi-IN)"} voice. Running acoustic phonetic fallback synthesis mode with Indian cadence.
               </span>
             </div>
           )}

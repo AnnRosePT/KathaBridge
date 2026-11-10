@@ -536,7 +536,13 @@ function ttsBackendPlugin(): Plugin {
 
           const https = await import("node:https");
           const encoded = encodeURIComponent(text);
-          const ttsLang = lang === "ml" ? "ml" : "en";
+          let ttsLang = "en";
+          const l = lang.toLowerCase();
+          if (l === "ml") ttsLang = "ml";
+          else if (l === "ta") ttsLang = "ta";
+          else if (l === "hi" || l === "sa") ttsLang = "hi";
+          else ttsLang = "en";
+
           const googleUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=${ttsLang}&client=tw-ob`;
 
           https.get(googleUrl, { headers: { "User-Agent": "Mozilla/5.0" } }, (gRes) => {

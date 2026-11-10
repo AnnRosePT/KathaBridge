@@ -1,4 +1,112 @@
-// Comprehensive Malayalam phonetic transliterator and voice matcher for cross-platform SpeechSynthesis
+// Devanagari Phonetic Transliterator (Hindi & Sanskrit)
+const DEVA_VOWELS: Record<string, string> = {
+  "अ": "a", "आ": "aa", "इ": "i", "ई": "ee", "उ": "u", "ऊ": "oo",
+  "ऋ": "ri", "ए": "e", "ऐ": "ai", "ओ": "o", "औ": "au"
+};
+
+const DEVA_VOWEL_SIGNS: Record<string, string> = {
+  "ा": "aa", "ि": "i", "ी": "ee", "ु": "u", "ू": "oo", "ृ": "ri",
+  "े": "e", "ै": "ai", "ो": "o", "ौ": "au"
+};
+
+const DEVA_CONSONANTS: Record<string, string> = {
+  "क": "ka", "ख": "kha", "ग": "ga", "घ": "gha", "ङ": "nga",
+  "च": "cha", "छ": "chha", "ज": "ja", "झ": "jha", "ञ": "nya",
+  "ट": "ta", "ठ": "tha", "ड": "da", "ढ": "dha", "ण": "na",
+  "त": "ta", "थ": "tha", "द": "da", "ध": "dha", "न": "na",
+  "प": "pa", "फ": "pha", "ब": "ba", "भ": "bha", "म": "ma",
+  "य": "ya", "र": "ra", "ल": "la", "व": "va",
+  "श": "sha", "ष": "sha", "स": "sa", "ह": "ha",
+  "क्ष": "ksha", "ज्ञ": "gya"
+};
+
+/**
+ * Converts Devanagari script (Sanskrit & Hindi) into phonetic Latin text.
+ * When browser lacks native Hindi/Sanskrit TTS, enables Indian English TTS to read fluently.
+ */
+export function transliterateDevanagari(text: string): string {
+  let out = "";
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const next = text[i + 1];
+
+    if (DEVA_VOWELS[ch]) {
+      out += DEVA_VOWELS[ch];
+    } else if (DEVA_CONSONANTS[ch]) {
+      const base = DEVA_CONSONANTS[ch].slice(0, -1);
+      if (next === "्") { // Virama (halant)
+        out += base;
+        i++; // skip virama
+      } else if (next && DEVA_VOWEL_SIGNS[next]) {
+        out += base + DEVA_VOWEL_SIGNS[next];
+        i++; // skip vowel sign
+      } else {
+        out += base + "a";
+      }
+    } else if (ch === "ं") {
+      out += "m";
+    } else if (ch === "ः") {
+      out += "h";
+    } else if (ch === "।" || ch === "॥") {
+      out += ". ";
+    } else {
+      out += ch;
+    }
+  }
+  return out;
+}
+
+// Tamil Phonetic Transliterator
+const TAMIL_VOWELS: Record<string, string> = {
+  "அ": "a", "ஆ": "aa", "இ": "i", "ஈ": "ee", "உ": "u", "ஊ": "oo",
+  "எ": "e", "ஏ": "ae", "ஐ": "ai", "ஒ": "o", "ஓ": "o", "ஔ": "au"
+};
+
+const TAMIL_VOWEL_SIGNS: Record<string, string> = {
+  "ா": "aa", "ி": "i", "ீ": "ee", "ு": "u", "ூ": "oo",
+  "ெ": "e", "ே": "ae", "ை": "ai", "ொ": "o", "ோ": "o", "ௌ": "au"
+};
+
+const TAMIL_CONSONANTS: Record<string, string> = {
+  "க": "ka", "ங": "nga", "ச": "cha", "ஞ": "nya",
+  "ட": "ta", "ண": "na", "த": "tha", "ந": "na",
+  "ப": "pa", "ம": "ma", "ய": "ya", "ர": "ra",
+  "ல": "la", "வ": "va", "ழ": "zha", "ள": "la",
+  "ற": "ra", "ன": "na", "ஜ": "ja", "ஷ": "sha",
+  "ஸ": "sa", "ஹ": "ha", "க்ஷ": "ksha"
+};
+
+/**
+ * Converts Tamil script into natural phonetic Latin text.
+ * When browser lacks native Tamil TTS, enables Indian English TTS to read fluently.
+ */
+export function transliterateTamil(text: string): string {
+  let out = "";
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const next = text[i + 1];
+
+    if (TAMIL_VOWELS[ch]) {
+      out += TAMIL_VOWELS[ch];
+    } else if (TAMIL_CONSONANTS[ch]) {
+      const base = TAMIL_CONSONANTS[ch].slice(0, -1);
+      if (next === "்") { // Pulli (virama)
+        out += base;
+        i++; // skip pulli
+      } else if (next && TAMIL_VOWEL_SIGNS[next]) {
+        out += base + TAMIL_VOWEL_SIGNS[next];
+        i++; // skip vowel sign
+      } else {
+        out += base + "a";
+      }
+    } else if (ch === "ஃ") {
+      out += "k";
+    } else {
+      out += ch;
+    }
+  }
+  return out;
+}
 
 const VOWELS: Record<string, string> = {
   "അ": "a", "ആ": "aa", "ഇ": "i", "ഈ": "ee", "ഉ": "u", "ഊ": "oo",
@@ -198,17 +306,20 @@ export function resolveSpeechVoice(synth: SpeechSynthesis, originalText: string,
       };
     }
 
-    // Fallback: Indian English
+    // Fallback: Transliterate Devanagari to Latin and use Indian English voice
     const inVoice = voices.find((v) => v.lang.toLowerCase().includes("en-in") || v.name.toLowerCase().includes("india"));
+    const fallbackVoice = inVoice || voices.find((v) => v.lang.startsWith("en")) || voices[0] || null;
+    const phoneticText = transliterateDevanagari(originalText);
+
     return {
-      voice: inVoice || voices[0] || null,
-      effectiveLang: inVoice?.lang || "en-IN",
-      textToSpeak: originalText
+      voice: fallbackVoice,
+      effectiveLang: inVoice ? inVoice.lang : "en-IN",
+      textToSpeak: phoneticText
     };
   }
 
   if (langUpper === "TA") {
-    // Look for native Tamil voice
+    // 1. Look for native Tamil voice
     const taVoice = voices.find(
       (v) =>
         v.lang.toLowerCase().startsWith("ta") ||
@@ -224,12 +335,15 @@ export function resolveSpeechVoice(synth: SpeechSynthesis, originalText: string,
       };
     }
 
-    // Fallback: Indian English
+    // Fallback: Transliterate Tamil to Latin and use Indian English voice
     const inVoice = voices.find((v) => v.lang.toLowerCase().includes("en-in") || v.name.toLowerCase().includes("india"));
+    const fallbackVoice = inVoice || voices.find((v) => v.lang.startsWith("en")) || voices[0] || null;
+    const phoneticText = transliterateTamil(originalText);
+
     return {
-      voice: inVoice || voices[0] || null,
-      effectiveLang: inVoice?.lang || "en-IN",
-      textToSpeak: originalText
+      voice: fallbackVoice,
+      effectiveLang: inVoice ? inVoice.lang : "en-IN",
+      textToSpeak: phoneticText
     };
   }
 
