@@ -383,8 +383,10 @@ export function speakSafely(
     utterance.voice = resolution.voice;
   }
   utterance.lang = resolution.effectiveLang;
-  utterance.rate =
-    options?.rate ?? (lang.toUpperCase() === "ML" && !resolution.voice?.lang.startsWith("ml") ? 0.85 : 0.95);
+  const isFallbackVoice = !resolution.voice?.lang.toLowerCase().startsWith(lang.toLowerCase());
+  // Calibrated slow, deliberate storytelling pace (0.76x) so words are crystal-clear and never rushed
+  utterance.rate = options?.rate ?? (isFallbackVoice ? 0.76 : 0.92);
+  utterance.pitch = isFallbackVoice ? 0.92 : 1.0;
   utterance.volume = options?.volume ?? 1.0;
 
   utterance.onend = () => {

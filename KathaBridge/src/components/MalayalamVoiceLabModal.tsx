@@ -204,12 +204,34 @@ export const MalayalamVoiceLabModal: React.FC<Props> = ({ onClose }) => {
     audio.onplay = () => setActivePlayingId(playId);
     audio.onended = () => setActivePlayingId(null);
     audio.onerror = () => {
-      if (sample && typeof window !== "undefined" && window.speechSynthesis) {
-        setActivePlayingId(playId);
-        speakSafely(window.speechSynthesis, sample.malayalam, sample.lang || "ML", {
-          rate: playbackSpeed,
-          onEnd: () => setActivePlayingId(null),
-          onError: () => setActivePlayingId(null)
+      if (sample) {
+        const directUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(sample.malayalam)}&tl=ml&client=tw-ob`;
+        const directAudio = new Audio(directUrl);
+        directAudio.playbackRate = playbackSpeed;
+        audioRef.current = directAudio;
+        directAudio.onplay = () => setActivePlayingId(playId);
+        directAudio.onended = () => setActivePlayingId(null);
+        directAudio.onerror = () => {
+          if (typeof window !== "undefined" && window.speechSynthesis) {
+            speakSafely(window.speechSynthesis, sample.malayalam, sample.lang || "ML", {
+              rate: playbackSpeed,
+              onEnd: () => setActivePlayingId(null),
+              onError: () => setActivePlayingId(null)
+            });
+          } else {
+            setActivePlayingId(null);
+          }
+        };
+        directAudio.play().catch(() => {
+          if (typeof window !== "undefined" && window.speechSynthesis) {
+            speakSafely(window.speechSynthesis, sample.malayalam, sample.lang || "ML", {
+              rate: playbackSpeed,
+              onEnd: () => setActivePlayingId(null),
+              onError: () => setActivePlayingId(null)
+            });
+          } else {
+            setActivePlayingId(null);
+          }
         });
       } else {
         setActivePlayingId(null);

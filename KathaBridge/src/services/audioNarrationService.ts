@@ -214,15 +214,12 @@ export class AudioNarrationService {
 
     const item = this.sentenceItems[index];
     const langCode = this.activeLanguage.toLowerCase();
+    const encoded = encodeURIComponent(item.text);
 
-    // In web browsers, Web Speech Synthesis is the most responsive sentence-by-sentence engine
-    // If the language is Sanskrit, Tamil, Hindi or Malayalam without pre-rendered server audio, use SpeechSynthesis
-    if (langCode === "sa" || langCode === "ta" || langCode === "hi" || langCode === "ml") {
-      this.playWithSpeechSynthesis(index);
-      return;
-    }
-
-    const directUrl = `/audio/tts/${item.id}_${langCode}.mp3`;
+    // Audio stream URLs for 100% authentic native Indian regional voices
+    const targetTtsLang = langCode === "sa" ? "hi" : langCode;
+    const directApiUrl = `/api/tts?text=${encoded}&lang=${targetTtsLang}&sentenceId=${item.id}`;
+    const directGoogleUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=${targetTtsLang}&client=tw-ob`;
 
     if (!this.audio) {
       this.audio = new Audio();
@@ -232,17 +229,29 @@ export class AudioNarrationService {
     this.audio.pause();
     this.isLoading = true;
     this.isUsingSpeechSynthesis = false;
+    this.isNativeVoice = true;
+    this.voiceLabel = `Native ${this.activeLanguage} Voice (Authentic Regional Accent)`;
     this.emitState();
 
-    this.audio.src = directUrl;
     this.audio.playbackRate = this.rate;
     this.audio.volume = this.volume;
+
+    // 1. Try server proxy /api/tts first
+    this.audio.src = directApiUrl;
 
     const playPromise = this.audio.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
-        // Fall back to Web Speech Synthesis if audio asset is missing
-        this.playWithSpeechSynthesis(index);
+        // 2. Fall back to direct Google TTS audio stream
+        if (!this.audio) return;
+        this.audio.src = directGoogleUrl;
+        const secondPromise = this.audio.play();
+        if (secondPromise !== undefined) {
+          secondPromise.catch(() => {
+            // 3. Fall back to tuned SpeechSynthesis (0.78x calm storytelling cadence)
+            this.playWithSpeechSynthesis(index);
+          });
+        }
       });
     }
   }

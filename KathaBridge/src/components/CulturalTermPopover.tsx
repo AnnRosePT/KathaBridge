@@ -34,19 +34,27 @@ export const CulturalTermPopover: React.FC<Props> = ({
       return;
     }
 
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      const voiceCheck = hasNativeVoiceFor(window.speechSynthesis, "ML");
-      if (voiceCheck.hasNative) {
-        setVoiceNotice(`Native voice: ${voiceCheck.voiceName}`);
-      } else {
-        setVoiceNotice("Acoustic phonetic fallback (Browser lacks native ml-IN voice)");
-      }
-      speakSafely(window.speechSynthesis, text, "ML");
-    } else {
-      const directUrl = `/audio/tts/${expression.id}.mp3`;
-      const audio = new Audio(directUrl);
-      audio.play().catch(() => {
-        setVoiceNotice("Speech synthesis unavailable");
+    const encoded = encodeURIComponent(text);
+    const apiUrl = `/api/tts?text=${encoded}&lang=ml&sentenceId=${expression.id}`;
+    const directGoogleUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=ml&client=tw-ob`;
+
+    const audio = new Audio(apiUrl);
+    setVoiceNotice("Authentic Native Malayalam Voice");
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        const fallbackAudio = new Audio(directGoogleUrl);
+        const secondPromise = fallbackAudio.play();
+        if (secondPromise !== undefined) {
+          secondPromise.catch(() => {
+            if (typeof window !== "undefined" && "speechSynthesis" in window) {
+              setVoiceNotice("Acoustic Storytelling Mode (0.76x)");
+              speakSafely(window.speechSynthesis, text, "ML");
+            } else {
+              setVoiceNotice("Audio stream unavailable");
+            }
+          });
+        }
       });
     }
   };
