@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import * as maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { Story } from "../types";
 import { Soundtrack } from "../services/soundtrackService";
 
@@ -129,27 +129,6 @@ export const HERITAGE_SITES: HeritageSite[] = [
   }
 ];
 
-const OSM_RASTER_STYLE: any = {
-  version: 8,
-  sources: {
-    "osm-tiles": {
-      type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors"
-    }
-  },
-  layers: [
-    {
-      id: "osm-layer",
-      type: "raster",
-      source: "osm-tiles",
-      minzoom: 0,
-      maxzoom: 19
-    }
-  ]
-};
-
 interface Props {
   stories: Story[];
   onSelectStory: (story: Story) => void;
@@ -164,12 +143,12 @@ export const HeritageMapModal: React.FC<Props> = ({
   const [selectedSite, setSelectedSite] = useState<HeritageSite>(HERITAGE_SITES[0]);
   const [filterCategory, setFilterCategory] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeMapView, setActiveMapView] = useState<"OPENFREEMAP" | "OSM" | "ILLUSTRATED">("OPENFREEMAP");
-  const [isMapLoading, setIsMapLoading] = useState<boolean>(true);
+  const [mapLayer, setMapLayer] = useState<"TERRAIN" | "STANDARD" | "ILLUSTRATED">("TERRAIN");
 
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
-  const markersRef = useRef<maplibregl.Marker[]>([]);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const tileLayerRef = useRef<L.TileLayer | null>(null);
+  const markersRef = useRef<L.Marker[]>([]);
 
   const filteredSites = HERITAGE_SITES.filter((site) => {
     const matchesCategory = filterCategory === "ALL" || site.category === filterCategory;
@@ -180,112 +159,116 @@ export const HeritageMapModal: React.FC<Props> = ({
     return matchesCategory && matchesSearch;
   });
 
-  // Initialize MapLibre GL instance
+  // Initialize Leaflet Map
   useEffect(() => {
-    if (activeMapView === "ILLUSTRATED") return;
+    if (mapLayer === "ILLUSTRATED") return;
     if (!mapContainerRef.current) return;
 
-    let map: maplibregl.Map | null = null;
-    setIsMapLoading(true);
-
     try {
-      const initialStyle =
-        activeMapView === "OPENFREEMAP"
-          ? "https://tiles.openfreemap.org/styles/liberty"
-          : OSM_RASTER_STYLE;
-
-      map = new maplibregl.Map({
-        container: mapContainerRef.current,
-        style: initialStyle,
-        center: [selectedSite.coordinates.lng, selectedSite.coordinates.lat],
-        zoom: 8.5,
-        minZoom: 5.5,
-        maxZoom: 16
+      // Create Leaflet map instance
+      const map = L.map(mapContainerRef.current, {
+        center: [selectedSite.coordinates.lat, selectedSite.coordinates.lng],
+        zoom: 8,
+        minZoom: 6,
+        maxZoom: 18,
+        zoomControl: true
       });
 
-      map.addControl(new maplibregl.NavigationControl(), "top-right");
+      // Select tile URL based on mapLayer
+      // TERRAIN: OpenTopoMap showing real Western Ghats elevation, contours, mountain relief & rivers
+      // STANDARD: OpenStreetMap showing full regional geographical details
+      const tileUrl =
+        mapLayer === "TERRAIN"
+          ? "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+          : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
-      // Add pins immediately so they are never blocked by style loading
+      const tileLayer = L.tileLayer(tileUrl, {
+        maxZoom: 18,
+        attribution:
+          mapLayer === "TERRAIN"
+            ? "Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)"
+            : "&copy; OpenStreetMap contributors"
+      }).addTo(map);
+
+      tileLayerRef.current = tileLayer;
+
+      // Add custom Neo-Pop pins
       HERITAGE_SITES.forEach((site) => {
-        const el = document.createElement("div");
-        el.className = "cursor-pointer group";
-        el.style.zIndex = "10";
-        el.innerHTML = `
-          <div style="background: ${site.unescoStatus ? "#080808" : "#FF087D"}; color: #FFFC00; border: 2.5px solid #080808; border-radius: 9999px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 3px 3px 0px #080808; cursor: pointer; transform: translate(-50%, -50%);">
-            📍
-          </div>
-        `;
-
-        el.addEventListener("click", () => {
-          Soundtrack.playModalPop();
-          setSelectedSite(site);
-          map?.flyTo({
-            center: [site.coordinates.lng, site.coordinates.lat],
-            zoom: 12,
-            speed: 1.2
-          });
+        const isSelected = site.id === selectedSite.id;
+        const customIcon = L.divIcon({
+          className: "custom-leaflet-marker",
+          html: `
+            <div style="
+              background: ${isSelected ? "#FF087D" : site.unescoStatus ? "#080808" : "#FFFC00"};
+              color: ${isSelected ? "#FFFFFF" : site.unescoStatus ? "#FFFC00" : "#080808"};
+              border: 2.5px solid #080808;
+              border-radius: 9999px;
+              width: 32px;
+              height: 32px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 15px;
+              box-shadow: 3px 3px 0px #080808;
+              cursor: pointer;
+              transform: translate(-50%, -50%);
+              transition: transform 0.15s ease;
+            ">
+              📍
+            </div>
+          `,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16]
         });
 
-        const marker = new maplibregl.Marker({ element: el })
-          .setLngLat([site.coordinates.lng, site.coordinates.lat])
-          .addTo(map!);
+        const marker = L.marker([site.coordinates.lat, site.coordinates.lng], {
+          icon: customIcon
+        }).addTo(map);
+
+        marker.on("click", () => {
+          Soundtrack.playModalPop();
+          setSelectedSite(site);
+          map.flyTo([site.coordinates.lat, site.coordinates.lng], 12, {
+            duration: 1.2
+          });
+        });
 
         markersRef.current.push(marker);
       });
 
-      map.on("load", () => {
-        setIsMapLoading(false);
-        map?.resize();
-      });
+      mapInstanceRef.current = map;
 
-      // If OpenFreeMap style load errors, switch gracefully to OSM raster tiles
-      map.on("error", (e) => {
-        console.warn("Tile style warning:", e);
-        if (activeMapView === "OPENFREEMAP") {
-          setIsMapLoading(false);
-          try {
-            map?.setStyle(OSM_RASTER_STYLE);
-          } catch (err) {
-            // Ignore style switch if unmounted
-          }
-        }
-      });
-
-      // Force canvas size calculation after layout mounts
+      // Fix size calculation inside animated modal
       const t1 = setTimeout(() => {
-        map?.resize();
-        setIsMapLoading(false);
+        map.invalidateSize();
       }, 150);
 
       const t2 = setTimeout(() => {
-        map?.resize();
-      }, 500);
-
-      mapRef.current = map;
+        map.invalidateSize();
+      }, 450);
 
       return () => {
         clearTimeout(t1);
         clearTimeout(t2);
         markersRef.current.forEach((m) => m.remove());
         markersRef.current = [];
-        map?.remove();
-        mapRef.current = null;
+        map.remove();
+        mapInstanceRef.current = null;
       };
-    } catch (e) {
-      console.warn("MapLibre init error, falling back:", e);
-      setIsMapLoading(false);
+    } catch (err) {
+      console.warn("Leaflet map initialization error:", err);
     }
-  }, [activeMapView]);
+  }, [mapLayer]);
 
   const handleSelectSite = (site: HeritageSite) => {
     Soundtrack.playClick();
     setSelectedSite(site);
-    if (mapRef.current) {
-      mapRef.current.flyTo({
-        center: [site.coordinates.lng, site.coordinates.lat],
-        zoom: 12,
-        speed: 1.2
-      });
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.flyTo(
+        [site.coordinates.lat, site.coordinates.lng],
+        12,
+        { duration: 1.2 }
+      );
     }
   };
 
@@ -296,7 +279,7 @@ export const HeritageMapModal: React.FC<Props> = ({
       metadata: {
         title: "KathaBridge Living Heritage Topography of Kerala",
         standard: "W3C Spatial Data on the Web / OGC GeoJSON",
-        tileProvider: "OpenFreeMap (https://github.com/hyperknot/openfreemap)",
+        tileProvider: "OpenTopoMap & OpenStreetMap Geographical Topography",
         extractedAt: new Date().toISOString()
       },
       features: HERITAGE_SITES.map((site) => ({
@@ -325,7 +308,7 @@ export const HeritageMapModal: React.FC<Props> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `kathabridge-openfreemap-${new Date().toISOString().slice(0, 10)}.geojson`;
+    a.download = `kathabridge-geographical-map-${new Date().toISOString().slice(0, 10)}.geojson`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -346,15 +329,15 @@ export const HeritageMapModal: React.FC<Props> = ({
             </div>
             <div>
               <div className="inline-flex items-center gap-2 bg-brandBlack text-brandYellow text-[10px] font-mono font-black px-2 py-0.5 rounded border border-brandBlack uppercase tracking-widest">
-                <span>OPENFREEMAP API INTEGRATION</span>
+                <span>GEOGRAPHICAL TOPOGRAPHY GIS</span>
                 <span>•</span>
-                <span>GEOSPATIAL HERITAGE GIS</span>
+                <span>KERALA ORAL LOCI</span>
               </div>
               <h2
                 id="heritage-map-title"
                 className="font-editorial text-2xl sm:text-3xl font-black text-brandBlack tracking-tight"
               >
-                Kerala Sacred Topography &amp; Oral Folklore Loci
+                Geographical Topography &amp; Sacred Shrines
               </h2>
             </div>
           </div>
@@ -427,15 +410,15 @@ export const HeritageMapModal: React.FC<Props> = ({
                 <span className="font-mono text-xs font-black uppercase text-brandPink flex items-center gap-1.5">
                   <span>✦</span>
                   <span>
-                    {activeMapView === "OPENFREEMAP"
-                      ? "OPENFREEMAP VECTOR TILES (LIBERTY)"
-                      : activeMapView === "OSM"
-                      ? "OPENSTREETMAP TILE LAYER"
-                      : "CULTURAL ILLUSTRATED TOPOGRAPHY"}
+                    {mapLayer === "TERRAIN"
+                      ? "GEOGRAPHICAL TOPOGRAPHY (ELEVATION & RELIEF)"
+                      : mapLayer === "STANDARD"
+                      ? "OPENSTREETMAP CARTOGRAPHY"
+                      : "CULTURAL ILLUSTRATED TERRAIN"}
                   </span>
                 </span>
                 <p className="text-xs text-neutral-600 font-sans font-bold">
-                  Powered by openfreemap.org (hyperknot/openfreemap).
+                  Interactive geographical map with real terrain contours and GPS markers.
                 </p>
               </div>
 
@@ -444,89 +427,64 @@ export const HeritageMapModal: React.FC<Props> = ({
                 <button
                   onClick={() => {
                     Soundtrack.playClick();
-                    setActiveMapView("OPENFREEMAP");
+                    setMapLayer("TERRAIN");
                   }}
-                  className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full transition ${
-                    activeMapView === "OPENFREEMAP"
+                  className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full transition cursor-pointer ${
+                    mapLayer === "TERRAIN"
                       ? "bg-brandPink text-white shadow-[1px_1px_0px_#080808]"
                       : "text-brandBlack hover:text-brandPink"
                   }`}
                 >
-                  OpenFreeMap
+                  ⛰️ Topography
                 </button>
                 <button
                   onClick={() => {
                     Soundtrack.playClick();
-                    setActiveMapView("OSM");
+                    setMapLayer("STANDARD");
                   }}
-                  className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full transition ${
-                    activeMapView === "OSM"
+                  className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full transition cursor-pointer ${
+                    mapLayer === "STANDARD"
                       ? "bg-brandPink text-white shadow-[1px_1px_0px_#080808]"
                       : "text-brandBlack hover:text-brandPink"
                   }`}
                 >
-                  OSM Standard
+                  🗺️ Standard
                 </button>
                 <button
                   onClick={() => {
                     Soundtrack.playClick();
-                    setActiveMapView("ILLUSTRATED");
+                    setMapLayer("ILLUSTRATED");
                   }}
-                  className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full transition ${
-                    activeMapView === "ILLUSTRATED"
+                  className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full transition cursor-pointer ${
+                    mapLayer === "ILLUSTRATED"
                       ? "bg-brandPink text-white shadow-[1px_1px_0px_#080808]"
                       : "text-brandBlack hover:text-brandPink"
                   }`}
                 >
-                  Illustrated
+                  🎨 Illustrated
                 </button>
               </div>
             </div>
 
             {/* Map Frame */}
             <div className="relative w-full h-80 sm:h-96 bg-[#FFFDE0] border-4 border-brandBlack rounded-2xl overflow-hidden shadow-[6px_6px_0px_#080808]">
-              {activeMapView !== "ILLUSTRATED" ? (
+              {mapLayer !== "ILLUSTRATED" ? (
                 <>
-                  {/* Absolute container guaranteed to fill height and width */}
+                  {/* Leaflet DOM container */}
                   <div
                     ref={mapContainerRef}
-                    key={activeMapView}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      width: "100%",
-                      height: "100%"
-                    }}
+                    key={mapLayer}
+                    className="w-full h-full"
+                    style={{ minHeight: "320px", width: "100%", height: "100%" }}
                   />
 
-                  {isMapLoading && (
-                    <div className="absolute inset-0 bg-brandYellow/30 backdrop-blur-xs flex items-center justify-center font-mono text-xs font-black text-brandBlack pointer-events-none">
-                      <div className="bg-white px-3 py-1.5 rounded-full border-2 border-brandBlack shadow-[2px_2px_0px_#080808] flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-brandPink animate-ping"></span>
-                        <span>Streaming OpenFreeMap Tiles...</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Attribution overlay */}
-                  <div className="absolute bottom-2 left-2 bg-white/90 border border-brandBlack px-2 py-0.5 rounded text-[9px] font-mono font-bold text-neutral-700 pointer-events-auto z-10">
-                    Tiles:{" "}
-                    <a
-                      href="https://openfreemap.org"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-brandPink hover:underline"
-                    >
-                      OpenFreeMap
-                    </a>{" "}
-                    &amp; OpenStreetMap
+                  {/* Leaflet attribution styling */}
+                  <div className="absolute bottom-1.5 left-2 bg-white/90 border border-brandBlack px-2 py-0.5 rounded text-[9px] font-mono font-bold text-neutral-700 pointer-events-auto z-1000">
+                    {mapLayer === "TERRAIN" ? "⛰️ OpenTopoMap Physical Terrain" : "🗺️ OpenStreetMap Geographical"}
                   </div>
                 </>
               ) : (
-                /* Fallback Illustrated Neo-Pop SVG Map */
+                /* High-Contrast Illustrated Cultural Topography Map */
                 <div className="w-full h-full flex items-center justify-center relative p-4 bg-[#FFFDE0]">
                   <div className="absolute top-3 left-3 text-[10px] font-mono font-bold text-neutral-400">
                     LAT: 8.3°N – 12.8°N<br />
@@ -610,7 +568,7 @@ export const HeritageMapModal: React.FC<Props> = ({
                 <button
                   key={site.id}
                   onClick={() => handleSelectSite(site)}
-                  className={`text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg border-2 border-brandBlack transition ${
+                  className={`text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg border-2 border-brandBlack transition cursor-pointer ${
                     selectedSite.id === site.id
                       ? "bg-brandPink text-white shadow-[2px_2px_0px_#080808]"
                       : "bg-neutral-50 text-brandBlack hover:bg-brandYellow"
