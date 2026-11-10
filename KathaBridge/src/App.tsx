@@ -237,6 +237,8 @@ export default function App() {
       const matchesSearch =
         story.title.EN.toLowerCase().includes(searchQuery.toLowerCase()) ||
         story.title.ML.includes(searchQuery) ||
+        (story.title.SA && story.title.SA.includes(searchQuery)) ||
+        (story.title.HI && story.title.HI.includes(searchQuery)) ||
         story.summary.EN.toLowerCase().includes(searchQuery.toLowerCase()) ||
         story.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase()) ||
         story.originRegion.toLowerCase().includes(searchQuery.toLowerCase());
@@ -251,6 +253,9 @@ export default function App() {
         (selectedLanguageFilter === "SANSKRIT" &&
           (story.availableLanguages.includes("SA") ||
             story.originalLanguage.toLowerCase().includes("sanskrit"))) ||
+        (selectedLanguageFilter === "HINDI" &&
+          (story.availableLanguages.includes("HI") ||
+            story.originalLanguage.toLowerCase().includes("hindi"))) ||
         story.availableLanguages.includes(selectedLanguageFilter as any);
 
       return matchesSearch && matchesCategory && matchesLang;
@@ -1037,8 +1042,9 @@ export default function App() {
             <span className="text-xs font-mono font-black text-brandBlack mr-1">{t.storiesSection.languageLabel}</span>
             {[
               { id: "ALL", label: t.storiesSection.allLang },
-              { id: "MALAYALAM", label: t.storiesSection.malayalamLang },
-              { id: "SANSKRIT", label: t.storiesSection.sanskritLang },
+              { id: "MALAYALAM", label: selectedLanguage === "ML" ? "മലയാളം" : "MALAYALAM" },
+              { id: "SANSKRIT", label: selectedLanguage === "SA" ? "संस्कृतम्" : "SANSKRIT" },
+              { id: "HINDI", label: selectedLanguage === "HI" ? "हिन्दी" : "HINDI" },
             ].map((lang) => (
               <button
                 key={lang.id}

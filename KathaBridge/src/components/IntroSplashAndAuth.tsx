@@ -750,90 +750,21 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
             <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
               Enter the World of Stories
             </h3>
-            <p className="text-neutral-400 text-sm mb-4 leading-relaxed">
-              Sign in to save regional bookmarks, explore interactive folk audio, and contribute regional folklore.
+            <p className="text-neutral-400 text-sm mb-5 leading-relaxed">
+              Sign in with your email or username to save folklore bookmarks and track your reading journey.
             </p>
-
-            {/* Live Auth Indicator & Error Alert */}
-            <div className="mb-4">
-              <div className="flex items-center justify-between text-[11px] font-mono px-3 py-1.5 rounded-lg bg-neutral-900 border border-neutral-800">
-                <span className="flex items-center gap-2 text-neutral-300">
-                  <span className={`w-2 h-2 rounded-full ${isFirebaseLive() ? "bg-emerald-400 animate-pulse" : "bg-brandYellow"}`}></span>
-                  {isFirebaseLive() ? "Firebase Real OAuth Live" : "Local Mode (Add Firebase keys for cloud OAuth)"}
-                </span>
-                <span className="text-[10px] text-neutral-500 font-bold">PROD READY</span>
-              </div>
-              {authError && (
-                <div className="mt-2 text-xs font-mono text-white bg-brandVermillion/90 border border-brandPink p-2.5 rounded-xl">
-                  ✦ {authError}
-                </div>
-              )}
-            </div>
-
-            {/* Social Login Options */}
-            <div className="space-y-3 mb-6">
-              <button
-                disabled={isAuthenticating}
-                className="w-full bg-white hover:bg-neutral-100 text-black font-semibold text-sm py-3 px-4 rounded-full flex items-center justify-center gap-3 transition-transform active:scale-95 shadow-md cursor-pointer disabled:opacity-60"
-                onClick={handleGoogleLogin}
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24">
-                  <path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    fill="#4285F4"
-                  ></path>
-                  <path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853"
-                  ></path>
-                  <path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                    fill="#FBBC05"
-                  ></path>
-                  <path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                    fill="#EA4335"
-                  ></path>
-                </svg>
-                <span>Continue with Google</span>
-              </button>
-
-              <button
-                className="w-full bg-[#1F1F1F] hover:bg-[#2A2A2A] text-white border border-neutral-700 font-semibold text-sm py-3 px-4 rounded-full flex items-center justify-center gap-3 transition-transform active:scale-95 cursor-pointer"
-                onClick={handleMobileLogin}
-              >
-                <svg className="w-5 h-5 text-[#FFFC00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                  ></path>
-                </svg>
-                <span>Continue with Mobile / OTP</span>
-              </button>
-            </div>
-
-            {/* Divider */}
-            <div className="relative flex py-2 items-center mb-5">
-              <div className="flex-grow border-t border-neutral-800"></div>
-              <span className="flex-shrink mx-4 text-[11px] font-mono uppercase tracking-widest text-neutral-500">
-                OR WITH EMAIL
-              </span>
-              <div className="flex-grow border-t border-neutral-800"></div>
-            </div>
 
             {/* Email Form */}
             <form className="space-y-4" onSubmit={handleEmailSubmit}>
               <div>
                 <label className="block text-xs font-medium text-neutral-300 mb-1">
-                  Email or Member ID
+                  Email or Username
                 </label>
                 <input
                   className="w-full bg-black border border-neutral-800 focus:border-[#FFFC00] focus:ring-1 focus:ring-[#FFFC00] text-sm px-4 py-3 rounded-xl text-white placeholder-neutral-600 outline-none transition-all"
-                  placeholder="reader@kathabridge.org"
+                  placeholder="e.g. reader@kathabridge.org"
                   required
-                  type="email"
+                  type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -842,16 +773,6 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-xs font-medium text-neutral-300">Password</label>
-                  <a
-                    className="text-[11px] text-[#FF2D78] hover:underline"
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      Soundtrack.playClick();
-                    }}
-                  >
-                    Forgot?
-                  </a>
                 </div>
                 <input
                   className="w-full bg-black border border-neutral-800 focus:border-[#FFFC00] focus:ring-1 focus:ring-[#FFFC00] text-sm px-4 py-3 rounded-xl text-white placeholder-neutral-600 outline-none transition-all"
@@ -871,6 +792,68 @@ export const IntroSplashAndAuth: React.FC<Props> = ({
                 <span>→</span>
               </button>
             </form>
+
+            {/* Instant 1-Click Demo Testing */}
+            <div className="pt-4 mt-4 border-t border-neutral-800">
+              <span className="block text-center text-[10px] font-mono uppercase text-neutral-500 mb-2 font-bold tracking-wider">
+                OR TEST INSTANTLY WITH 1-CLICK
+              </span>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    Soundtrack.playSuccessChime();
+                    onUserLogin({
+                      id: "usr-aarav-" + Date.now(),
+                      name: "Aarav Sharma",
+                      email: "aarav.sharma@kathabridge.org",
+                      role: "SCHOLAR",
+                      avatarInitials: "AS",
+                      favoriteStoryIds: ["mahabali", "theyyam", "panchatantra"],
+                      readingHistory: [
+                        { storyId: "mahabali", lastReadAt: new Date().toISOString(), progressPercentage: 100 },
+                        { storyId: "theyyam", lastReadAt: new Date(Date.now() - 86400000).toISOString(), progressPercentage: 80 }
+                      ],
+                      joinedDate: "November 2026",
+                      preferredLanguage: "EN",
+                      authProvider: "local",
+                      isRealAuth: true
+                    });
+                    setIsLoginModalOpen(false);
+                    onComplete();
+                  }}
+                  className="bg-neutral-900 hover:bg-neutral-800 text-[#FFFC00] py-2 px-3 rounded-xl font-mono text-[11px] font-bold border border-neutral-700 transition cursor-pointer text-center"
+                >
+                  ⚡ Aarav (Scholar)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    Soundtrack.playSuccessChime();
+                    onUserLogin({
+                      id: "usr-devi-" + Date.now(),
+                      name: "Devi Varma",
+                      email: "devi.varma@heritage.in",
+                      role: "READER",
+                      avatarInitials: "DV",
+                      favoriteStoryIds: ["mahabali"],
+                      readingHistory: [
+                        { storyId: "mahabali", lastReadAt: new Date().toISOString(), progressPercentage: 100 }
+                      ],
+                      joinedDate: "November 2026",
+                      preferredLanguage: "EN",
+                      authProvider: "local",
+                      isRealAuth: true
+                    });
+                    setIsLoginModalOpen(false);
+                    onComplete();
+                  }}
+                  className="bg-neutral-900 hover:bg-neutral-800 text-white py-2 px-3 rounded-xl font-mono text-[11px] font-bold border border-neutral-700 transition cursor-pointer text-center"
+                >
+                  📖 Devi (Reader)
+                </button>
+              </div>
+            </div>
 
             {/* Guest Entry Link */}
             <div className="mt-5 text-center">

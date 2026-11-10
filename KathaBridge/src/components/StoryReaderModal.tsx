@@ -35,6 +35,30 @@ export const StoryReaderModal: React.FC<Props> = ({
     activeLanguage: initialLanguage
   });
 
+  const getSentenceTextForLang = (s: any, lang: LanguageCode): string => {
+    if (lang === "ML") return s.originalText || s.translatedText?.ML || s.translatedText?.EN || "";
+    if (lang === "SA") return s.translatedText?.SA || s.originalText || s.translatedText?.EN || "";
+    if (lang === "HI") return s.translatedText?.HI || s.translatedText?.EN || "";
+    if (lang === "TA") return s.translatedText?.TA || s.translatedText?.EN || "";
+    return s.translatedText?.EN || s.originalText || "";
+  };
+
+  const getTitleForLang = (st: Story, lang: LanguageCode): string => {
+    if (lang === "ML") return st.title.ML || st.title.EN;
+    if (lang === "SA") return st.title.SA || st.title.ML || st.title.EN;
+    if (lang === "HI") return st.title.HI || st.title.EN;
+    if (lang === "TA") return st.title.TA || st.title.EN;
+    return st.title.EN;
+  };
+
+  const getSummaryForLang = (st: Story, lang: LanguageCode): string => {
+    if (lang === "ML") return st.summary.ML || st.summary.EN;
+    if (lang === "SA") return st.summary.SA || st.summary.ML || st.summary.EN;
+    if (lang === "HI") return st.summary.HI || st.summary.EN;
+    if (lang === "TA") return st.summary.TA || st.summary.EN;
+    return st.summary.EN;
+  };
+
   const audioServiceRef = useRef<AudioNarrationService | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -59,7 +83,7 @@ export const StoryReaderModal: React.FC<Props> = ({
   const loadStoryAudio = (service: AudioNarrationService, lang: LanguageCode) => {
     const sentenceItems = story.sentences.map((s) => ({
       id: s.id,
-      text: lang === "ML" ? s.originalText : s.translatedText.EN
+      text: getSentenceTextForLang(s, lang)
     }));
     service.loadSentences(sentenceItems, lang);
   };
@@ -123,22 +147,24 @@ export const StoryReaderModal: React.FC<Props> = ({
           <div className="flex items-center gap-2">
             {/* Language Switcher */}
             <div className="flex bg-white rounded-full p-1 border-2 border-brandBlack shadow-[2px_2px_0px_#080808]">
-              <button
-                onClick={() => handleLanguageChange("EN")}
-                className={`px-3 py-1 rounded-full text-xs font-mono font-black transition ${
-                  activeLang === "EN" ? "bg-brandPink text-white shadow-sm" : "text-brandBlack hover:bg-neutral-100"
-                }`}
-              >
-                ENGLISH
-              </button>
-              <button
-                onClick={() => handleLanguageChange("ML")}
-                className={`px-3 py-1 rounded-full text-xs font-mono font-black transition ${
-                  activeLang === "ML" ? "bg-brandPink text-white shadow-sm" : "text-brandBlack hover:bg-neutral-100"
-                }`}
-              >
-                മലയാളം
-              </button>
+              {[
+                { code: "EN" as LanguageCode, label: "EN" },
+                { code: "ML" as LanguageCode, label: "മലയാളം" },
+                { code: "SA" as LanguageCode, label: "संस्कृतम्" },
+                { code: "HI" as LanguageCode, label: "हिन्दी" }
+              ].map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => handleLanguageChange(lang.code)}
+                  className={`px-2.5 py-1 rounded-full text-xs font-mono font-black transition ${
+                    activeLang === lang.code
+                      ? "bg-brandPink text-white shadow-sm"
+                      : "text-brandBlack hover:bg-neutral-100"
+                  }`}
+                >
+                  {lang.label}
+                </button>
+              ))}
             </div>
 
             {/* Font Size Scaling */}
@@ -209,10 +235,10 @@ export const StoryReaderModal: React.FC<Props> = ({
               className="font-editorial text-3xl sm:text-5xl font-black tracking-tight mb-4"
               style={{ fontSize: `calc(${fontSizeOffset * 2}px + 2.5rem)` }}
             >
-              {activeLang === "ML" ? story.title.ML : story.title.EN}
+              {getTitleForLang(story, activeLang)}
             </h1>
             <p className="font-bold text-base sm:text-lg opacity-90 leading-relaxed max-w-3xl mb-6">
-              {activeLang === "ML" ? story.summary.ML : story.summary.EN}
+              {getSummaryForLang(story, activeLang)}
             </p>
 
             <div className="relative rounded-2xl overflow-hidden border-2 border-brandBlack max-h-80 w-full shadow-[6px_6px_0px_#080808]">
@@ -255,8 +281,7 @@ export const StoryReaderModal: React.FC<Props> = ({
               const isCurrentSpoken =
                 audioState.isPlaying && audioState.currentSentenceIndex === idx;
 
-              const sentenceText =
-                activeLang === "ML" ? sentence.originalText : sentence.translatedText.EN;
+              const sentenceText = getSentenceTextForLang(sentence, activeLang);
 
               return (
                 <div
@@ -367,6 +392,10 @@ export const StoryReaderModal: React.FC<Props> = ({
                   : audioState.isPlaying
                   ? activeLang === "ML"
                     ? "NATIVE MALAYALAM NARRATION (SOBHANA NEURAL)"
+                    : activeLang === "SA"
+                    ? "SANSKRIT CLASSICAL RECITATION"
+                    : activeLang === "HI"
+                    ? "HINDI NARRATION (SWARA NEURAL)"
                     : "ENGLISH NARRATION (NEERJA NEURAL)"
                   : audioState.isPaused
                   ? "AUDIO PAUSED"

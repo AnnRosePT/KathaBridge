@@ -226,3 +226,4 @@ export function subscribeToAuthChanges(callback: (user: UserProfile | null) => v
 
   return unsubscribe;
 }
+

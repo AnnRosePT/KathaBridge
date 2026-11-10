@@ -24,6 +24,9 @@ export interface StorySentence {
   translatedText: {
     EN: string;
     ML: string;
+    SA?: string;
+    HI?: string;
+    TA?: string;
   };
   highlightedTermIds?: string[];
 }
@@ -34,6 +37,9 @@ export interface Story {
   title: {
     EN: string;
     ML: string;
+    SA?: string;
+    HI?: string;
+    TA?: string;
   };
   category: "FOLK_TALES" | "CLASSICAL_LIT" | "PERFORMANCES" | "REGIONAL_ART" | "MUSIC_ORAL" | "FESTIVALS";
   categoryLabel: string;
@@ -47,6 +53,9 @@ export interface Story {
   summary: {
     EN: string;
     ML: string;
+    SA?: string;
+    HI?: string;
+    TA?: string;
   };
   sourceAttribution?: string;
   sourceUrl?: string;

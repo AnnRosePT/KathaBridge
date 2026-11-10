@@ -74,10 +74,11 @@ export interface VoiceResolution {
 /**
  * Intelligently resolves the best voice and phonetic text across all browsers.
  */
-export function resolveSpeechVoice(synth: SpeechSynthesis, originalText: string, targetLang: "EN" | "ML"): VoiceResolution {
+export function resolveSpeechVoice(synth: SpeechSynthesis, originalText: string, targetLang: string): VoiceResolution {
   const voices = synth.getVoices();
+  const langUpper = targetLang.toUpperCase();
 
-  if (targetLang === "ML") {
+  if (langUpper === "ML") {
     // 1. Look for native Malayalam voice
     const nativeMl = voices.find(
       (v) => v.lang.toLowerCase().startsWith("ml") || v.name.toLowerCase().includes("malayalam")
@@ -110,7 +111,35 @@ export function resolveSpeechVoice(synth: SpeechSynthesis, originalText: string,
     };
   }
 
-  // English target
+  if (langUpper === "HI" || langUpper === "SA") {
+    // 1. Look for native Hindi / Sanskrit Devanagari voice
+    const devanagariVoice = voices.find(
+      (v) =>
+        v.lang.toLowerCase().startsWith("hi") ||
+        v.lang.toLowerCase().startsWith("sa") ||
+        v.name.toLowerCase().includes("hindi") ||
+        v.name.toLowerCase().includes("swara") ||
+        v.name.toLowerCase().includes("madhur")
+    );
+
+    if (devanagariVoice) {
+      return {
+        voice: devanagariVoice,
+        effectiveLang: devanagariVoice.lang || "hi-IN",
+        textToSpeak: originalText
+      };
+    }
+
+    // Fallback: Indian English
+    const inVoice = voices.find((v) => v.lang.toLowerCase().includes("en-in") || v.name.toLowerCase().includes("india"));
+    return {
+      voice: inVoice || voices[0] || null,
+      effectiveLang: inVoice?.lang || "en-IN",
+      textToSpeak: originalText
+    };
+  }
+
+  // English or general target
   const enInVoice = voices.find((v) => v.lang.toLowerCase().includes("en-in") || v.name.toLowerCase().includes("india"));
   const enVoice = enInVoice || voices.find((v) => v.lang.startsWith("en")) || voices[0] || null;
 
@@ -122,13 +151,13 @@ export function resolveSpeechVoice(synth: SpeechSynthesis, originalText: string,
 }
 
 /**
- * Safely speaks text with cross-platform resilience for Malayalam and English.
+ * Safely speaks text with cross-platform resilience for all supported languages.
  * Works around Chrome's cancel/resume microtask race and voice pack deficiencies.
  */
 export function speakSafely(
   synth: SpeechSynthesis,
   text: string,
-  lang: "EN" | "ML",
+  lang: string,
   options?: {
     rate?: number;
     volume?: number;
@@ -146,9 +175,8 @@ export function speakSafely(
     utterance.voice = resolution.voice;
   }
   utterance.lang = resolution.effectiveLang;
-  // If speaking Malayalam via transliteration on an English voice, slow down slightly for clear Indian inflection
   utterance.rate =
-    options?.rate ?? (lang === "ML" && !resolution.voice?.lang.startsWith("ml") ? 0.85 : 0.95);
+    options?.rate ?? (lang.toUpperCase() === "ML" && !resolution.voice?.lang.startsWith("ml") ? 0.85 : 0.95);
   utterance.volume = options?.volume ?? 1.0;
 
   utterance.onend = () => {
