@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://kathabridge.vercel.app/sitemap.xml
+

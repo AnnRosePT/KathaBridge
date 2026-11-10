@@ -1949,7 +1949,15 @@ export default function App() {
               >
                 REVIEWER PORTAL
               </button>
-              <span className="hover:text-brandYellow transition cursor-pointer">OPEN REPO</span>
+              <a
+                href="https://github.com/AnnRosePT/KathaBridge"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => Soundtrack.playClick()}
+                className="hover:text-brandYellow transition cursor-pointer"
+              >
+                OPEN REPO ↗
+              </a>
             </div>
           </div>
         </div>

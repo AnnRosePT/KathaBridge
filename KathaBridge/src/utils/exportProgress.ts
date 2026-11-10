@@ -56,3 +56,4 @@ export function downloadReadingPortfolio(userName: string = "Folklore Explorer")
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+

@@ -10,19 +10,23 @@ interface Props {
 
 export const CulturalTermPopover: React.FC<Props> = ({ expression, onClose, onPlayPronunciation }) => {
   const handleAudio = () => {
+    const text =
+      expression.audioPronunciationText || expression.originalScript || expression.term;
     if (onPlayPronunciation) {
-      onPlayPronunciation(expression.audioPronunciationText || expression.term);
+      onPlayPronunciation(text);
       return;
     }
     const directUrl = `/audio/tts/${expression.id}.mp3`;
     const audio = new Audio(directUrl);
     audio.play().catch(() => {
-      const text =
-        expression.audioPronunciationText || expression.originalScript || expression.term;
       const apiAudio = new Audio(
         `/api/tts?text=${encodeURIComponent(text)}&lang=ml&voice=ml-IN-SobhanaNeural`
       );
-      apiAudio.play().catch((e) => console.warn("Native audio play failed:", e));
+      apiAudio.play().catch(() => {
+        if ("speechSynthesis" in window) {
+          speakSafely(window.speechSynthesis, text, "ML");
+        }
+      });
     });
   };
 

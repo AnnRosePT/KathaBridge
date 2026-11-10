@@ -85,3 +85,4 @@ KathaBridge combines three synchronized modalities:
 
 - **Try it now**: [https://kathabridge.vercel.app/](https://kathabridge.vercel.app/)
 - **Contribute**: [https://github.com/AnnRosePT/KathaBridge](https://github.com/AnnRosePT/KathaBridge)
+

@@ -36,14 +36,18 @@ export const GlossaryModal: React.FC<Props> = ({ onClose, onSelectExpression }) 
   });
 
   const handlePronounce = (exp: CulturalExpression) => {
+    const text = exp.audioPronunciationText || exp.originalScript || exp.term;
     const directUrl = `/audio/tts/${exp.id}.mp3`;
     const audio = new Audio(directUrl);
     audio.play().catch(() => {
-      const text = exp.audioPronunciationText || exp.originalScript || exp.term;
       const apiAudio = new Audio(
         `/api/tts?text=${encodeURIComponent(text)}&lang=ml&voice=ml-IN-SobhanaNeural`
       );
-      apiAudio.play().catch((e) => console.warn("Native glossary audio failed:", e));
+      apiAudio.play().catch(() => {
+        if ("speechSynthesis" in window) {
+          speakSafely(window.speechSynthesis, text, "ML");
+        }
+      });
     });
   };
 

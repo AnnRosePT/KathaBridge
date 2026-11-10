@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { UserProfile, Story } from "../types";
 import { StorageService } from "../services/storageService";
 import { mockStories } from "../data/mockData";
+import { downloadReadingPortfolio } from "../utils/exportProgress";
 
 interface Props {
   currentUser: UserProfile | null;
@@ -211,10 +212,19 @@ export const AuthModal: React.FC<Props> = ({ currentUser, onUserChange, onClose,
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 flex flex-col gap-2">
                 <button
+                  type="button"
+                  onClick={() => downloadReadingPortfolio(currentUser.name)}
+                  className="w-full bg-brandYellow hover:bg-white text-brandBlack py-2.5 rounded-full font-mono text-xs font-black border-2 border-brandBlack transition shadow-[2px_2px_0px_#080808] flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>📜</span>
+                  <span>Export Living Heritage Portfolio (JSON)</span>
+                </button>
+                <button
+                  type="button"
                   onClick={handleLogout}
-                  className="w-full bg-white hover:bg-neutral-100 text-brandVermillion py-2.5 rounded-full font-mono text-xs font-black border-2 border-brandBlack transition shadow-[2px_2px_0px_#080808]"
+                  className="w-full bg-white hover:bg-neutral-100 text-brandVermillion py-2.5 rounded-full font-mono text-xs font-black border-2 border-brandBlack transition shadow-[2px_2px_0px_#080808] cursor-pointer"
                 >
                   Sign Out of Account
                 </button>
