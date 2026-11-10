@@ -112,6 +112,12 @@ export default function App() {
     } else {
       document.body.classList.remove("reduce-motion");
     }
+
+    if (accessibilitySettings.isDyslexiaFont) {
+      document.body.classList.add("font-dyslexic");
+    } else {
+      document.body.classList.remove("font-dyslexic");
+    }
   }, [accessibilitySettings]);
 
   // Global Accessibility & Power Keyboard Shortcuts (Escape to dismiss, Alt+A for A11y, Alt+G for Glossary, Alt+V for Voice)

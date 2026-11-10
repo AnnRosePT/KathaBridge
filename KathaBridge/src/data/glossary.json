@@ -14,7 +14,10 @@
     "audioPronunciationText": "മാവേലി നാടു വാണീടും കാലം",
     "sourceAttribution": "Kerala Tourism Heritage Archives & Herman Gundert Malayalam Folk Collection (Archive.org)",
     "sourceUrl": "https://www.keralatourism.org/festival/onam/1",
-    "license": "Public Cultural Heritage Documentation"
+    "license": "Public Cultural Heritage Documentation",
+    "sourceId": "src-keralatourism",
+    "literalMeaning": "During the reign when King Mahabali ruled the land.",
+    "storyRelevance": "In \"The Legend of Mahabali\", this folk hymn defines the egalitarian reign of King Mahabali, encapsulating the utopian values celebrated across Kerala during Onam."
   },
   {
     "id": "exp-daivakolam",
@@ -31,7 +34,10 @@
     "audioPronunciationText": "ദൈവക്കോലം",
     "sourceAttribution": "Sahapedia North Malabar Performance Archives",
     "sourceUrl": "https://www.sahapedia.org/theyyam",
-    "license": "CC BY-NC-SA 4.0"
+    "license": "CC BY-NC-SA 4.0",
+    "sourceId": "src-sahapedia",
+    "literalMeaning": "Divine Form / Manifestation of the Deity.",
+    "storyRelevance": "In \"Theyyam: The Living Gods of North Malabar\", this signifies the sacred transformation where mortal performers transcend social hierarchy to embody living ancestral deities."
   },
   {
     "id": "exp-thottam",
@@ -48,7 +54,10 @@
     "audioPronunciationText": "തോറ്റംപാട്ട്",
     "sourceAttribution": "Sahapedia Oral Traditions Archive & Kerala Tourism",
     "sourceUrl": "https://www.sahapedia.org/theyyam-songs-thottam",
-    "license": "CC BY-NC-SA 4.0"
+    "license": "CC BY-NC-SA 4.0",
+    "sourceId": "src-sahapedia",
+    "literalMeaning": "Invocation Song / Song of Genesis (from 'Thonnum Pattu').",
+    "storyRelevance": "In North Malabar Theyyam narratives, Thottam ballads represent the living oral liturgy chanted at dusk to invoke the deity's trials, martyrdom, and apotheosis."
   },
   {
     "id": "exp-pookkalam",
@@ -65,7 +74,10 @@
     "audioPronunciationText": "പൂക്കളം",
     "sourceAttribution": "Kerala Tourism Festivals & Cultural Archives",
     "sourceUrl": "https://www.keralatourism.org/festival/onam/pookkalam/1",
-    "license": "Government Open Information"
+    "license": "Government Open Information",
+    "sourceId": "src-keralatourism",
+    "literalMeaning": "Floral carpet / Floral mandala.",
+    "storyRelevance": "In \"The Legend of Mahabali\", the ten-ringed floral carpet laid on courtyards welcomes King Mahabali's spirit back to his beloved people during the harvest."
   },
   {
     "id": "exp-onasadya",
@@ -82,7 +94,10 @@
     "audioPronunciationText": "ഓണസദ്യ",
     "sourceAttribution": "Kerala Tourism Culinary Heritage Archive",
     "sourceUrl": "https://www.keralatourism.org/cuisine/onasadya/1",
-    "license": "Government Open Information"
+    "license": "Government Open Information",
+    "sourceId": "src-keralatourism",
+    "literalMeaning": "Onam Banquet / Feast.",
+    "storyRelevance": "In \"The Legend of Mahabali\", this 26-dish vegetarian feast on plantain leaves celebrates the shared agrarian abundance and non-hierarchical dining of Mahabali's golden era."
   },
   {
     "id": "exp-koothambalam",
@@ -99,7 +114,10 @@
     "audioPronunciationText": "കൂത്തമ്പലം",
     "sourceAttribution": "UNESCO Intangible Cultural Heritage Dossier 00010 & Sahapedia",
     "sourceUrl": "https://ich.unesco.org/en/RL/kutiyattam-sanskrit-theatre-00010",
-    "license": "UNESCO Public Heritage Documentation"
+    "license": "UNESCO Public Heritage Documentation",
+    "sourceId": "src-unesco-ich",
+    "literalMeaning": "Temple Theatre Hall (Koothu + Ambalam).",
+    "storyRelevance": "In \"Koodiyattam: The Living Sanskrit Theatre\", the sacred temple theatre hall provides the dedicated acoustical sanctuary and wooden architecture essential for multi-night Sanskrit plays."
   },
   {
     "id": "exp-mizhavu",
@@ -116,7 +134,10 @@
     "audioPronunciationText": "മിഴാവ്",
     "sourceAttribution": "UNESCO ICH Dossier & Kerala Kalamandalam Archives",
     "sourceUrl": "https://ich.unesco.org/en/RL/kutiyattam-sanskrit-theatre-00010",
-    "license": "UNESCO Public Heritage Documentation"
+    "license": "UNESCO Public Heritage Documentation",
+    "sourceId": "src-unesco-ich",
+    "literalMeaning": "Large spherical copper percussion drum.",
+    "storyRelevance": "In \"Koodiyattam\", this monumental copper pot percussion drum acts as the resonant sonic heartbeat guiding the actor's micro-rhythms and eye movements."
   },
   {
     "id": "exp-netrabhinaya",
@@ -133,7 +154,10 @@
     "audioPronunciationText": "നേത്രാഭിനയം",
     "sourceAttribution": "Sahapedia Koodiyattam Aesthetic Treatises",
     "sourceUrl": "https://www.sahapedia.org/kutiyattam-eyes-of-expression",
-    "license": "CC BY-NC-SA 4.0"
+    "license": "CC BY-NC-SA 4.0",
+    "sourceId": "src-unesco-ich",
+    "literalMeaning": "Acting / expression through ocular micro-movements.",
+    "storyRelevance": "In \"Koodiyattam\", the rigorous discipline of eye expression enables performers to convey complex philosophical dialogues and subtext without speaking aloud."
   },
   {
     "id": "exp-mudiyettu",
@@ -150,7 +174,10 @@
     "audioPronunciationText": "മുടിയേറ്റ്",
     "sourceAttribution": "UNESCO Intangible Cultural Heritage Dossier 00345",
     "sourceUrl": "https://ich.unesco.org/en/RL/mudiyettu-ritual-theatre-and-dance-drama-of-kerala-00345",
-    "license": "UNESCO Public Heritage Documentation"
+    "license": "UNESCO Public Heritage Documentation",
+    "sourceId": "src-unesco-ich",
+    "literalMeaning": "The bearing / donning of the divine crown (Mudi).",
+    "storyRelevance": "In ritual Kerala theatre, Mudiyettu enacts the cosmic triumph of Goddess Bhadrakali over the demon Darika within consecrated village temple grounds."
   },
   {
     "id": "exp-theechamundi",
@@ -167,7 +194,10 @@
     "audioPronunciationText": "തീച്ചാമുണ്ഡി",
     "sourceAttribution": "Sahapedia Ritual Performance Archive & Kerala Tourism",
     "sourceUrl": "https://www.sahapedia.org/theyyam-fire-dance",
-    "license": "CC BY-NC-SA 4.0"
+    "license": "CC BY-NC-SA 4.0",
+    "sourceId": "src-sahapedia",
+    "literalMeaning": "Fire Chamundi / Single Sacred Form.",
+    "storyRelevance": "In North Malabar folklore, Thee Chamundi's repeated leaps into the flaming Meleri pyre demonstrate fearless transcendence over mortal limitations through collective faith."
   },
   {
     "id": "exp-kakka",
@@ -184,7 +214,10 @@
     "audioPronunciationText": "കാക്ക കുളിച്ചാൽ കൊക്കാവുമോ",
     "sourceAttribution": "Herman Gundert Malayalam-English Dictionary (1872) via Internet Archive",
     "sourceUrl": "https://archive.org/details/A_Malayalam_and_English_Dictionary_H_Gundert",
-    "license": "Public Domain"
+    "license": "Public Domain",
+    "sourceId": "src-archive-org",
+    "literalMeaning": "If a crow bathes in the pond, will it turn into a white stork?",
+    "storyRelevance": "In \"Panchatantra: The Blue Jackal and the Loyal Wolf\", this classic Malayalam idiom underlines that external pretenses cannot permanently alter one's true nature."
   },
   {
     "id": "exp-theeyil",
@@ -201,7 +234,10 @@
     "audioPronunciationText": "തീയിൽ പിറന്നവൾ, നാടിന്റെ കാവൽ",
     "sourceAttribution": "Sahapedia North Malabar Folklore Field Recordings",
     "sourceUrl": "https://www.sahapedia.org/theyyam-muchilot-bhagavathi",
-    "license": "CC BY-NC-SA 4.0"
+    "license": "CC BY-NC-SA 4.0",
+    "sourceId": "src-sahapedia",
+    "literalMeaning": "Born of fire, she stands as the vigilant guardian of the soil.",
+    "storyRelevance": "In North Malabar folklore, this invocation commemorates women deities born of fiery trials who evolved into compassionate protectors of the agrarian landscape."
   },
   {
     "id": "exp-onakkodi",
@@ -218,7 +254,10 @@
     "audioPronunciationText": "ഓണക്കോടി",
     "sourceAttribution": "Kerala Tourism Festivals Archive",
     "sourceUrl": "https://www.keralatourism.org/festival/onam/onakkodi/1",
-    "license": "Government Open Information"
+    "license": "Government Open Information",
+    "sourceId": "src-keralatourism",
+    "literalMeaning": "New clothes for Onam (Kodi = pristine, unwashed fabric).",
+    "storyRelevance": "In the Onam harvest celebration, gifting auspicious handwoven new garments symbolizes renewal, dignity, and egalitarian sharing across families."
   },
   {
     "id": "exp-pulikkali",
@@ -235,7 +274,10 @@
     "audioPronunciationText": "പുലിക്കളി",
     "sourceAttribution": "Kerala Tourism Cultural Events & Sahapedia",
     "sourceUrl": "https://www.keralatourism.org/event/pulikkali/1",
-    "license": "Government Open Information"
+    "license": "Government Open Information",
+    "sourceId": "src-keralatourism",
+    "literalMeaning": "Tiger Play / Dance of the Tigers.",
+    "storyRelevance": "During Onam street festivities, this vibrant body-painted tiger dance channels spontaneous folk joy and communal laughter across Thrissur's public squares."
   },
   {
     "id": "exp-aranmula",
@@ -252,7 +294,10 @@
     "audioPronunciationText": "ആറന്മുള കണ്ണാടി",
     "sourceAttribution": "Kerala Tourism Heritage Crafts & GI Registry of India",
     "sourceUrl": "https://www.keralatourism.org/destination/aranmula-kannadi/1",
-    "license": "Government Open Information"
+    "license": "Government Open Information",
+    "sourceId": "src-keralatourism",
+    "literalMeaning": "Metal mirror of Aranmula.",
+    "storyRelevance": "In Kerala's visual craft heritage, this front-surface metal alloy mirror represents centuries of metallurgy wisdom protected as an indigenous geographical indication."
   },
   {
     "id": "exp-sarpakkavu",
@@ -269,7 +314,10 @@
     "audioPronunciationText": "സർപ്പക്കാവ്",
     "sourceAttribution": "Sahapedia Ecology & Sacred Groves of Kerala",
     "sourceUrl": "https://www.sahapedia.org/sacred-groves-kerala-sarpakkavu",
-    "license": "CC BY-NC-SA 4.0"
+    "license": "CC BY-NC-SA 4.0",
+    "sourceId": "src-sahapedia",
+    "literalMeaning": "Sacred Grove of the Serpent Deities.",
+    "storyRelevance": "In ecological folklore, sacred serpent groves preserve undisturbed virgin rainforest micro-ecosystems, water reservoirs, and medicinal biodiversity."
   },
   {
     "id": "exp-samvruthokaram",
@@ -286,7 +334,10 @@
     "audioPronunciationText": "സംവൃതോകാരം",
     "sourceAttribution": "Bhashini Indic Linguistic Standards & Herman Gundert Grammar (Archive.org)",
     "sourceUrl": "https://bhashini.gov.in/",
-    "license": "Open Linguistic Research Documentation"
+    "license": "Open Linguistic Research Documentation",
+    "sourceId": "src-bhashini",
+    "literalMeaning": "Contracted / Rounded vowel ending.",
+    "storyRelevance": "In Malayalam linguistic preservation, this half-u vowel sound reflects ancient Dravidian phonological precision preserved in regional oral storytelling."
   },
   {
     "id": "exp-mitrabheda",
@@ -303,7 +354,10 @@
     "audioPronunciationText": "മിത്രഭേദം",
     "sourceAttribution": "StoryWeaver (Pratham Books) & Sahapedia Classical Literature",
     "sourceUrl": "https://storyweaver.org.in/",
-    "license": "CC BY 4.0"
+    "license": "CC BY 4.0",
+    "sourceId": "src-storyweaver",
+    "literalMeaning": "The Splitting of Friends / Sowing Discord between Allies.",
+    "storyRelevance": "In the Panchatantra didactic fables, Mitra-bheda explores how suspicion and cunning advice can fracture the deepest bonds between loyal companions."
   },
   {
     "id": "exp-chenda",
@@ -320,7 +374,10 @@
     "audioPronunciationText": "ചെണ്ട",
     "sourceAttribution": "Kerala Kalamandalam Deemed University for Art & Culture",
     "sourceUrl": "https://www.kalamandalam.ac.in/",
-    "license": "Cultural Heritage Documentation"
+    "license": "Cultural Heritage Documentation",
+    "sourceId": "src-sahapedia",
+    "literalMeaning": "Cylindrical wooden percussion drum.",
+    "storyRelevance": "Across Kerala ritual performances, the cylindrical wooden drum dictates the tempo of trance, dramatic climaxes, and temple festival processions."
   },
   {
     "id": "exp-chakyar",
@@ -337,7 +394,10 @@
     "audioPronunciationText": "ചാക്യാർ കൂത്ത്",
     "sourceAttribution": "Sahapedia & Kerala Sangeetha Nataka Akademi",
     "sourceUrl": "https://www.sahapedia.org/koodiyattam-and-chakyar-koothu",
-    "license": "CC BY-NC-SA 4.0"
+    "license": "CC BY-NC-SA 4.0",
+    "sourceId": "src-unesco-ich",
+    "literalMeaning": "The dance-monologue of the Chakyar.",
+    "storyRelevance": "In classical temple arts, the Chakyar actor preserves the ancient Sanskrit performative tradition while retaining the unique right to satirize contemporary sociopolitical hubris."
   },
   {
     "id": "exp-mudra",
@@ -354,7 +414,10 @@
     "audioPronunciationText": "ഹസ്തമുദ്ര",
     "sourceAttribution": "Kalamandalam Kathakali Manuals",
     "sourceUrl": "https://www.kalamandalam.ac.in/",
-    "license": "CC BY-SA 4.0"
+    "license": "CC BY-SA 4.0",
+    "sourceId": "src-unesco-ich",
+    "literalMeaning": "Hand seal / Gesture symbol.",
+    "storyRelevance": "In Kerala performative pedagogy, codified 24 root hand gestures provide a complete visual sign language conveying nuanced literary meanings."
   },
   {
     "id": "exp-sopanam",
@@ -371,7 +434,10 @@
     "audioPronunciationText": "സോപാന സംഗീതം",
     "sourceAttribution": "Kerala Sangeetha Nataka Akademi Archives",
     "sourceUrl": "https://keralaculture.org/",
-    "license": "Open Heritage Record"
+    "license": "Open Heritage Record",
+    "sourceId": "src-keralatourism",
+    "literalMeaning": "Music sung on the flight of steps (sopanam) to the sanctum.",
+    "storyRelevance": "In traditional temple music, this soulful stepped melodic style mirrors the slow reverent ascent to the temple sanctum sanctorum."
   },
   {
     "id": "exp-padayani",
@@ -388,7 +454,10 @@
     "audioPronunciationText": "പടയണി",
     "sourceAttribution": "District Cultural Archives Pathanamthitta",
     "sourceUrl": "https://keralatourism.org/",
-    "license": "CC BY-SA 4.0"
+    "license": "CC BY-SA 4.0",
+    "sourceId": "src-keralatourism",
+    "literalMeaning": "Military row / Formation of soldiers.",
+    "storyRelevance": "In Central Travancore folklore, kolam masks painted on spathes of areca palms invoke healing rhythms to pacify fierce cosmic energies."
   },
   {
     "id": "exp-chillu",
@@ -405,7 +474,9 @@
     "audioPronunciationText": "ചില്ലക്ഷരങ്ങൾ",
     "sourceAttribution": "Kerala Bhasha Institute & Unicode Malayalam Technical Notes",
     "sourceUrl": "https://bhashainstitute.kerala.gov.in/",
-    "license": "Open Educational Documentation"
+    "license": "Open Educational Documentation",
+    "sourceId": "src-bhashini",
+    "literalMeaning": "Pure vowelless consonants.",
+    "storyRelevance": "In Malayalam orthography, pure consonant characters represent phonological preservation vital for accurate digital transliteration and screen reader vocalization."
   }
 ]
-

@@ -234,3 +234,23 @@
 .eq-bar-1 { animation: eqBar1 0.7s ease-in-out infinite; }
 .eq-bar-2 { animation: eqBar2 0.55s ease-in-out infinite 0.15s; }
 .eq-bar-3 { animation: eqBar3 0.65s ease-in-out infinite 0.3s; }
+
+/* ========================================================== */
+/* ACCESSIBILITY & INCLUSIVE DESIGN ENHANCEMENTS              */
+/* ========================================================== */
+body.font-dyslexic, body.font-dyslexic * {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', -apple-system, sans-serif !important;
+  letter-spacing: 0.03em !important;
+  word-spacing: 0.06em !important;
+}
+
+body.reduce-motion * {
+  animation: none !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+:focus-visible {
+  outline: 3px solid #FF087D !important;
+  outline-offset: 2px !important;
+}

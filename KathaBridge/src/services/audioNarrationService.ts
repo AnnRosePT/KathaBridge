@@ -1,5 +1,5 @@
 import { LanguageCode } from "../types";
-import { speakSafely } from "../utils/malayalamPhonetics";
+import { speakSafely, hasNativeVoiceFor } from "../utils/malayalamPhonetics";
 
 export interface AudioPlaybackState {
   isPlaying: boolean;
@@ -12,6 +12,8 @@ export interface AudioPlaybackState {
   currentTimeSeconds: number;
   durationSeconds: number;
   activeLanguage: LanguageCode;
+  isNativeVoice: boolean;
+  voiceLabel: string;
   errorMessage?: string | null;
 }
 
@@ -33,11 +35,34 @@ export class AudioNarrationService {
   private activeLanguage: LanguageCode = "EN";
   private onStateChange: ((state: AudioPlaybackState) => void) | null = null;
   private errorMessage: string | null = null;
+  private isNativeVoice = false;
+  private voiceLabel = "Detecting voice...";
 
   constructor() {
     if (typeof window !== "undefined") {
       this.audio = new Audio();
       this.setupAudioListeners();
+      this.detectVoice(this.activeLanguage);
+    }
+  }
+
+  private detectVoice(lang: LanguageCode) {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      this.isNativeVoice = false;
+      this.voiceLabel = "Speech Synthesis Unsupported";
+      return;
+    }
+
+    const check = hasNativeVoiceFor(window.speechSynthesis, lang);
+    this.isNativeVoice = check.hasNative;
+    if (check.hasNative) {
+      this.voiceLabel = `Native ${lang} Voice (${check.voiceName || "System"})`;
+    } else {
+      if (lang === "ML") {
+        this.voiceLabel = "Acoustic Phonetic Synthesis (No ml-IN voice in browser)";
+      } else {
+        this.voiceLabel = `Acoustic Fallback (${check.voiceName || "Indian English Accent"})`;
+      }
     }
   }
 
@@ -69,9 +94,9 @@ export class AudioNarrationService {
       this.emitState();
     });
 
-    this.audio.addEventListener("error", () => {
+    this.audio.addEventListener("error", (e) => {
+      console.warn("HTML5 audio playback failed, falling back to Web Speech:", e);
       this.isLoading = false;
-      // If audio file playback errors, immediately switch to Web Speech Synthesis fallback!
       if (this.isPlaying && !this.isPaused) {
         this.playWithSpeechSynthesis(this.currentSentenceIndex);
       }
@@ -98,6 +123,8 @@ export class AudioNarrationService {
         currentTimeSeconds: currentTime,
         durationSeconds: duration,
         activeLanguage: this.activeLanguage,
+        isNativeVoice: this.isNativeVoice,
+        voiceLabel: this.voiceLabel,
         errorMessage: this.errorMessage
       });
     }
@@ -106,7 +133,6 @@ export class AudioNarrationService {
   public loadSentences(sentences: (string | SentenceItem)[], language: LanguageCode) {
     this.stop();
 
-    // Normalize input to SentenceItem format
     this.sentenceItems = sentences.map((s, idx) => {
       if (typeof s === "string") {
         return { id: `custom-${idx}`, text: s };
@@ -115,6 +141,7 @@ export class AudioNarrationService {
     });
 
     this.activeLanguage = language;
+    this.detectVoice(language);
     this.currentSentenceIndex = 0;
     this.errorMessage = null;
     this.emitState();
@@ -123,7 +150,12 @@ export class AudioNarrationService {
   public play(fromIndex?: number) {
     if (this.isPaused && fromIndex === undefined) {
       if (this.isUsingSpeechSynthesis && typeof window !== "undefined" && window.speechSynthesis) {
-        window.speechSynthesis.resume();
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        } else {
+          // If browser lost utterance state, replay current sentence cleanly
+          this.playSentenceAtIndex(this.currentSentenceIndex);
+        }
         this.isPaused = false;
         this.isPlaying = true;
         this.emitState();
@@ -153,6 +185,21 @@ export class AudioNarrationService {
     this.playSentenceAtIndex(this.currentSentenceIndex);
   }
 
+  public replaySentence(index: number) {
+    if (index >= 0 && index < this.sentenceItems.length) {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      if (this.audio) {
+        this.audio.pause();
+      }
+      this.currentSentenceIndex = index;
+      this.isPlaying = true;
+      this.isPaused = false;
+      this.playSentenceAtIndex(index);
+    }
+  }
+
   private playSentenceAtIndex(index: number) {
     if (!this.isPlaying || index >= this.sentenceItems.length) {
       this.stop();
@@ -162,9 +209,9 @@ export class AudioNarrationService {
     const item = this.sentenceItems[index];
     const langCode = this.activeLanguage.toLowerCase();
 
-    // For Sanskrit (sa), Tamil (ta), and Hindi (hi), use native Speech Synthesis immediately
-    // For English (en) and Malayalam (ml), attempt pre-rendered static MP3 first
-    if (langCode === "sa" || langCode === "ta" || langCode === "hi") {
+    // In web browsers, Web Speech Synthesis is the most responsive sentence-by-sentence engine
+    // If the language is Sanskrit, Tamil, Hindi or Malayalam without pre-rendered server audio, use SpeechSynthesis
+    if (langCode === "sa" || langCode === "ta" || langCode === "hi" || langCode === "ml") {
       this.playWithSpeechSynthesis(index);
       return;
     }
@@ -203,6 +250,7 @@ export class AudioNarrationService {
     const item = this.sentenceItems[index];
     if (typeof window === "undefined" || !window.speechSynthesis) {
       this.isLoading = false;
+      this.errorMessage = "Speech synthesis is unsupported on this browser.";
       this.emitState();
       return;
     }
@@ -213,6 +261,7 @@ export class AudioNarrationService {
 
     this.isUsingSpeechSynthesis = true;
     this.isLoading = false;
+    this.detectVoice(this.activeLanguage);
     this.emitState();
 
     speakSafely(window.speechSynthesis, item.text, this.activeLanguage, {
@@ -229,11 +278,11 @@ export class AudioNarrationService {
         }
       },
       onError: (err) => {
-        console.warn("Speech synthesis notice:", err);
+        console.warn("Speech synthesis error recovery:", err);
         if (this.isPlaying && !this.isPaused) {
           this.currentSentenceIndex++;
           if (this.currentSentenceIndex < this.sentenceItems.length) {
-            setTimeout(() => this.playSentenceAtIndex(this.currentSentenceIndex), 300);
+            setTimeout(() => this.playSentenceAtIndex(this.currentSentenceIndex), 250);
           } else {
             this.stop();
           }
@@ -271,6 +320,7 @@ export class AudioNarrationService {
     this.isLoading = false;
     this.isUsingSpeechSynthesis = false;
     this.currentSentenceIndex = 0;
+    this.errorMessage = null;
     this.emitState();
   }
 
@@ -316,6 +366,8 @@ export class AudioNarrationService {
       currentTimeSeconds: currentTime,
       durationSeconds: duration,
       activeLanguage: this.activeLanguage,
+      isNativeVoice: this.isNativeVoice,
+      voiceLabel: this.voiceLabel,
       errorMessage: this.errorMessage
     };
   }

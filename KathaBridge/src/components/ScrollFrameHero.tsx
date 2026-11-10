@@ -19,12 +19,30 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick, onOpenIntroLo
   // Lerp tracking for ultra-smooth 60fps frame interpolation
   const targetFrameRef = useRef<number>(START_FRAME_INDEX);
   const currentRenderedFrameRef = useRef<number>(START_FRAME_INDEX);
+  const lastRenderedFrameRef = useRef<number>(-1);
   const animLoopIdRef = useRef<number | null>(null);
 
   const [activeFrameIndex, setActiveFrameIndex] = useState<number>(START_FRAME_INDEX);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [loadedCount, setLoadedCount] = useState<number>(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(false);
+  const [isReducedMotion, setIsReducedMotion] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+    return false;
+  });
+
+  // Listen to OS prefers-reduced-motion changes
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsReducedMotion(e.matches);
+    };
+    mq.addEventListener("change", handleChange);
+    return () => mq.removeEventListener("change", handleChange);
+  }, []);
 
   // Helper to format frame filename
   const getFrameUrl = useCallback((index: number) => {
@@ -58,14 +76,21 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick, onOpenIntroLo
 
     if (!img || !img.complete || img.naturalWidth === 0) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    // Mobile-optimized resolution clamping (1.5x mobile, 2.0x desktop)
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const maxDpr = isMobile ? 1.5 : 2.0;
+    const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
     const width = canvas.clientWidth || window.innerWidth;
     const height = canvas.clientHeight || window.innerHeight;
 
-    if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+    if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+    } else if (lastRenderedFrameRef.current === frameIdx) {
+      // Frame already rendered at current dimension, bypass redundant draw
+      return;
     }
+    lastRenderedFrameRef.current = frameIdx;
 
     ctx.save();
     ctx.scale(dpr, dpr);
@@ -174,19 +199,32 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick, onOpenIntroLo
     };
   }, [getFrameUrl, renderFrame]);
 
-  // 2. Smooth Lerp Animation Loop (60fps weighted damping)
+  // 2. Smooth Lerp Animation Loop (60fps weighted damping with Reduced-Motion Fallback)
   useEffect(() => {
     let animId: number;
     const lerpLoop = () => {
-      const diff = targetFrameRef.current - currentRenderedFrameRef.current;
-      if (Math.abs(diff) > 0.04) {
-        currentRenderedFrameRef.current += diff * 0.26; // Snappy yet buttery interpolation
-        const currentInt = Math.max(
+      if (isReducedMotion) {
+        // Reduced Motion Fallback: Step directly without continuous micro-interpolation
+        const targetInt = Math.max(
           START_FRAME_INDEX,
-          Math.min(END_FRAME_INDEX, Math.round(currentRenderedFrameRef.current))
+          Math.min(END_FRAME_INDEX, Math.round(targetFrameRef.current))
         );
-        renderFrame(currentInt);
-        setActiveFrameIndex(currentInt);
+        if (Math.round(currentRenderedFrameRef.current) !== targetInt) {
+          currentRenderedFrameRef.current = targetInt;
+          renderFrame(targetInt);
+          setActiveFrameIndex(targetInt);
+        }
+      } else {
+        const diff = targetFrameRef.current - currentRenderedFrameRef.current;
+        if (Math.abs(diff) > 0.04) {
+          currentRenderedFrameRef.current += diff * 0.26; // Snappy yet buttery interpolation
+          const currentInt = Math.max(
+            START_FRAME_INDEX,
+            Math.min(END_FRAME_INDEX, Math.round(currentRenderedFrameRef.current))
+          );
+          renderFrame(currentInt);
+          setActiveFrameIndex(currentInt);
+        }
       }
       animId = requestAnimationFrame(lerpLoop);
     };
@@ -197,7 +235,7 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick, onOpenIntroLo
     return () => {
       if (animLoopIdRef.current) cancelAnimationFrame(animLoopIdRef.current);
     };
-  }, [renderFrame]);
+  }, [renderFrame, isReducedMotion]);
 
   // 3. Scroll Handler with Pure CSS Sticky Pinning (Zero Cutoff / Never Goes Black)
   useEffect(() => {
@@ -336,10 +374,26 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick, onOpenIntroLo
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Reduced Motion Toggle Button */}
+            <button
+              onClick={() => setIsReducedMotion((prev) => !prev)}
+              aria-label={isReducedMotion ? "Disable reduced motion mode" : "Enable reduced motion mode"}
+              title="Toggle accessible reduced motion fallback"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-mono font-bold transition-all border cursor-pointer ${
+                isReducedMotion
+                  ? "bg-amber-400 text-black border-brandBlack shadow-[2px_2px_0px_#080808]"
+                  : "bg-black/70 backdrop-blur-md text-neutral-300 border-white/20 hover:border-amber-300"
+              }`}
+            >
+              <span>{isReducedMotion ? "⚡" : "🍃"}</span>
+              <span className="hidden md:inline">{isReducedMotion ? "Reduced Motion: ON" : "Reduced Motion"}</span>
+            </button>
+
             {/* Auto-Play Cinema Toggle */}
             <button
               onClick={toggleAutoPlay}
+              aria-label={isAutoPlaying ? "Pause continuous scroll animation" : "Start continuous scroll animation"}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-all border cursor-pointer ${
                 isAutoPlaying
                   ? "bg-brandPink text-white border-brandPink shadow-[0_0_15px_rgba(255,45,120,0.6)]"
@@ -347,7 +401,7 @@ export const ScrollFrameHero: React.FC<Props> = ({ onExploreClick, onOpenIntroLo
               }`}
             >
               <span>{isAutoPlaying ? "⏸" : "▶"}</span>
-              <span>{isAutoPlaying ? "Pause Auto-Scroll" : "Auto-Play Cinema"}</span>
+              <span className="hidden sm:inline">{isAutoPlaying ? "Pause Auto-Scroll" : "Auto-Play Cinema"}</span>
             </button>
 
             {/* Frame Counter Badge */}

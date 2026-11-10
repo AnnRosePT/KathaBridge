@@ -71,6 +71,74 @@ export interface VoiceResolution {
   textToSpeak: string;
 }
 
+export interface VoiceCheckResult {
+  hasNative: boolean;
+  voiceName: string | null;
+  lang: string;
+}
+
+/**
+ * Checks whether an authentic native regional voice pack exists in the host browser.
+ */
+export function hasNativeVoiceFor(synth: SpeechSynthesis, lang: string): VoiceCheckResult {
+  if (!synth || typeof synth.getVoices !== "function") {
+    return { hasNative: false, voiceName: null, lang };
+  }
+  const voices = synth.getVoices();
+  const langUpper = lang.toUpperCase();
+
+  if (langUpper === "ML") {
+    const native = voices.find(
+      (v) => v.lang.toLowerCase().startsWith("ml") || v.name.toLowerCase().includes("malayalam")
+    );
+    return {
+      hasNative: !!native,
+      voiceName: native ? native.name : null,
+      lang: "ml-IN"
+    };
+  }
+
+  if (langUpper === "HI") {
+    const native = voices.find(
+      (v) => v.lang.toLowerCase().startsWith("hi") || v.name.toLowerCase().includes("hindi")
+    );
+    return {
+      hasNative: !!native,
+      voiceName: native ? native.name : null,
+      lang: "hi-IN"
+    };
+  }
+
+  if (langUpper === "SA") {
+    const native = voices.find(
+      (v) => v.lang.toLowerCase().startsWith("sa") || v.name.toLowerCase().includes("sanskrit")
+    );
+    return {
+      hasNative: !!native,
+      voiceName: native ? native.name : null,
+      lang: "sa-IN"
+    };
+  }
+
+  if (langUpper === "TA") {
+    const native = voices.find(
+      (v) => v.lang.toLowerCase().startsWith("ta") || v.name.toLowerCase().includes("tamil")
+    );
+    return {
+      hasNative: !!native,
+      voiceName: native ? native.name : null,
+      lang: "ta-IN"
+    };
+  }
+
+  const enNative = voices.find((v) => v.lang.startsWith("en"));
+  return {
+    hasNative: !!enNative,
+    voiceName: enNative ? enNative.name : null,
+    lang: "en-US"
+  };
+}
+
 /**
  * Intelligently resolves the best voice and phonetic text across all browsers.
  */
