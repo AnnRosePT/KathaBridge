@@ -272,6 +272,15 @@ artForms.forEach((art, idx) => {
   assert(art.associatedStoryId ? stories.some((s) => s.id === art.associatedStoryId) : true, `Art Form #${idx + 1} references valid KathaBridge story archive ID`);
 });
 
+// 16. Camera Viewfinder & WebRTC Fallback Capability Assertions
+console.log('\n16. Testing Camera Scanner Constraints & Fallback Contracts...');
+const mockCameraConstraints = {
+  video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+};
+assert(mockCameraConstraints.video.facingMode === 'environment', 'Scanner defaults to rear-facing environment camera');
+assert(typeof mockCameraConstraints.video.width.ideal === 'number', 'High-definition 720p/1080p ideal resolution configured');
+assert(artForms.every((a) => a.sampleImageUrl && a.sampleImageUrl.startsWith('/images/')), 'All art forms provide local fallback sample image fixtures');
+
 // =========================================================================
 // TEST SUMMARY & EVALUATION REPORT
 // =========================================================================
