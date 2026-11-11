@@ -1,6 +1,6 @@
 {
-  "name": "figma-make-app",
-  "version": "1.0.0",
+  "name": "kathabridge-heritage-editorial",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "node scripts/verify-all.js",
+    "test:scanner": "node scripts/verify-all.js",
     "format": "oxfmt"
   },
   "dependencies": {
