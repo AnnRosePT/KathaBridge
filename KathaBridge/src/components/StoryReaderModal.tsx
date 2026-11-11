@@ -13,6 +13,7 @@ interface Props {
   onClose: () => void;
   onFavoriteToggle?: (storyId: string) => void;
   isFavorite?: boolean;
+  onOpenVisionScanner?: () => void;
 }
 
 export const StoryReaderModal: React.FC<Props> = ({
@@ -20,7 +21,8 @@ export const StoryReaderModal: React.FC<Props> = ({
   initialLanguage = "EN",
   onClose,
   onFavoriteToggle,
-  isFavorite = false
+  isFavorite = false,
+  onOpenVisionScanner
 }) => {
   const [activeLang, setActiveLang] = useState<LanguageCode>(initialLanguage);
   const [activeTerm, setActiveTerm] = useState<CulturalExpression | null>(null);
@@ -246,6 +248,22 @@ export const StoryReaderModal: React.FC<Props> = ({
               <span>🥁</span>
               <span className="hidden md:inline">Folk Tala</span>
             </button>
+
+            {/* AI Heritage Lens Scanner Trigger */}
+            {onOpenVisionScanner && (
+              <button
+                onClick={() => {
+                  Soundtrack.playModalPop();
+                  onOpenVisionScanner();
+                }}
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-brandPink hover:bg-brandBlack text-white border-2 border-brandBlack rounded-full text-xs font-mono font-black shadow-[2px_2px_0px_#080808] transition cursor-pointer"
+                title="Identify cultural art forms with AI Heritage Lens"
+                aria-label="Scan art form with AI Heritage Lens"
+              >
+                <span>👁️</span>
+                <span>Scan Art</span>
+              </button>
+            )}
 
             {/* Reading Contrast Mode */}
             <button

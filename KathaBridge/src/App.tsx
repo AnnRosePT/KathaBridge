@@ -2232,6 +2232,7 @@ export default function App() {
           }}
           onFavoriteToggle={handleFavoriteToggle}
           isFavorite={favorites.includes(activeStoryReader.id)}
+          onOpenVisionScanner={() => setVisionScannerOpen(true)}
         />
       )}
 
