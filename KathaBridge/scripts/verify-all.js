@@ -256,6 +256,22 @@ assert(sampleJsonLd['@type'] === 'CreativeWork', 'JSON-LD entity typed as W3C Cr
 assert(Array.isArray(sampleJsonLd.inLanguage), 'JSON-LD reflects bilingual language array');
 assert(sampleJsonLd.name === 'The Legend of Mahabali', 'JSON-LD name field verified');
 
+// 15. Cultural Art Forms & Visual Recognition Dataset Schema
+console.log('\n15. Checking Cultural Art Forms & Visual Recognition Dataset...');
+const artFormsPath = path.join(rootDir, 'src/data/artForms.json');
+assert(fs.existsSync(artFormsPath), 'artForms.json exists');
+const artForms = JSON.parse(fs.readFileSync(artFormsPath, 'utf8'));
+assert(Array.isArray(artForms) && artForms.length >= 6, `Loaded ${artForms.length} cultural art forms (minimum 6 expected)`);
+
+artForms.forEach((art, idx) => {
+  assert(art.id && art.name && art.nameMalayalam, `Art Form #${idx + 1} (${art.id}) has valid bilingual titles`);
+  assert(Array.isArray(art.visualMarkers) && art.visualMarkers.length >= 3, `Art Form #${idx + 1} (${art.id}) has minimum 3 detected visual markers`);
+  assert(typeof art.culturalSignificance === 'string' && art.culturalSignificance.length > 20, `Art Form #${idx + 1} has documented cultural significance`);
+  assert(typeof art.academicCitation === 'string' && art.academicCitation.length > 5, `Art Form #${idx + 1} has academic provenance citation`);
+  assert(art.sourceUrl && art.sourceUrl.startsWith('https://'), `Art Form #${idx + 1} citation uses secure HTTPS URL`);
+  assert(art.associatedStoryId ? stories.some((s) => s.id === art.associatedStoryId) : true, `Art Form #${idx + 1} references valid KathaBridge story archive ID`);
+});
+
 // =========================================================================
 // TEST SUMMARY & EVALUATION REPORT
 // =========================================================================
