@@ -171,3 +171,34 @@ export interface AccessibilitySettings {
   showCaptions: boolean;
 }
 
+export interface CulturalArtForm {
+  id: string;
+  name: string;
+  nameMalayalam: string;
+  category: "CLASSICAL_DANCE_DRAMA" | "RITUAL_THEATRE" | "FOLK_MARTIAL_ART" | "INDIGENOUS_CRAFT" | "TEMPLE_MURAL";
+  categoryLabel: string;
+  originRegion: string;
+  description: string;
+  visualMarkers: string[];
+  costumeDetails: string;
+  makeupTypes?: string[];
+  musicalInstruments: string[];
+  culturalSignificance: string;
+  associatedStoryId?: string;
+  associatedStoryTitle?: string;
+  sampleImageUrl: string;
+  academicCitation: string;
+  sourceUrl: string;
+}
+
+export interface ArtIdentificationResult {
+  identifiedArtForm: CulturalArtForm;
+  confidenceScore: number;
+  identifiedFeatures: string[];
+  analysisSummary: string;
+  historicalContext: string;
+  detectedCostumeDetails: string;
+  recommendedStoryId?: string;
+  recommendedStoryTitle?: string;
+}
+
