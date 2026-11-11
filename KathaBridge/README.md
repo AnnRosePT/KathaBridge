@@ -35,6 +35,11 @@ Cultural stories, folk performances, art demonstrations, and regional literature
 | **Accessibility** | Captions, readable layouts, image descriptions | Font scaling (`-` / `+`), High-Contrast Yellow/Black & Dark modes, line spacing, captions, reduced-motion toggle, semantic HTML, and full `alt` tags. |
 | **Human Correction** | Human correction of machine-generated content | **Scholar Review Workstation (`[ 06 ]`)**: Side-by-side comparison (Raw vs AI Draft vs Verified), editable fields, granular statuses, and version history. |
 | **Community Submissions** | User contribution pipeline | Community archivist modal (`[ 05 ]`) allowing folklore suggestions and corrections with moderation before publishing. |
+| **AI Heritage Lens** | Visual art form & ritual recognition | Camera & photo scanner identifying Kathakali, Theyyam, Koodiyattam, Padayani, etc., with visual markers and story deep-links (`Alt+L`). |
+| **Geographical Topography** | Sacred loci & living heritage GIS | OpenTopoMap elevation & relief map plotting sacred shrines, UNESCO temple theatres, and artisan guilds with GeoJSON export (`Alt+M`). |
+| **Oral Folk Tala** | Indigenous rhythmic meter metronome | Web Audio API procedural synthesis of Chenda, Valanthala, and Ilathalam across authentic Kerala folk meters (`Alt+R`). |
+| **Cultural Guide Bot** | AI folklore dialogue assistant | Gemini-powered assistant with strict oral folklore guardrails, audio readout, and story links (`Alt+C`). |
+| **Automated Verification** | High-rigor test suite | 414 automated assertions verifying schema integrity, Unicode preservation, and academic links (`pnpm test`). |
 
 ---
 
