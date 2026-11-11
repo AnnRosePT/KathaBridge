@@ -272,7 +272,10 @@ export const HeritageVisionScannerModal: React.FC<Props> = ({
                 )}
 
                 {/* Status Badge */}
-                <div className="absolute top-3 left-3 bg-brandBlack/80 text-brandYellow text-[10px] font-mono font-black px-2.5 py-1 rounded border border-brandBlack">
+                <div
+                  aria-live="polite"
+                  className="absolute top-3 left-3 bg-brandBlack/80 text-brandYellow text-[10px] font-mono font-black px-2.5 py-1 rounded border border-brandBlack"
+                >
                   {isScanning ? "ANALYZING PIGMENTS & MUDRAS..." : "VISUAL SCAN READY"}
                 </div>
               </div>

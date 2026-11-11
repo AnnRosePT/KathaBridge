@@ -235,7 +235,11 @@ Keep answers under 3-4 sentences. Include cultural nuances. If the user asks in 
         </div>
 
         {/* Message Stream */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-white">
+        <div
+          aria-live="polite"
+          aria-atomic="false"
+          className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-white"
+        >
           {messages.map((msg) => (
             <div
               key={msg.id}
