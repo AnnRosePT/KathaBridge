@@ -20,6 +20,7 @@ import { CategoryShowcaseModal, CategoryData } from "./components/CategoryShowca
 import { CulturalGuideBotModal } from "./components/CulturalGuideBotModal";
 import { HeritageMapModal } from "./components/HeritageMapModal";
 import { OralTalaMetronomeModal } from "./components/OralTalaMetronomeModal";
+import { HeritageVisionScannerModal } from "./components/HeritageVisionScannerModal";
 import { speakSafely } from "./utils/malayalamPhonetics";
 import { getUIText } from "./utils/translations";
 import { subscribeToAuthChanges } from "./services/firebaseAuth";
@@ -57,6 +58,7 @@ export default function App() {
   const [guideBotOpen, setGuideBotOpen] = useState(false);
   const [heritageMapOpen, setHeritageMapOpen] = useState(false);
   const [talaMetronomeOpen, setTalaMetronomeOpen] = useState(false);
+  const [visionScannerOpen, setVisionScannerOpen] = useState(false);
 
   // Celebratory Confetti & Sound
   const [showConfetti, setShowConfetti] = useState(false);
@@ -149,6 +151,11 @@ export default function App() {
         setGuideBotOpen(false);
         setHeritageMapOpen(false);
         setTalaMetronomeOpen(false);
+        setVisionScannerOpen(false);
+      } else if (e.altKey && e.key.toLowerCase() === "l") {
+        e.preventDefault();
+        Soundtrack.playModalPop();
+        setVisionScannerOpen((prev) => !prev);
       } else if (e.altKey && e.key.toLowerCase() === "c") {
         e.preventDefault();
         Soundtrack.playModalPop();
@@ -424,6 +431,20 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2.5 relative" data-purpose="accessibility-controls">
+            {/* AI Heritage Lens Scanner */}
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setVisionScannerOpen(true);
+              }}
+              aria-label="AI Heritage Lens Visual Scanner"
+              title="Identify Cultural Art Forms with Camera & AI (Alt+L)"
+              className="flex items-center gap-1.5 px-3 py-2 border-2 border-brandBlack rounded-full bg-brandPink text-white hover:bg-brandBlack text-xs font-mono font-black transition shadow-[3px_3px_0px_#080808] cursor-pointer"
+            >
+              <span>👁️</span>
+              <span className="hidden sm:inline">Heritage Lens</span>
+            </button>
+
             {/* AI Cultural Guide Bot */}
             <button
               onClick={() => {
@@ -662,6 +683,16 @@ export default function App() {
             >
               About &amp; Mission
             </a>
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setMobileMenuOpen(false);
+                setVisionScannerOpen(true);
+              }}
+              className="block py-2 text-brandPink border-b border-brandBlack/20 text-left w-full font-bold"
+            >
+              👁️ AI Heritage Lens (Art Scanner)
+            </button>
             <button
               onClick={() => {
                 Soundtrack.playModalPop();
@@ -1332,6 +1363,16 @@ export default function App() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              onClick={() => {
+                Soundtrack.playModalPop();
+                setVisionScannerOpen(true);
+              }}
+              className="bg-brandPink hover:bg-black text-white font-mono text-xs font-black px-4 py-2.5 rounded-full border-2 border-brandBlack shadow-[3px_3px_0px_#080808] transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>👁️</span>
+              <span>Scan Art with AI Lens →</span>
+            </button>
             <button
               onClick={() => {
                 Soundtrack.playModalPop();
@@ -2366,6 +2407,21 @@ export default function App() {
           onClose={() => {
             Soundtrack.playClick();
             setTalaMetronomeOpen(false);
+          }}
+        />
+      )}
+
+      {/* 14. AI Heritage Lens Visual Art Scanner Modal */}
+      {visionScannerOpen && (
+        <HeritageVisionScannerModal
+          stories={mockStories}
+          onSelectStory={(st) => {
+            setActiveStoryReader(st);
+            setVisionScannerOpen(false);
+          }}
+          onClose={() => {
+            Soundtrack.playClick();
+            setVisionScannerOpen(false);
           }}
         />
       )}
