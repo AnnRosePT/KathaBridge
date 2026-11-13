@@ -5,6 +5,7 @@ import { StorageService } from "../services/storageService";
 import { CulturalTermPopover } from "./CulturalTermPopover";
 import { CitationExportModal } from "./CitationExportModal";
 import { OralTalaMetronomeModal } from "./OralTalaMetronomeModal";
+import { AudioVisualizerCanvas } from "./AudioVisualizerCanvas";
 import { mockSources } from "../data/mockData";
 
 interface Props {
@@ -577,6 +578,13 @@ export const StoryReaderModal: React.FC<Props> = ({
               </span>
             </div>
           )}
+
+          {/* Oral Audio Recitation Visualizer */}
+          <AudioVisualizerCanvas
+            isPlaying={audioState.isPlaying}
+            height={38}
+            className="mb-2"
+          />
 
           {/* Scrubber */}
           <input
