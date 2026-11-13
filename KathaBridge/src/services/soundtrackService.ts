@@ -37,6 +37,7 @@ class SoundtrackService {
   private bgmGain: GainNode | null = null;
   private masterGain: GainNode | null = null;
   private sfxGain: GainNode | null = null;
+  private analyser: AnalyserNode | null = null;
   private activeOscillators: OscillatorNode[] = [];
   private loopInterval: number | null = null;
   private bellInterval: number | null = null;
@@ -50,7 +51,13 @@ class SoundtrackService {
       if (AudioCtx) {
         this.ctx = new AudioCtx();
         this.masterGain = this.ctx.createGain();
-        this.masterGain.connect(this.ctx.destination);
+
+        this.analyser = this.ctx.createAnalyser();
+        this.analyser.fftSize = 64;
+        this.analyser.smoothingTimeConstant = 0.8;
+
+        this.masterGain.connect(this.analyser);
+        this.analyser.connect(this.ctx.destination);
 
         this.bgmGain = this.ctx.createGain();
         this.bgmGain.gain.setValueAtTime(this.bgmVolume, this.ctx.currentTime);
@@ -64,6 +71,11 @@ class SoundtrackService {
     if (this.ctx && this.ctx.state === "suspended") {
       this.ctx.resume();
     }
+  }
+
+  public getAnalyser(): AnalyserNode | null {
+    this.initContext();
+    return this.analyser;
   }
 
   public subscribe(callback: (isPlaying: boolean, track: BGMTrackId, volume: number) => void) {
@@ -372,6 +384,81 @@ class SoundtrackService {
 
     osc.start(now);
     osc.stop(now + 0.13);
+  }
+
+  // Heritage Procedural Soundscapes & Ritual Instruments
+  public playShankhaInvocation() {
+    if (!this.sfxEnabled) return;
+    this.initContext();
+    if (!this.ctx || !this.sfxGain) return;
+    const now = this.ctx.currentTime;
+
+    const osc = this.ctx.createOscillator();
+    const subOsc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+
+    osc.type = "sawtooth";
+    subOsc.type = "sine";
+
+    // Sacred conch characteristic swell and rising harmonic glissando
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(293.66, now + 0.8);
+    osc.frequency.exponentialRampToValueAtTime(277.18, now + 2.2);
+
+    subOsc.frequency.setValueAtTime(110, now);
+    subOsc.frequency.exponentialRampToValueAtTime(146.83, now + 0.8);
+
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(450, now);
+    filter.frequency.linearRampToValueAtTime(900, now + 0.6);
+    filter.frequency.exponentialRampToValueAtTime(300, now + 2.4);
+
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.28, now + 0.5);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
+
+    osc.connect(filter);
+    subOsc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.sfxGain);
+
+    osc.start(now);
+    subOsc.start(now);
+    osc.stop(now + 2.55);
+    subOsc.stop(now + 2.55);
+  }
+
+  public playChendaUruttu() {
+    if (!this.sfxEnabled) return;
+    this.initContext();
+    if (!this.ctx || !this.sfxGain) return;
+    const now = this.ctx.currentTime;
+
+    // 3 rapid resonant cylindrical drum strikes with exponential body resonance
+    [0, 0.09, 0.22].forEach((offset, idx) => {
+      if (!this.ctx || !this.sfxGain) return;
+      const strikeTime = now + offset;
+      const osc = this.ctx.createOscillator();
+      const strikeGain = this.ctx.createGain();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(idx === 2 ? 140 : 165, strikeTime);
+      osc.frequency.exponentialRampToValueAtTime(60, strikeTime + 0.08);
+
+      strikeGain.gain.setValueAtTime(0.35, strikeTime);
+      strikeGain.gain.exponentialRampToValueAtTime(0.001, strikeTime + 0.15);
+
+      osc.connect(strikeGain);
+      strikeGain.connect(this.sfxGain);
+
+      osc.start(strikeTime);
+      osc.stop(strikeTime + 0.16);
+    });
+  }
+
+  public playTempleManiSolo() {
+    this.playTempleBell();
   }
 }
 
