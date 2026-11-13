@@ -39,7 +39,11 @@ Cultural stories, folk performances, art demonstrations, and regional literature
 | **Geographical Topography** | Sacred loci & living heritage GIS | OpenTopoMap elevation & relief map plotting sacred shrines, UNESCO temple theatres, and artisan guilds with GeoJSON export (`Alt+M`). |
 | **Oral Folk Tala** | Indigenous rhythmic meter metronome | Web Audio API procedural synthesis of Chenda, Valanthala, and Ilathalam across authentic Kerala folk meters (`Alt+R`). |
 | **Cultural Guide Bot** | AI folklore dialogue assistant | Gemini-powered assistant with strict oral folklore guardrails, audio readout, and story links (`Alt+C`). |
-| **Automated Verification** | High-rigor test suite | 414 automated assertions verifying schema integrity, Unicode preservation, and academic links (`pnpm test`). |
+| **PWA & Offline Cache** | Standalone progressive web app & service worker | Full offline oral folklore caching (`sw.js` and `manifest.json`) for rural fieldwork without connectivity. |
+| **Procedural Soundscapes** | Pure Web Audio ambient soundscapes | Synthesized Kshetram Sanctum bronze bells, Kavu night cicadas, and Edavappathi monsoon rain without audio files. |
+| **Canvas Audio Visualizer** | Live oral recitation waveform & spectrum | Neo-Pop brutalist frequency bars, oscilloscope wave, and radial tala pulse canvas connected to Web Audio Analyser. |
+| **Cultural Archival Dossier** | Print-ready peer-reviewed monograph | One-click printable PDF / Markdown anthropological dossier with W3C JSON-LD and scholar sign-off. |
+| **Automated Verification** | High-rigor test suite | 431 automated assertions across 18 test suites verifying schema integrity, Unicode preservation, and audio contracts (`pnpm test`). |
 
 ---
 

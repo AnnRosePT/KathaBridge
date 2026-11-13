@@ -281,6 +281,39 @@ assert(mockCameraConstraints.video.facingMode === 'environment', 'Scanner defaul
 assert(typeof mockCameraConstraints.video.width.ideal === 'number', 'High-definition 720p/1080p ideal resolution configured');
 assert(artForms.every((a) => a.sampleImageUrl && a.sampleImageUrl.startsWith('/images/')), 'All art forms provide local fallback sample image fixtures');
 
+// 17. Progressive Web App (PWA) & Service Worker Cache Contracts
+console.log('\n17. Testing PWA Offline Capabilities & Service Worker Cache...');
+const swPath = path.join(rootDir, 'public', 'sw.js');
+assert(fs.existsSync(swPath), 'Service Worker script (public/sw.js) exists');
+const swContent = fs.readFileSync(swPath, 'utf8');
+assert(swContent.includes('kathabridge-cache-'), 'Service Worker defines versioned cache store');
+assert(swContent.includes('addEventListener(\'fetch\''), 'Service Worker implements offline request interceptor');
+
+const manifestPath = path.join(rootDir, 'public', 'manifest.json');
+assert(fs.existsSync(manifestPath), 'Web App Manifest (public/manifest.json) exists');
+const manifestObj = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+assert(manifestObj.display === 'standalone', 'PWA configured for native standalone app mode');
+assert(manifestObj.theme_color === '#FFFC00', 'PWA theme color conforms to Neo-Pop brutalist yellow');
+assert(Array.isArray(manifestObj.categories) && manifestObj.categories.includes('culture'), 'PWA manifest categorized under culture and education');
+
+// 18. Procedural Web Audio Soundscapes & Monograph Export Contracts
+console.log('\n18. Testing Procedural Soundscapes & Archival Monograph System...');
+const soundscapePath = path.join(rootDir, 'src', 'services', 'heritageSoundscapeService.ts');
+assert(fs.existsSync(soundscapePath), 'Heritage Soundscape service module exists');
+const soundscapeContent = fs.readFileSync(soundscapePath, 'utf8');
+assert(soundscapeContent.includes('TEMPLE_SANCTUM'), 'Soundscape provides Kshetram Sanctum preset');
+assert(soundscapeContent.includes('SACRED_GROVE'), 'Soundscape provides Kavu Night Woods preset');
+assert(soundscapeContent.includes('MONSOON_GHATS'), 'Soundscape provides Edavappathi Monsoon preset');
+
+const visualizerPath = path.join(rootDir, 'src', 'components', 'AudioVisualizerCanvas.tsx');
+assert(fs.existsSync(visualizerPath), 'AudioVisualizerCanvas component exists');
+
+const dossierPath = path.join(rootDir, 'src', 'components', 'CulturalDossierModal.tsx');
+assert(fs.existsSync(dossierPath), 'CulturalDossierModal archival component exists');
+const dossierContent = fs.readFileSync(dossierPath, 'utf8');
+assert(dossierContent.includes('window.print'), 'Dossier modal supports native print and PDF export');
+assert(dossierContent.includes('generateMarkdownReport'), 'Dossier modal supports markdown monograph export');
+
 // =========================================================================
 // TEST SUMMARY & EVALUATION REPORT
 // =========================================================================
