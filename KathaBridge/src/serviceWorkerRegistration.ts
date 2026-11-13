@@ -1,0 +1,27 @@
+// KathaBridge Service Worker Registration Helper
+export function registerServiceWorker(): void {
+  if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          console.log('✅ KathaBridge Service Worker registered with scope:', registration.scope);
+        })
+        .catch((error) => {
+          console.warn('⚠️ KathaBridge Service Worker registration failed:', error);
+        });
+    });
+  }
+}
+
+export function unregisterServiceWorker(): void {
+  if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.ready
+      .then((registration) => {
+        registration.unregister();
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }
+}
