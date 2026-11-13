@@ -4,6 +4,7 @@ import { AudioNarrationService, AudioPlaybackState } from "../services/audioNarr
 import { StorageService } from "../services/storageService";
 import { CulturalTermPopover } from "./CulturalTermPopover";
 import { CitationExportModal } from "./CitationExportModal";
+import { CulturalDossierModal } from "./CulturalDossierModal";
 import { OralTalaMetronomeModal } from "./OralTalaMetronomeModal";
 import { AudioVisualizerCanvas } from "./AudioVisualizerCanvas";
 import { mockSources } from "../data/mockData";
@@ -30,6 +31,7 @@ export const StoryReaderModal: React.FC<Props> = ({
   const [fontSizeOffset, setFontSizeOffset] = useState<number>(0);
   const [contrastMode, setContrastMode] = useState<"normal" | "dark" | "high-contrast">("normal");
   const [citationModalOpen, setCitationModalOpen] = useState<boolean>(false);
+  const [dossierModalOpen, setDossierModalOpen] = useState<boolean>(false);
   const [talaModalOpen, setTalaModalOpen] = useState<boolean>(false);
   const [audioState, setAudioState] = useState<AudioPlaybackState>({
     isPlaying: false,
@@ -404,7 +406,19 @@ export const StoryReaderModal: React.FC<Props> = ({
                     title="Export BibTeX, APA, MLA, or W3C JSON-LD citation"
                   >
                     <span>📜</span>
-                    <span>Export Citation &amp; JSON-LD</span>
+                    <span>Export Citation</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      Soundtrack.playModalPop();
+                      setDossierModalOpen(true);
+                    }}
+                    className="bg-brandPink hover:bg-brandBlack hover:text-white text-white border border-brandBlack px-2.5 py-0.5 rounded text-[10px] font-mono font-black transition shadow-[1px_1px_0px_#080808] flex items-center gap-1 cursor-pointer"
+                    title="Generate printable anthropological dossier & archival monograph"
+                  >
+                    <span>🖨️</span>
+                    <span>Print Cultural Dossier</span>
                   </button>
                 </div>
               </div>
@@ -686,6 +700,14 @@ export const StoryReaderModal: React.FC<Props> = ({
           story={story}
           source={resolvedSource || null}
           onClose={() => setCitationModalOpen(false)}
+        />
+      )}
+
+      {/* Cultural Archival Dossier Modal */}
+      {dossierModalOpen && (
+        <CulturalDossierModal
+          story={story}
+          onClose={() => setDossierModalOpen(false)}
         />
       )}
 
